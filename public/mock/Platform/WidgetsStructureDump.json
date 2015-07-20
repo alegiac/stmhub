@@ -1,0 +1,62 @@
+[
+      {
+         "id": "openeddatefilter",
+         "width": "full",
+         "type": "daterange"
+      },
+      {
+         "id": "avgrevbook",
+         "width": "medium",
+         "type": "progresswidget",
+         "color": "white",
+         "title": "Average revenue",
+         "text": "Bookings",
+         "unit":"€",
+         "value": 0,
+         "perc": 0
+      },
+      {
+         "id": "adrbook",
+         "width": "medium",
+         "type": "progresswidget",
+         "color": "white",
+         "title": "Average daily rate",
+         "text": "Bookings",
+         "unit":"€",
+         "value": 0,
+         "perc": 0
+      },
+      {
+           "id": "totrevxpaxseg",
+           "width": "full",
+           "type": "chartwidget",
+           "color": "white",
+           "class": "flotchart-holder",
+           "title": "Total Revenue x Pax Segment",
+           "unit":"€",
+           "hideTitle": false
+      } ,
+      {
+         "id": "totrevxresmon3ys",
+         "width": "full",
+         "type": "chartwidget",
+         "class": "flotchart-holder",
+         "unit":"€",
+         "title": "Total Revenue x Reservation Month - 3 Years Statement"
+     },
+      {
+         "id": "revenuefacts",
+         "width": "small",
+         "type": "revenuefacts",
+         "unit":"€",
+         "title":"reservations revenue",
+         "subTitle":"by opened date",
+         "values":{
+             "todayValue":4000,
+             "yesterdayValue":2000,
+             "days30Value":29000,
+             "months12Value":183000,
+             "months24Value":321000
+         }
+     }
+]

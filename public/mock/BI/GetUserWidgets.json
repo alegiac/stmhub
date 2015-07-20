@@ -1,0 +1,591 @@
+{
+    "chartpage": {
+        "favorites":{
+            "left":[],
+            "center":[],
+            "right":[]
+        },
+        "revenue": {
+            "left": [
+                {
+                    "id": "openeddatefilter",
+                    "width": "full",
+                    "type": "daterange"
+                }, {
+                    "id": "avgrevbook",
+                    "width": "medium",
+                    "type": "progresswidget",
+                    "color": "white",
+                    "title": "Average revenue",
+                    "text": "Bookings",
+                    "unit":"€",
+                    "value": 0,
+                    "perc": 0
+                },
+                {
+                    "id": "adrbook",
+                    "width": "medium",
+                    "type": "progresswidget",
+                    "color": "white",
+                    "title": "Average daily rate",
+                    "text": "Bookings",
+                    "unit":"€",
+                    "value": 0,
+                    "perc": 0
+                },
+                {
+                    "id": "totrevxpaxseg",
+                    "width": "full",
+                    "type": "chartwidget",
+                    "color": "white",
+                    "class": "flotchart-holder",
+                    "title": "Total Revenue x Pax Segment",
+                    "unit":"€",
+                    "hidetitle": false,
+                    "data": [ {
+                        "data": [[0, 4]],
+                        "color": "#00b9d7",
+                        "bars": {"show": true, "barwidth":1, "fillcolor": "#00b9d7", "order": 1, "align": "center" }
+                    }, {
+                        "data": [[1, 20]],
+                        "color": "#3a4452",
+                        "bars": {"show": true, "barwidth":1, "fillcolor": "#3a4452", "order": 2, "align": "center" }
+                    }],
+                    "options":{
+                        "xaxis": {
+                            "ticks":[[0,"Daft"],[1,"Punk"]]
+                        },
+                        "grid": {
+                            "labelMargin": 10,
+                            "backgroundcolor": "#e2e6e9",
+                            "color": "#ffffff",
+                            "bordercolor": null
+                        }
+                    }
+
+
+                },
+                {
+                    "id": "totrevxresmon3ys",
+                    "width": "full",
+                    "type": "chartwidget",
+                    "class": "flotchart-holder",
+                    "unit":"€",
+                    "title": "Total Revenue x Reservation Month - 3 Years Statement"
+                },
+                {
+                    "id": "totrevxroocod",
+                    "width": "full",
+                    "type": "chartwidget",
+                    "class": "flotchart-holder   ",
+                    "unit":"€",
+                    "title": "Total Revenue x Room Code"
+                },
+                {
+                    "id": "totrevxratcod",
+                    "width": "full",
+                    "type": "chartwidget",
+                    "class": "flotchart-holder",
+                    "unit":"€",
+                    "title": "Total Revenue x Rate Code"
+                },
+                {
+                    "id": "avgrevxratcod",
+                    "width": "full",
+                    "type": "chartwidget",
+                    "class": "flotchart-holder",
+                    "unit":"€",
+                    "title": "Avarage Revenue x Rate Code"
+                }
+              ],
+            "center": [],
+            "right": []
+        },
+        "pax": {
+            "left": [
+
+                {
+                    "id": "totrevxpaxseg",
+                    "width": "full",
+                    "type": "chartwidget",
+                    "color": "white",
+                    "class": "flotchart-holder",
+                    "unit":"€",
+                    "title": "Total Revenue x Pax Segment",
+                    "hidetitle": false
+                }
+            ],
+            "center": [],
+           "right": []
+        },
+        "room": {
+            "left": [
+                {
+                    "id": "avgrevbook",
+                    "width": "medium",
+                    "type": "progresswidget",
+                    "color": "white",
+                    "title": "Average revenue",
+                    "text": "Bookings",
+                    "unit":"€",
+                    "value": 0,
+                    "perc": 0
+                },
+                {
+                    "id": "totrevxroocod",
+                    "width": "full",
+                    "type": "chartwidget",
+                    "class": "flotchart-holder   ",
+                    "unit":"€",
+                    "title": "Total Revenue x Room Code"
+                }
+            ],
+            "center": [],
+            "right": []
+        }
+    },
+    "homepage":{
+        "default": {
+            "left": [
+                {
+                    "id": "left21",
+                    "ribboncolor": "danger",
+                    "ribbon": "Discount",
+                    "href": "#",
+                    "border": true,
+                    "textcolor": "text-white",
+                    "background": "bg-purple",
+                    "width": "small",
+                    "type": "teaser",
+                    "color": "white",
+                    "icon": "icon-first-aid",
+                    "text": "knowledge_base"
+                },
+                {
+                    "id": "left22",
+                    "href": "#/graph",
+                    "border": true,
+                    "textcolor": "text-white",
+                    "background": "bg-primary",
+                    "width": "small",
+                    "type": "teaser",
+                    "color": "white",
+                    "icon": "icon-trophy-fill",
+                    "text": "statistics_and_graph"
+                },
+                {
+                    "id": "left23",
+                    "href": "#",
+                    "border": true,
+                    "textcolor": "text-white",
+                    "background": "bg-warning",
+                    "width": "small",
+                    "type": "teaser",
+                    "color": "white",
+                    "icon": "icon-atom-1",
+                    "text": "incubator"
+                },
+                {"id": "left29", "type": "rowtitle", "title": "Benefits", "titleIcon": "icon-cool"},
+                {
+                    "id": "left24",
+                    "type": "teasermerged",
+                    "merge": true,
+                    "width": "full",
+                    "title": "Benefits",
+
+                    "items": [
+                        {
+                            "href": "#/chart",
+                            "textcolor": "text-inverse",
+                            "background": "bg-gray-hover",
+                            "color": "white",
+
+                            "icon": "icon-question",
+                            "title": "Community QeA",
+                            "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi, deserunt."
+                        },
+
+                        {
+                            "href": "#/chart",
+                            "textcolor": "text-inverse",
+                            "background": "bg-gray-hover",
+                            "ribbon": "50% off",
+                            "ribboncolor": "primary",
+                            "color": "white",
+                            "icon": "icon-ticket",
+                            "title": "support_tickets",
+                            "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi, deserunt."
+                        },
+
+                        {
+                            "href": null,
+                            "textcolor": "text-inverse",
+                            "background": "bg-gray-hover",
+                            "color": "white",
+                            "icon": "icon-comment-heart-fill",
+                            "title": "Feedback",
+                            "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi, deserunt."
+                        }
+                    ]
+                },
+
+                {
+                    "id": "left124",
+                    "type": "teaserlist",
+                    "merge": true,
+                    "width": "full",
+                    "title": "Benefit",
+                    "titleIcon": "fa-exclamation-circle",
+                    "background": "bg-primary",
+                    "separator": true,
+                    "badge": 10,
+                    "items": [
+                        {
+                            "href": "#/chart",
+                            "textcolor": "text-inverse",
+                            "background": "bg-success",
+                            "border": false,
+                            "color": "white",
+                            "icon": "icon-desktop-play",
+                            "subtitle": "5:5",
+                            "subicon": "fa-clock-o",
+                            "title": "Community QeA",
+                            "badge": 6,
+                            "image": "../assets/images/gallery-2/2.jpg",
+                            "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi, deserunt.",
+                            "columns": [
+                                {"text": "Lorem ipsum dolor sit amet", "bold": false},
+                                {"text": "Lorem ipsum dolor sit amet"}
+                            ]
+                        },
+                        {
+                            "href": null,
+                            "textcolor": "text-inverse",
+                            "background": "bg-purple",
+                            "color": "white",
+                            "ribbon": "20% off",
+                            "icon": "icon-ticket",
+                            "title": "Tickets",
+                            "active": false,
+                            "image": "../assets/images/gallery-2/3.jpg",
+                            "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi, deserunt.",
+                            "columns": [
+                                {"text": "Lorem ipsum dolor sit amet", "bold": false},
+                                {"text": "Lorem ipsum dolor sit amet"}
+                            ]
+                        },
+                        {
+                            "href": null,
+                            "textcolor": "text-inverse",
+                            "background": "bg-mustard",
+                            "color": "white",
+                            "icon": "icon-race-flag-fill",
+                            "title": "Feedback",
+                            "badge": 4,
+                            "image": "../assets/images/gallery-2/4.jpg",
+                            "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi, deserunt.",
+                            "columns": [
+                                {"text": "Lorem ipsum dolor sit amet", "bold": false},
+                                {"text": "Lorem ipsum dolor sit amet"}
+                            ]
+                        }
+                    ]
+                }, {
+                    "id": "left125",
+                    "type": "listgroup",
+                    "merge": true,
+                    "width": "full",
+                    "title": "Benefit",
+                    "titleicon": "fa-exclamation-circle",
+                    "background": "bg-primary",
+                    "separator": true,
+                    "badge": 10,
+                    "items": [
+                        {
+                            "href": "#/chart",
+                            "textcolor": "text-inverse",
+                            "background": "bg-success",
+                            "border": false,
+                            "color": "white",
+                            "icon": "icon-desktop-play",
+                            "subtitle": "5:5",
+                            "subicon": "fa-clock-o",
+                            "title": "Community QeA",
+                            "badge": 6,
+                            "image": "../assets/images/gallery-2/2.jpg",
+                            "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi, deserunt.",
+                            "columns": [
+                                {"text": "Lorem ipsum dolor sit amet", "bold": false},
+                                {"text": "Lorem ipsum dolor sit amet"}
+                            ]
+                        },
+                        {
+                            "href": null,
+                            "textcolor": "text-inverse",
+                            "background": "bg-purple",
+                            "color": "white",
+                            "ribbon": "20% off",
+                            "icon": "icon-ticket",
+                            "title": "Tickets",
+                            "active": false,
+                            "image": "../assets/images/gallery-2/3.jpg",
+                            "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi, deserunt.",
+                            "columns": [
+                                {"text": "Lorem ipsum dolor sit amet", "bold": false},
+                                {"text": "Lorem ipsum dolor sit amet"}
+                            ]
+                        },
+                        {
+                            "href": null,
+                            "textcolor": "text-inverse",
+                            "background": "bg-mustard",
+                            "color": "white",
+                            "icon": "icon-race-flag-fill",
+                            "title": "Feedback",
+                            "badge": 4,
+                            "image": "../assets/images/gallery-2/4.jpg",
+                            "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi, deserunt.",
+                            "columns": [
+                                {"text": "Lorem ipsum dolor sit amet", "bold": false},
+                                {"text": "Lorem ipsum dolor sit amet"}
+                            ]
+                       }
+                    ]
+                }, {
+                    "id": "left126",
+                    "type": "listgrid",
+                    "merge": true,
+                    "width": "full",
+                    "title": "Benefit",
+                    "titleicon": "fa-exclamation-circle",
+                    "background": "bg-primary",
+                    "separator": true,
+                    "badge": 10,
+                    "items": [
+                        {
+                            "href": "#/chart",
+                            "textcolor": "text-inverse",
+                            "background": "bg-success",
+                            "border": false,
+                            "color": "white",
+                            "icon": "icon-desktop-play",
+                            "subtitle": "5:5",
+                            "subicon": "fa-clock-o",
+                            "title": "Community QeA",
+                            "badge": 6,
+                            "image": "../assets/images/gallery-2/2.jpg",
+                            "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi, deserunt.",
+                            "columns": [
+                                {"text": "Lorem ipsum dolor sit amet", "bold": false},
+                                {"text": "Lorem ipsum dolor sit amet"}
+                            ]
+                        },
+                        {
+                            "href": null,
+                            "textcolor": "text-inverse",
+                            "background": "bg-purple",
+                            "color": "white",
+                            "ribbon": "20% off",
+                            "icon": "icon-ticket",
+                            "title": "Tickets",
+                            "active": false,
+                            "image": "../assets/images/gallery-2/3.jpg",
+                            "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi, deserunt.",
+                            "columns": [
+                                {"text": "Lorem ipsum dolor sit amet", "bold": false},
+                                {"text": "Lorem ipsum dolor sit amet"}
+                            ]
+                        },
+                        {
+                            "href": null,
+                            "textcolor": "text-inverse",
+                            "background": "bg-mustard",
+                            "color": "white",
+                            "icon": "icon-race-flag-fill",
+                            "title": "Feedback",
+                            "badge": 4,
+                            "image": "../assets/images/gallery-2/4.jpg",
+                            "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi, deserunt.",
+                            "columns": [
+                                {"text": "Lorem ipsum dolor sit amet", "bold": false},
+                                {"text": "Lorem ipsum dolor sit amet"}
+                            ]
+                        }
+                    ]
+                }, {
+                    "id": "left127",
+                    "type": "medialist",
+                    "merge": true,
+                    "width": "full",
+                    "title": "Benefit",
+                    "titleicon": "fa-exclamation-circle",
+                    "background": "bg-primary",
+                    "separator": true,
+                    "badge": 10,
+                    "items": [
+                        {
+                            "href": "#/chart",
+                            "textcolor": "text-inverse",
+                            "background": "bg-success",
+                            "border": false,
+                            "color": "white",
+                            "icon": "icon-desktop-play",
+                            "subtitle": "5:5",
+                            "subicon": "fa-clock-o",
+                            "title": "Community QeA",
+                            "badge": 6,
+                            "image": "../assets/images/gallery-2/2.jpg",
+                            "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi, deserunt.",
+                            "columns": [
+                                {"text": "Lorem ipsum dolor sit amet", "bold": false},
+                                {"text": "Lorem ipsum dolor sit amet"}
+                            ]
+                        },
+                        {
+                           "href": null,
+                            "textcolor": "text-inverse",
+                            "background": "bg-purple",
+                            "color": "white",
+                            "ribbon": "20% off",
+                            "icon": "icon-ticket",
+                            "title": "Tickets",
+                            "active": false,
+                            "image": "../assets/images/gallery-2/3.jpg",
+                            "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi, deserunt.",
+                            "columns": [
+                                {"text": "Lorem ipsum dolor sit amet", "bold": false},
+                                {"text": "Lorem ipsum dolor sit amet"}
+                            ]
+                        },
+                        {
+                            "href": null,
+                            "textcolor": "text-inverse",
+                            "background": "bg-mustard",
+                            "color": "white",
+                            "icon": "icon-race-flag-fill",
+                            "title": "Feedback",
+                            "badge": 4,
+                            "image": "../assets/images/gallery-2/4.jpg",
+                            "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi, deserunt.",
+                            "columns": [
+                                {"text": "Lorem ipsum dolor sit amet", "bold": false},
+                                {"text": "Lorem ipsum dolor sit amet"}
+                            ]
+                        }
+                    ]
+                }
+
+                ,{"id": "left12901","type":"rowtitle","width": "full","title":" "}
+                , {
+                    "id": "left128",
+                    "type": "carousel", 
+                    "merge": true,
+                    "width": "full",
+                    "title": "Benefit",
+                    "titleicon": "fa-exclamation-circle",
+                    "background": "bg-primary",
+                    "separator": true,
+                    "badge": 10,
+                    "items": [
+                        {
+                            "href": "#/chart",
+                            "textcolor": "text-inverse",
+                            "background": "bg-success",
+                            "border": false,
+                            "color": "white",
+                            "icon": "icon-desktop-play",
+                            "subtitle": "5:5",
+                            "subicon": "fa-clock-o",
+                            "title": "Community QeA",
+                            "badge": 6,
+                            "image": "../assets/images/gallery-2/2.jpg",
+                            "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi, deserunt.",
+                            "columns": [
+                                {"text": "Lorem ipsum dolor sit amet", "bold": false},
+                                {"text": "Lorem ipsum dolor sit amet"}
+                            ]
+                        },
+                        {
+                            "href": null,
+                            "textcolor": "text-inverse",
+                            "background": "bg-purple",
+                            "color": "white",
+                            "ribbon": "20% off",
+                            "icon": "icon-ticket",
+                            "title": "Tickets",
+                            "active": false,
+                            "image": "../assets/images/gallery-2/3.jpg",
+                            "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi, deserunt.",
+                            "columns": [
+                                {"text": "Lorem ipsum dolor sit amet", "bold": false},
+                                {"text": "Lorem ipsum dolor sit amet"}
+                            ]
+                        },
+                        {
+                            "href": null,
+                            "textcolor": "text-inverse",
+                            "background": "bg-mustard",
+                            "color": "white",
+                            "icon": "icon-race-flag-fill",
+                            "title": "Feedback",
+                            "badge": 4,
+                            "image": "../assets/images/gallery-2/4.jpg",
+                            "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi, deserunt.",
+                            "columns": [
+                                {"text": "Lorem ipsum dolor sit amet", "bold": false},
+                                {"text": "Lorem ipsum dolor sit amet"}
+                            ]
+                        }
+                    ]
+                }
+                ,{"id": "left129","type":"rowtitle","width": "full"}
+
+
+            ],
+            "center": [],
+            "right": [
+
+
+                {
+                    "id": "right1", "href": "#/chart",
+                    "border": false,
+                    "textcolor": "text-white",
+                    "background": "bg-primary",
+                    "width": "full",
+                    "type": "teaserblock",
+                    "color": "white",
+                    "icon": "icon-compose",
+                    "title": "Knowledge",
+                    "text": "knowledge_base"
+                },
+
+                {
+                    "id": "right2",
+                    "title": "",
+                    "href": "#/graph",
+                    "border": false,
+                    "textcolor": "text-white",
+                    "background": "bg-primary",
+                    "width": "full",
+                    "type": "teaser",
+                    "color": "white",
+                    "icon": "icon-trophy-fill",
+                    "text": "statistics_and_graph"
+                },
+                {
+                    "id": "right3",
+                    "href": "#",
+                    "border": true,
+                    "textcolor": "text-white",
+                    "background": "bg-warning",
+                    "width": "full",
+                    "type": "teaser",
+                    "color": "white",
+                    "icon": "icon-atom-1",
+                    "text": "incubator"
+                }
+
+            ]
+        }
+    }
+}

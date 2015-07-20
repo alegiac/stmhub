@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ServiceHub DB Setup" default="build" basedir="." description="This is a Database setup buildfile for Phing.">
+	<target name="recreate-db">
+	    <echo message="[Data] Drop and recreate database..." />
+	    <pdosqlexec
+	            url="mysql:host=${db.project.host};dbname=${db.project.dbname}"
+	            userid="${db.project.username}"
+	            password="${db.project.password}"
+	            onerror="abort">
+	        DROP DATABASE IF EXISTS `${db.project.dbname}`;
+	        CREATE DATABASE `${db.project.dbname}`;
+	    </pdosqlexec>
+	    <echo message="[Data] Populate database with schema ..." />
+	    <pdosqlexec
+	            url="mysql:host=${db.project.host};dbname=${db.project.dbname}"
+	            userid="${db.project.username}"
+	            password="${db.project.password}"
+	            onerror="abort">
+	        <transaction src="${basePath}/db-versioning/v1/schema.sql" />
+	    </pdosqlexec>
+	</target>
+	<target name="seed-db">
+		<echo message="[Data] seeding database..." />
+		<pdosqlexec
+	            url="mysql:host=${db.project.host};dbname=${db.project.dbname}"
+	            userid="${db.project.username}"
+	            password="${db.project.password}"
+	            onerror="abort">
+	        <transaction src="${basePath}/db-versioning/v1/filldata/preconditions.sql" />	            
+	        <transaction src="${basePath}/db-versioning/v1/filldata/widgetsize.sql" />
+	        <transaction src="${basePath}/db-versioning/v1/filldata/widgettype.sql" />
+	        <transaction src="${basePath}/db-versioning/v1/filldata/page.sql" />
+	        <transaction src="${basePath}/db-versioning/v1/filldata/widget.sql" />
+	        <transaction src="${basePath}/db-versioning/v1/filldata/accountmenustatus.sql" />
+	        <transaction src="${basePath}/db-versioning/v1/filldata/menustatus.sql" />
+	        <transaction src="${basePath}/db-versioning/v1/filldata/menutype.sql" />
+	        <transaction src="${basePath}/db-versioning/v1/filldata/menuitem.sql" />
+	    	<transaction src="${basePath}/db-versioning/v1/filldata/pagehaswidget.sql" />
+	    </pdosqlexec>			
+	</target>
+	<target name="generate-doctrine-entities">
+	    <exec executable="${applicationPath}/vendor/bin/doctrine-module" outputProperty="phing1.output">
+	    	<arg line="orm:convert-mapping"/>
+	    	<arg line="--force"/>
+	    	<arg line="--from-database"/>
+	        <arg line="--namespace=${moduleName}\\Entity\\"/>
+	        <arg line="annotation module/${moduleName}/src"/>
+	    </exec>
+	    <echo message="[Doctrine] Convert mapping from db into entities... ${phing1.output}"/>
+	    
+	    <exec executable="${applicationPath}/vendor/bin/doctrine-module" outputProperty="phing2.output">
+	    	<arg line="orm:generate-entities"/>
+	    	<arg line="--generate-annotations=true"/>
+	    	<arg line="--update-entities=true"/> 
+	        <arg line="--generate-methods=true"/>
+	        <arg line="--no-backup"/>
+	        <arg line="./module/${moduleName}/src/"/>
+	    </exec>
+	    <echo message="[Doctrine] Generate entities with methods.... ${phing2.output}"/>
+	</target>
+	<target name="generate-doctrine-repos">
+	    <exec executable="${applicationPath}/vendor/bin/doctrine-module" outputProperty="phing3.output">
+	    	<arg line="orm:generate-repositories"/>
+	    	<arg line="./module/${moduleName}/src/"/>
+	    </exec>
+	    <echo message="[Doctrine] Generate repositories.... ${phing3.output}"/>
+	</target>
+</project>
