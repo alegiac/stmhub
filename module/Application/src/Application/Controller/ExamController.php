@@ -17,7 +17,13 @@ class ExamController extends AbstractActionController
 {
 	public function indexAction() 
 	{
-		$request = $this->getRequest();
+		$token = $this->params('kns');
+		if (is_null($token)) {
+			return $this->redirect()->toRoute('http://www.venetobanca.it');
+		}
+		
+		
+		
 		
 		// 1 - Verifica presenza di token
 		// 1.1 ->> Se c'è token, ok

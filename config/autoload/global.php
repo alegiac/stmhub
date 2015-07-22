@@ -12,9 +12,9 @@ return array (
 			'orm_default' => array (
 				'driverClass' => 'Doctrine\DBAL\Driver\PDOMySql\Driver',
 				'params' => array (
-					'host'     => '10.0.20.15',
+					'host'     => 'localhost',
 					'port'     => '3306',
-					'dbname'   => 'servicehub2',
+					'dbname'   => 'smiletomove_learning',
 				)
 			)
 		),

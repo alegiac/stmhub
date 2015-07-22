@@ -21,7 +21,8 @@
         "san/san-session-toolbar": "0.*",
         "bushbaby/zf2-module-phing-service":"~2.0",
         "zfcampus/zf-console": "~1.0",
-        "zfr/zfr-cors": "1.*"
+        "zfr/zfr-cors": "1.*",
+        "gkralik/gk-smarty": "dev-master"
     },
     "require-dev": {
         "zfcampus/zf-apigility-admin": "~1.0",
