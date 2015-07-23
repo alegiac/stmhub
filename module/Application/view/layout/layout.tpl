@@ -1,68 +1,54 @@
-{$this->doctype()}
+<!DOCTYPE html>
+<!--[if IE 9 ]><html class="ie9"><![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Material Admin</title>
 
+        <!-- Vendor CSS -->
+        <link href="/static/assets/vendors/fullcalendar/fullcalendar.css" rel="stylesheet">
+        <link href="/static/assets/vendors/animate-css/animate.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/sweet-alert/sweet-alert.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/material-icons/material-design-iconic-font.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/socicon/socicon.min.css" rel="stylesheet">
+            
+        <!-- CSS -->
+        <link href="/static/assets/css/app.min.1.css" rel="stylesheet">
+        <link href="/static/assets/css/app.min.2.css" rel="stylesheet">
+        
+    </head>
+    <body>
+   
+      	{$this->content};
+      	
+        <!-- Javascript Libraries -->
+        <script src="/static/assets/js/jquery-2.1.1.min.js"></script>
+        <script src="/static/assets/js/bootstrap.min.js"></script>
+        
+        <script src="/static/assets/vendors/flot/jquery.flot.min.js"></script>
+        <script src="/static/assets/vendors/flot/jquery.flot.resize.min.js"></script>
+        <script src="/static/assets/vendors/flot/plugins/curvedLines.js"></script>
+        <script src="/static/assets/vendors/sparklines/jquery.sparkline.min.js"></script>
+        <script src="/static/assets/vendors/easypiechart/jquery.easypiechart.min.js"></script>
+        
+        <script src="/static/assets/vendors/fullcalendar/lib/moment.min.js"></script>
+        <script src="/static/assets/vendors/fullcalendar/fullcalendar.min.js"></script>
+        <script src="/static/assets/vendors/simpleWeather/jquery.simpleWeather.min.js"></script>
+        <script src="/static/assets/vendors/auto-size/jquery.autosize.min.js"></script>
+        <script src="/static/assets/vendors/nicescroll/jquery.nicescroll.min.js"></script>
+        <script src="/static/assets/vendors/waves/waves.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
+        <script src="/static/assets/vendors/sweet-alert/sweet-alert.min.js"></script>
+        
+        <script src="/static/assets/js/flot-charts/curved-line-chart.js"></script>
+        <script src="/static/assets/js/flot-charts/line-chart.js"></script>
+        <script src="/static/assets/js/charts.js"></script>
+        
+        <script src="/static/assets/js/charts.js"></script>
+        <script src="/static/assets/js/functions.js"></script>
+        <script src="/static/assets/js/demo.js"></script>
 
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    {$this->headTitle()->setSeparator(' - ')->setAutoEscape(false)}
-
-    {$basePath = $this->basePath()}
-    {$this->headLink()->appendStylesheet("`$basePath`/css/bootstrap.min.css")
-    ->appendStylesheet("`$basePath`/css/style.css")
-    ->appendStylesheet("`$basePath`/css/bootstrap-responsive.min.css")}
-
-    {$this->headLink([ 'rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' =>
-    "`$basePath`/images/favicon.ico"])}
-
-
-    {$this->headScript()->appendFile("`$basePath`/js/html5.js", "text/javascript", ['conditional' => 'lt IE9'])}
-    {$this->headTitle('ZF2 Skeleton Application')}
-
-    {$this->headMeta()}
-
-    <!-- Le styles -->
-    {$this->headLink()}
-
-    <!-- Scripts -->
-    {$this->headScript()}
-
-</head>
-
-<body>
-
-<div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-        <div class="container">
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </a>
-            <a class="brand" href="{$this->url('home')}">Skeleton Application</a>
-
-            <div class="nav-collapse">
-                <ul class="nav">
-                    <li class="active"><a href="{$this->url('home')}">Home</a></li>
-                </ul>
-            </div>
-            <!--/.nav-collapse -->
-        </div>
-    </div>
-</div>
-
-<div class="container">
-
-    {$this->content}
-
-    <hr>
-
-    <footer>
-        <p>&copy; 2006 - 2012 by Zend Technologies Ltd. All rights reserved.</p>
-    </footer>
-
-</div>
-<!-- /container -->
-
-</body>
-</html>
+        
+    </body>
+  </html>

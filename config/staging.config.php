@@ -24,6 +24,7 @@ return array(
         'AssetManager',
         'EddieJaoude\\Zf2Logger',
         'BsbPhingService',
+    	'SmartyModule',
     	'Application',
         'Platform',
         'BI',

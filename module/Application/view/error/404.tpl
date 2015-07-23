@@ -1,22 +1,3 @@
-<!DOCTYPE html>
-    <!--[if IE 9 ]><html class="ie9"><![endif]-->
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Material Admin</title>
-        
-        <!-- Vendor CSS -->
-        <link href="/static/assets/vendors/animate-css/animate.min.css" rel="stylesheet">
-        <link href="/static/assets/vendors/sweet-alert/sweet-alert.min.css" rel="stylesheet">
-        <link href="/static/assets/vendors/material-icons/material-design-iconic-font.min.css" rel="stylesheet">
-        <link href="/static/assets/vendors/socicon/socicon.min.css" rel="stylesheet">
-            
-        <!-- CSS -->
-        <link href="/static/assets/css/app.min.1.css" rel="stylesheet">
-        <link href="/static/assets/css/app.min.2.css" rel="stylesheet">
-    </head>
-    
     <body class="four-zero-content">        
         <div class="four-zero">
             <h2>SEX!</h2>
@@ -69,4 +50,3 @@
             </div>   
         <![endif]-->
     </body>
-</html>
