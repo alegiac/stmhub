@@ -15,15 +15,22 @@ use Zend\Console\Request as ConsoleRequest;
 
 class ExamController extends AbstractActionController
 {
+	/**
+	 * Ingresso nella funzione di accesso all'esame.
+	 * Questa action verifica la presenza del token utente (inviato via email).
+	 * In caso di consistenza, verifica se un utente può partecipare all'esame:
+	 * - se non c'è token, esce con un 404
+	 * - se c'è token:
+	 * 	-- esame da iniziare -> carica esame e via
+	 *  -- esame già in corso (legge sessione e invalida eventuale altra) --> carica macchina a stati
+	 *  -- esame finito ---> carica pagina di notifica esame completato (o 404)
+	 *  
+	 *  
+	 * @see \Zend\Mvc\Controller\AbstractActionController::indexAction()
+	 */
 	public function indexAction() 
 	{
-		$token = $this->params('kns');
-		if (is_null($token)) {
-			return $this->redirect()->toRoute('http://www.venetobanca.it');
-		}
-		
-		
-		
+		return new ViewModel();
 		
 		// 1 - Verifica presenza di token
 		// 1.1 ->> Se c'è token, ok

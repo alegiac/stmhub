@@ -9,20 +9,19 @@
     "homepage": "http://framework.zend.com/",
     "require": {
         "php": ">=5.3.3",
-		"zendframework/zendframework": "2.4.*",
-		"doctrine/doctrine-orm-module": "0.8.*",
+	"zendframework/zendframework": "2.*",
+	"doctrine/doctrine-orm-module": "0.8.*",
         "zendframework/zend-developer-tools": "dev-master",
         "zf-commons/zfc-user-doctrine-orm": "0.1.*",
         "bjyoungblood/BjyProfiler": "dev-master",
-        "murganikolay/smarty-module": "1.0.0",
+        "murganikolay/smarty-module": "1.*",
         "zendframework/zftool": "dev-master",
         "zfcampus/zf-apigility": "~1.0",
         "eddiejaoude/zf2-logger": "^0.4.1",
         "san/san-session-toolbar": "0.*",
         "bushbaby/zf2-module-phing-service":"~2.0",
         "zfcampus/zf-console": "~1.0",
-        "zfr/zfr-cors": "1.*",
-        "gkralik/gk-smarty": "dev-master"
+        "zfr/zfr-cors": "1.*"
     },
     "require-dev": {
         "zfcampus/zf-apigility-admin": "~1.0",

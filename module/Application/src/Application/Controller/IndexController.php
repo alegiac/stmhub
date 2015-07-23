@@ -16,7 +16,9 @@ use Zend\Console\Request as ConsoleRequest;
 class IndexController extends AbstractActionController
 {
 	public function indexAction() 
-	{}
+	{
+		return new ViewModel();
+	}
 	
 	public function setupdbAction()
 	{

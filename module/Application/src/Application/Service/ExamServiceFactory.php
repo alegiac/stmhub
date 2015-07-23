@@ -2,21 +2,21 @@
 
 namespace Application\Service;
 
-use Application\Service\SetupService;
+use Application\Service\ExamService;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class SetupServiceFactory implements FactoryInterface
+class ExamServiceFactory implements FactoryInterface
 {
     /**
      * Service factory
      *
      * @param ServiceLocatorInterface $serviceLocator
-     * @return SetupService
+     * @return ExamService
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-    	return new SetupService($serviceLocator);
+    	return new ExamService($serviceLocator);
     }
 }
