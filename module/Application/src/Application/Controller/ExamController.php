@@ -30,12 +30,24 @@ class ExamController extends AbstractActionController
 	 */
 	public function indexAction() 
 	{
-		return new ViewModel();
-		
 		// 1 - Verifica presenza di token
-		// 1.1 ->> Se c'è token, ok
-		// 1.2 ->> Non c'è token --> attacco
-		// 2 - Acquisizione stato attuale di gestibilità
+		$stmt = $this->params('stmt');
+		if (!isset($stmt)) {
+			$this->redirect()->toUrl('http://www.smiletomove.it');
+		}
+		// 2 - Verifica stato token
+		$tokenValid = $this->getServiceLocator()->get('ExamService')->;
+		 
+		// Analyze the action requested
+		$action = $request->getParam('action');
+	
+		switch ($action) {
+			case 'setup':
+	
+				// Create database (drop previous if any)
+				$buildResult = $this->getServiceLocator()->get('BsbPhingService')->build('recreate-db',$options);
+					
+	
 	}
 	
 	public function setupdbAction()

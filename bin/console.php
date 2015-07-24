@@ -1,5 +1,9 @@
 <?php
 
+// TODO: Impostazioni PHPINI
+ini_set('display_errors', true);
+ini_set('date.timezone','Europe/Rome');
+
 use Zend\Stdlib\ArrayUtils;
 
 use Zend\Console\Adapter\AdapterInterface as Console;
@@ -13,7 +17,6 @@ chdir(dirname(__DIR__));
 if (!defined('APPLICATION_PATH')) {
 	define('APPLICATION_PATH', realpath(__DIR__ . '/../'));
 }
-
 $env = $_SERVER['argv'][2];
 
 if ($env == "production") $env = "application";
@@ -28,7 +31,7 @@ $application = Zend\Mvc\Application::init($appConfig);
 $dispatcher = new Dispatcher();
 
 $services    = $application->getServiceManager();
-$setupService = $services->get('Application\\SetupService');
+$setupService = $services->get('Core\\SetupService');
 
 $dispatcher->map('datasetup', function ($route, $console) use ($setupService) {
 	$opts = $route->getMatches();
@@ -66,17 +69,12 @@ $app = new Application (
 
 $app->setDebug(true);
 $app->setBanner('                                                                                                  
- @@@@@@   @@@@@@@@  @@@@@@@   @@@  @@@  @@@   @@@@@@@  @@@@@@@@     @@@  @@@  @@@  @@@  @@@@@@@   
-@@@@@@@   @@@@@@@@  @@@@@@@@  @@@  @@@  @@@  @@@@@@@@  @@@@@@@@     @@@  @@@  @@@  @@@  @@@@@@@@  
-!@@       @@!       @@!  @@@  @@!  @@@  @@!  !@@       @@!          @@!  @@@  @@!  @@@  @@!  @@@  
-!@!       !@!       !@!  @!@  !@!  @!@  !@!  !@!       !@!          !@!  @!@  !@!  @!@  !@   @!@  
-!!@@!!    @!!!:!    @!@!!@!   @!@  !@!  !!@  !@!       @!!!:!       @!@!@!@!  @!@  !@!  @!@!@!@   
- !!@!!!   !!!!!:    !!@!@!    !@!  !!!  !!!  !!!       !!!!!:       !!!@!!!!  !@!  !!!  !!!@!!!!  
-     !:!  !!:       !!: :!!   :!:  !!:  !!:  :!!       !!:          !!:  !!!  !!:  !!!  !!:  !!!  
-    !:!   :!:       :!:  !:!   ::!!:!   :!:  :!:       :!:          :!:  !:!  :!:  !:!  :!:  !:!  
-:::: ::    :: ::::  ::   :::    ::::     ::   ::: :::   :: ::::     ::   :::  ::::: ::   :: ::::  
-:: : :    : :: ::    :   : :     :      :     :: :: :  : :: ::       :   : :   : :  :   :: : ::   
-                                                                                                  
+   _____ __  _________    ______   __________     __  _______ _    ________
+  / ___//  |/  /  _/ /   / ____/  /_  __/ __ \   /  |/  / __ \ |  / / ____/
+  \__ \/ /|_/ // // /   / __/      / / / / / /  / /|_/ / / / / | / / __/   
+ ___/ / /  / // // /___/ /___     / / / /_/ /  / /  / / /_/ /| |/ / /___   
+/____/_/  /_/___/_____/_____/    /_/  \____/  /_/  /_/\____/ |___/_____/   
+                                                                                                                                                                            
 ');
 
 $exit = $app->run();

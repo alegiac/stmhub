@@ -15,9 +15,14 @@ use Zend\Console\Request as ConsoleRequest;
 
 class IndexController extends AbstractActionController
 {
+	/**
+	 * Effettua un redirect sul sito corporate di SmileToMove
+	 *
+	 * @see \Zend\Mvc\Controller\AbstractActionController::indexAction()
+	 */
 	public function indexAction() 
 	{
-		return new ViewModel();
+		return $this->redirect()->toUrl('http://www.smiletomove.it');
 	}
 	
 	public function setupdbAction()
