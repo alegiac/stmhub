@@ -26,8 +26,6 @@ return array(
         'BsbPhingService',
     	'SmartyModule',
     	'Application',
-        'Platform',
-        'BI',
         'Core',
     ),
     'module_listener_options' => array(

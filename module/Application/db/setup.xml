@@ -30,16 +30,16 @@
 	    </pdosqlexec>			
 	</target>
 	<target name="generate-doctrine-entities">
-	    <exec executable="${applicationPath}/vendor/bin/doctrine-module" outputProperty="phing1.output">
+	    <exec executable="${applicationPath}/bin/doctrine-module" outputProperty="phing1.output">
 	    	<arg line="orm:convert-mapping"/>
 	    	<arg line="--force"/>
 	    	<arg line="--from-database"/>
 	        <arg line="--namespace=${moduleName}\\Entity\\"/>
 	        <arg line="annotation module/${moduleName}/src"/>
 	    </exec>
-	    <echo message="[Doctrine] Convert mapping from db into entities... ${phing1.output}"/>
+	    <echo message="[Doctrine] Convert mapping from db into entities... \n${phing1.output}"/>
 	    
-	    <exec executable="${applicationPath}/vendor/bin/doctrine-module" outputProperty="phing2.output">
+	    <exec executable="${applicationPath}/bin/doctrine-module" outputProperty="phing2.output">
 	    	<arg line="orm:generate-entities"/>
 	    	<arg line="--generate-annotations=true"/>
 	    	<arg line="--update-entities=true"/> 
@@ -50,7 +50,7 @@
 	    <echo message="[Doctrine] Generate entities with methods.... ${phing2.output}"/>
 	</target>
 	<target name="generate-doctrine-repos">
-	    <exec executable="${applicationPath}/vendor/bin/doctrine-module" outputProperty="phing3.output">
+	    <exec executable="${applicationPath}/bin/doctrine-module" outputProperty="phing3.output">
 	    	<arg line="orm:generate-repositories"/>
 	    	<arg line="./module/${moduleName}/src/"/>
 	    </exec>

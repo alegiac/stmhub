@@ -24,6 +24,15 @@ final class SetupService implements ServiceLocatorAwareInterface
     }
     
     /**
+     * Format output for console environment
+     * @param string $message 
+     */
+    private function formatConsoleOutput($message)
+    {
+    	return str_replace("<br>","\n",$message);
+    }
+    
+    /**
      * Load database options
      * 
      * @param string $moduleName Name of the module
@@ -32,7 +41,6 @@ final class SetupService implements ServiceLocatorAwareInterface
     private function loadDbOptions($moduleName)
     {
     	$config = $this->getServiceLocator()->get('Config');
-    	
     	$dbpars = $config['doctrine']['connection']['orm_default']['params'];
     	$dbhost = $dbpars['host'];
     	$dbport = $dbpars['port'];
@@ -79,13 +87,13 @@ final class SetupService implements ServiceLocatorAwareInterface
     		$buildResult = $this->getServiceLocator()->get('BsbPhingService')->build('recreate-db',$options);
     	 
     		if ($buildResult->getExitCode() > 0) {
-    			echo "[Error] - ".$buildResult->getErrorOutput() . "\n\n";
+    			echo "[Error] - ".$this->formatConsoleOutput($buildResult->getErrorOutput()) . "\n\n";
     			return false;
     		} else {
     			return true;
     		}
     	} catch (\FileNotFoundException $e) {
-    		echo "[Error] - ".$e->getMessage()."\n\n";
+    		echo "[Error] - ".$this->formatConsoleOutput($e->getMessage())."\n\n";
     		return false;
     	}
     }
@@ -105,13 +113,13 @@ final class SetupService implements ServiceLocatorAwareInterface
 			$buildResult = $this->getServiceLocator()->get('BsbPhingService')->build('seed-db',$options);
 			
 			if ($buildResult->getExitCode() > 0) {
-				echo "[Error] - ".$buildResult->getErrorOutput() . "\n\n";
+				echo "[Error] - ".$this->formatConsoleOutput($buildResult->getErrorOutput()) . "\n\n";
 				return false;
 			} else {
 				return true;
 			}
 		} catch (\FileNotFoundException $e) {
-			echo "[Error] - ".$e->getMessage()."\n\n";
+			echo "[Error] - ".$this->formatConsoleOutput($e->getMessage())."\n\n";
 			return false;
 		}
     }
@@ -124,18 +132,18 @@ final class SetupService implements ServiceLocatorAwareInterface
      */
     private function generateEntities($moduleName)
     {
+    	
     	try {
 	    	$options = $this->loadDbOptions($moduleName);
 	    	
 	    	$buildResult = $this->getServiceLocator()->get('BsbPhingService')->build('generate-doctrine-entities',$options);
 	    	
 	    	if ($buildResult->getExitCode() > 0) {
-	    		echo "[Error] - ".str_replace("<br>", "\n", $buildResult->getErrorOutput()) . "\n\n";
+	    		echo "[Error] - ".$this->formatConsoleOutput($buildResult->getErrorOutput()) . "\n\n";
 	    		return false;
 	    	} else {
-	    		echo "[Info] - ".$buildResult->getOutput().'\n\n';
+	    		echo "[Info] - ".$this->formatConsoleOutput($buildResult->getOutput()).'\n\n';
 	    		$hh = scandir( __DIR__.'/../../../../' . ucfirst($moduleName) . '/src/' . ucfirst($moduleName) . '/Entity');
-	    		print_r($hh);
 	    		foreach ($hh as $k=>$entry) {
 	    			if ($entry == "." || $entry == "..") {
 	    			} else {
@@ -151,7 +159,7 @@ final class SetupService implements ServiceLocatorAwareInterface
 				return true;
 	    	}
     	} catch (\FileNotFoundException $e) {
-    		echo "[Error] - ".$e->getMessage()."\n\n";
+    		echo "[Error] - ".$this->formatConsoleOutput($e->getMessage())."\n\n";
     		return false;
     	}
     }
@@ -169,14 +177,14 @@ final class SetupService implements ServiceLocatorAwareInterface
     	
     		$buildResult = $this->getServiceLocator()->get('BsbPhingService')->build('generate-doctrine-repos',$options);
     		if ($buildResult->getExitCode() > 0) {
-    			 echo "[Error] - ".$buildResult->getErrorOutput() . "\n\n";
+    			 echo "[Error] - ".$this->formatConsoleOutput($buildResult->getErrorOutput()) . "\n\n";
     			 return false;
     		} else {
-    			echo $buildResult->getOutput();
+    			echo "[Info] - ".$this->formatConsoleOutput($buildResult->getOutput()) . "\n\n";
     			return true;
 			}
     	} catch (\FileNotFoundException $e) {
-    		echo "[Error] - ".$e->getMessage()."\n\n";
+    		echo "[Error] - ".$this->formatConsoleOutput($e->getMessage())."\n\n";
     		return false;
     	}
     }

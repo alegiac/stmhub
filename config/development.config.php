@@ -26,8 +26,6 @@ return array(
 				'BsbPhingService',
 				'SmartyModule',
 				'Application',
-				'Platform',
-				'BI',
 				'Core',
 				'ZF\Apigility\Admin',
 				'ZF\Configuration'
