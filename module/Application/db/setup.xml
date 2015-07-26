@@ -26,7 +26,32 @@
 	            userid="${db.project.username}"
 	            password="${db.project.password}"
 	            onerror="abort">
-	        <!--  transaction src="${basePath}/db-versioning/v1/filldata/pagehaswidget.sql" /-->
+	      	<transaction src="${basePath}/db-versioning/v1/filldata/activationstatus.sql" />
+	      	<transaction src="${basePath}/db-versioning/v1/filldata/weekday.sql" />
+	      	<transaction src="${basePath}/db-versioning/v1/filldata/clientconfiguration.sql" />
+	      	<transaction src="${basePath}/db-versioning/v1/filldata/itemtype.sql" />
+	    </pdosqlexec>			
+	</target>
+	<target name="test-fixtures">
+		<echo message="[Data] installing test fixtures in database..." />
+		<pdosqlexec
+	            url="mysql:host=${db.project.host};dbname=${db.project.dbname}"
+	            userid="${db.project.username}"
+	            password="${db.project.password}"
+	            onerror="abort">
+	      	<transaction src="${basePath}/db-versioning/v1/filldata/client.sql" />
+	      	<transaction src="${basePath}/db-versioning/v1/filldata/account.sql" />
+	      	<transaction src="${basePath}/db-versioning/v1/filldata/course.sql" />
+	      	<transaction src="${basePath}/db-versioning/v1/filldata/client_has_course.sql" />
+	      	<transaction src="${basePath}/db-versioning/v1/filldata/student.sql" />
+	      	<transaction src="${basePath}/db-versioning/v1/filldata/client_has_student.sql" />
+	      	<transaction src="${basePath}/db-versioning/v1/filldata/studentgroup.sql" />
+	      	<transaction src="${basePath}/db-versioning/v1/filldata/studentgroup_has_student.sql" />
+	      	<transaction src="${basePath}/db-versioning/v1/filldata/student_has_course.sql" />
+	      	<transaction src="${basePath}/db-versioning/v1/filldata/exam.sql" />
+	      	<transaction src="${basePath}/db-versioning/v1/filldata/item.sql" />
+	      	<transaction src="${basePath}/db-versioning/v1/filldata/exam_has_item.sql" />
+	      	<transaction src="${basePath}/db-versioning/v1/filldata/student_has_course_has_exam.sql" />
 	    </pdosqlexec>			
 	</target>
 	<target name="generate-doctrine-entities">

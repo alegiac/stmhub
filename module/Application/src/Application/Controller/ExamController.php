@@ -30,6 +30,7 @@ class ExamController extends AbstractActionController
 	 */
 	public function indexAction() 
 	{
+		echo "sdsdasdas";die();
 		$cfg = $this->getServiceLocator()->get('Config');
 		
 		// 1 - Verifica presenza di token
@@ -38,7 +39,21 @@ class ExamController extends AbstractActionController
 			$this->redirect()->toUrl($cfg['corporateurl']);
 		}
 		
-		// 2 - Verifica stato token
-		$tokenValid = $this->getServiceLocator()->get('ExamService')->;
+		try {
+			// 2 - Verifica stato token
+			print_r($this->getExamService()->getExamSessionIdByToken($stmt));
+			die();
+		} catch (\Exception $e) {
+			echo "qui";die();
+			print_r($e);
+		}
+	}
+	
+	/**
+	 * @return Application\Service\ExamService
+	 */
+	private function getExamService()
+	{
+		return $this->getServiceLocator()->get('exam');
 	}
 }

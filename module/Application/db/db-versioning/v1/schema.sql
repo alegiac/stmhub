@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.6.19, for osx10.7 (i386)
+-- MySQL dump 10.13  Distrib 5.6.12, for osx10.7 (i386)
 --
--- Host: 10.0.20.15    Database: servicehub2
+-- Host: localhost    Database: smiletomove_learning
 -- ------------------------------------------------------
--- Server version	5.5.42-MariaDB-wsrep-log
+-- Server version	5.6.12
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -24,456 +24,392 @@ DROP TABLE IF EXISTS `account`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `account` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `accountstatus_id` int(11) NOT NULL,
-  `brand_id` int(11) NOT NULL,
+  `client_id` bigint(20) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `passwordsha1` varchar(40) NOT NULL,
+  `insert_date` datetime NOT NULL,
+  `last_access` datetime DEFAULT NULL,
+  `activationstatus_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_account_accountstatus1_idx` (`accountstatus_id`),
-  KEY `fk_account_brand1_idx` (`brand_id`),
-  CONSTRAINT `fk_account_accountstatus1` FOREIGN KEY (`accountstatus_id`) REFERENCES `accountstatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_account_brand1` FOREIGN KEY (`brand_id`) REFERENCES `brand` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  UNIQUE KEY `username_UNIQUE` (`username`),
+  KEY `fk_account_client1_idx` (`client_id`),
+  KEY `fk_account_activationstatus1_idx` (`activationstatus_id`),
+  CONSTRAINT `fk_account_client1` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_account_activationstatus1` FOREIGN KEY (`activationstatus_id`) REFERENCES `activationstatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `account_extends_brand_has_widget_use_service`
+-- Table structure for table `activationstatus`
 --
 
-DROP TABLE IF EXISTS `account_extends_brand_has_widget_use_service`;
+DROP TABLE IF EXISTS `activationstatus`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `account_extends_brand_has_widget_use_service` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `account_id` bigint(20) NOT NULL,
-  `brand_has_widget_use_service_id` bigint(20) NOT NULL,
-  `params` text,
-  PRIMARY KEY (`id`),
-  KEY `fk_account_has_brand_has_widget_use_service_brand_has_widge_idx` (`brand_has_widget_use_service_id`),
-  KEY `fk_account_has_brand_has_widget_use_service_account1_idx` (`account_id`),
-  CONSTRAINT `fk_account_has_brand_has_widget_use_service_account1` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_account_has_brand_has_widget_use_service_brand_has_widget_1` FOREIGN KEY (`brand_has_widget_use_service_id`) REFERENCES `brand_has_widget_use_service` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `account_has_brand_has_page_has_widget`
---
-
-DROP TABLE IF EXISTS `account_has_brand_has_page_has_widget`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `account_has_brand_has_page_has_widget` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `account_id` bigint(20) NOT NULL,
-  `brand_has_page_has_widget_id` bigint(20) NOT NULL,
-  `widget_id` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_account_has_brand_has_page_has_widget1_brand_has_page_ha_idx` (`brand_has_page_has_widget_id`),
-  KEY `fk_account_has_brand_has_page_has_widget1_account1_idx` (`account_id`),
-  KEY `fk_account_has_brand_has_page_has_widget_widget1_idx` (`widget_id`),
-  CONSTRAINT `fk_account_has_brand_has_page_has_widget1_account1` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_account_has_brand_has_page_has_widget1_brand_has_page_has_1` FOREIGN KEY (`brand_has_page_has_widget_id`) REFERENCES `brand_has_page_has_widget` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_account_has_brand_has_page_has_widget_widget1` FOREIGN KEY (`widget_id`) REFERENCES `widget` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `account_has_brand_has_widget`
---
-
-DROP TABLE IF EXISTS `account_has_brand_has_widget`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `account_has_brand_has_widget` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `account_id` bigint(20) NOT NULL,
-  `brand_has_widget_id` bigint(20) NOT NULL,
-  `structure` text,
-  `graphic` text,
-  `context` text,
-  PRIMARY KEY (`id`),
-  KEY `fk_account_has_brand_has_widget1_brand_has_widget1_idx` (`brand_has_widget_id`),
-  KEY `fk_account_has_brand_has_widget1_account1_idx` (`account_id`),
-  CONSTRAINT `fk_account_has_brand_has_widget1_account1` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_account_has_brand_has_widget1_brand_has_widget1` FOREIGN KEY (`brand_has_widget_id`) REFERENCES `brand_has_widget` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `account_has_menuitem`
---
-
-DROP TABLE IF EXISTS `account_has_menuitem`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `account_has_menuitem` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `account_id` bigint(20) NOT NULL,
-  `menuitem_id` bigint(20) NOT NULL,
-  `accountmenustatus_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_account_has_menuitem_menuitem1_idx` (`menuitem_id`),
-  KEY `fk_account_has_menuitem_account1_idx` (`account_id`),
-  KEY `fk_account_has_menuitem_accountmenustatus1_idx` (`accountmenustatus_id`),
-  CONSTRAINT `fk_account_has_menuitem_account1` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_account_has_menuitem_menuitem1` FOREIGN KEY (`menuitem_id`) REFERENCES `menuitem` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_account_has_menuitem_accountmenustatus1` FOREIGN KEY (`accountmenustatus_id`) REFERENCES `accountmenustatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `account_has_page`
---
-
-DROP TABLE IF EXISTS `account_has_page`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `account_has_page` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `account_id` bigint(20) NOT NULL,
-  `page_id` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_account_has_page_page1_idx` (`page_id`),
-  KEY `fk_account_has_page_account1_idx` (`account_id`),
-  CONSTRAINT `fk_account_has_page_account1` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_account_has_page_page1` FOREIGN KEY (`page_id`) REFERENCES `page` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `account_has_widgetoption`
---
-
-DROP TABLE IF EXISTS `account_has_widgetoption`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `account_has_widgetoption` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `account_id` bigint(20) NOT NULL,
-  `widgetoption_id` bigint(20) NOT NULL,
-  `option` text NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_account_has_widgetoption_account1_idx` (`account_id`),
-  CONSTRAINT `fk_account_has_widgetoption_account1` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `accountmenustatus`
---
-
-DROP TABLE IF EXISTS `accountmenustatus`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `accountmenustatus` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `accountstatus`
---
-
-DROP TABLE IF EXISTS `accountstatus`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `accountstatus` (
+CREATE TABLE `activationstatus` (
   `id` int(11) NOT NULL,
-  `name` text,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `area`
---
-
-DROP TABLE IF EXISTS `area`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `area` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `country_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `brand`
---
-
-DROP TABLE IF EXISTS `brand`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `brand` (
-  `id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `brand_has_page_has_widget`
---
-
-DROP TABLE IF EXISTS `brand_has_page_has_widget`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `brand_has_page_has_widget` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `brand_id` int(11) NOT NULL,
-  `page_has_widget_id` bigint(20) NOT NULL,
-  `widget_id` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_brand_has_page_has_widget_page_has_widget1_idx` (`page_has_widget_id`),
-  KEY `fk_brand_has_page_has_widget_brand1_idx` (`brand_id`),
-  KEY `fk_brand_has_page_has_widget_widget1_idx` (`widget_id`),
-  CONSTRAINT `fk_brand_has_page_has_widget_brand1` FOREIGN KEY (`brand_id`) REFERENCES `brand` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_brand_has_page_has_widget_page_has_widget1` FOREIGN KEY (`page_has_widget_id`) REFERENCES `page_has_widget` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_brand_has_page_has_widget_widget1` FOREIGN KEY (`widget_id`) REFERENCES `widget` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `brand_has_widget`
---
-
-DROP TABLE IF EXISTS `brand_has_widget`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `brand_has_widget` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `brand_id` int(11) NOT NULL,
-  `widget_id` bigint(20) NOT NULL,
-  `structure` text,
-  `graphic` text,
-  `context` text,
-  PRIMARY KEY (`id`),
-  KEY `fk_brand_has_widget_widget1_idx` (`widget_id`),
-  KEY `fk_brand_has_widget_brand1_idx` (`brand_id`),
-  CONSTRAINT `fk_brand_has_widget_brand1` FOREIGN KEY (`brand_id`) REFERENCES `brand` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_brand_has_widget_widget1` FOREIGN KEY (`widget_id`) REFERENCES `widget` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `brand_has_widget_use_service`
---
-
-DROP TABLE IF EXISTS `brand_has_widget_use_service`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `brand_has_widget_use_service` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `brand_id` int(11) NOT NULL,
-  `widget_use_service_id` bigint(20) NOT NULL,
-  `params` text,
-  PRIMARY KEY (`id`),
-  KEY `fk_brand_has_widget_use_service1_widget_use_service1_idx` (`widget_use_service_id`),
-  KEY `fk_brand_has_widget_use_service1_brand1_idx` (`brand_id`),
-  CONSTRAINT `fk_brand_has_widget_use_service1_brand1` FOREIGN KEY (`brand_id`) REFERENCES `brand` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_brand_has_widget_use_service1_widget_use_service1` FOREIGN KEY (`widget_use_service_id`) REFERENCES `widget_use_service` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `menu_has_page`
---
-
-DROP TABLE IF EXISTS `menu_has_page`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `menu_has_page` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `menu_id` bigint(20) NOT NULL,
-  `page_id` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_menu_has_page_page1_idx` (`page_id`),
-  KEY `fk_menu_has_page_menu1_idx` (`menu_id`),
-  CONSTRAINT `fk_menu_has_page_menu1` FOREIGN KEY (`menu_id`) REFERENCES `menuitem` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_menu_has_page_page1` FOREIGN KEY (`page_id`) REFERENCES `page` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `menuitem`
---
-
-DROP TABLE IF EXISTS `menuitem`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `menuitem` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) NOT NULL,
-  `iconurl` text,
-  `url` text NOT NULL,
-  `menustatus_id` int(11) NOT NULL,
-  `page_id` bigint(20) NOT NULL,
-  `menuitem_id` bigint(20) DEFAULT NULL,
-  `menutype_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_menu_menustatus1_idx` (`menustatus_id`),
-  KEY `fk_menu_page1_idx` (`page_id`),
-  KEY `fk_menuitem_menuitem1_idx` (`menuitem_id`),
-  KEY `fk_menuitem_menutype1_idx` (`menutype_id`),
-  CONSTRAINT `fk_menuitem_menutype1` FOREIGN KEY (`menutype_id`) REFERENCES `menutype` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_menuitem_menuitem1` FOREIGN KEY (`menuitem_id`) REFERENCES `menuitem` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_menu_menustatus1` FOREIGN KEY (`menustatus_id`) REFERENCES `menustatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_menu_page1` FOREIGN KEY (`page_id`) REFERENCES `page` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `menustatus`
---
-
-DROP TABLE IF EXISTS `menustatus`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `menustatus` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `menutype`
---
-
-DROP TABLE IF EXISTS `menutype`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `menutype` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `page`
---
-
-DROP TABLE IF EXISTS `page`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `page` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `code` varchar(45) NOT NULL,
-  `template` varchar(45) NOT NULL,
-  `structure` text,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `code_UNIQUE` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `page_has_widget`
---
-
-DROP TABLE IF EXISTS `page_has_widget`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `page_has_widget` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `page_id` bigint(20) NOT NULL,
-  `widget_id` bigint(20) NOT NULL,
-  `widgetsize_id` int(11) NOT NULL,
-  `position` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_page_has_widget_widget1_idx` (`widget_id`),
-  KEY `fk_page_has_widget_page_idx` (`page_id`),
-  KEY `fk_page_has_widget_widgetsize1_idx` (`widgetsize_id`),
-  CONSTRAINT `fk_page_has_widget_widgetsize1` FOREIGN KEY (`widgetsize_id`) REFERENCES `widgetsize` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_page_has_widget_page` FOREIGN KEY (`page_id`) REFERENCES `page` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_page_has_widget_widget1` FOREIGN KEY (`widget_id`) REFERENCES `widget` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `service`
+-- Table structure for table `client`
 --
 
-DROP TABLE IF EXISTS `service`;
+DROP TABLE IF EXISTS `client`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `service` (
+CREATE TABLE `client` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `businessname` varchar(255) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `zip` varchar(45) NOT NULL,
+  `city` varchar(255) NOT NULL,
+  `area` varchar(255) NOT NULL,
+  `country` varchar(255) NOT NULL,
+  `phone` varchar(45) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `fax` varchar(45) DEFAULT NULL,
+  `vatnumber` varchar(45) DEFAULT NULL,
+  `fiscode` varchar(45) DEFAULT NULL,
+  `insert_date` datetime NOT NULL,
+  `activationstatus_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_client_activationstatus1_idx` (`activationstatus_id`),
+  CONSTRAINT `fk_client_activationstatus1` FOREIGN KEY (`activationstatus_id`) REFERENCES `activationstatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `client_has_course`
+--
+
+DROP TABLE IF EXISTS `client_has_course`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `client_has_course` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `client_id` bigint(20) NOT NULL,
+  `course_id` bigint(20) NOT NULL,
+  `insert_date` datetime NOT NULL,
+  `activationstatus_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_client_has_course_course1_idx` (`course_id`),
+  KEY `fk_client_has_course_client1_idx` (`client_id`),
+  KEY `fk_client_has_course_activationstatus1_idx` (`activationstatus_id`),
+  CONSTRAINT `fk_client_has_course_client1` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_client_has_course_course1` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_client_has_course_activationstatus1` FOREIGN KEY (`activationstatus_id`) REFERENCES `activationstatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `client_has_student`
+--
+
+DROP TABLE IF EXISTS `client_has_student`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `client_has_student` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `client_id` bigint(20) NOT NULL,
+  `student_id` bigint(20) NOT NULL,
+  `activationstatus_id` int(11) NOT NULL,
+  `insert_date` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_client_has_student_student1_idx` (`student_id`),
+  KEY `fk_client_has_student_client1_idx` (`client_id`),
+  KEY `fk_client_has_student_activationstatus1_idx` (`activationstatus_id`),
+  CONSTRAINT `fk_client_has_student_client1` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_client_has_student_student1` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_client_has_student_activationstatus1` FOREIGN KEY (`activationstatus_id`) REFERENCES `activationstatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `clientconfiguration`
+--
+
+DROP TABLE IF EXISTS `clientconfiguration`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `clientconfiguration` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `client_id` bigint(20) NOT NULL,
+  `maxusers` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_clientconfiguration_client1_idx` (`client_id`),
+  CONSTRAINT `fk_clientconfiguration_client1` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `course`
+--
+
+DROP TABLE IF EXISTS `course`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `course` (
+  `id` bigint(20) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` text,
+  `periodicityweek` int(11) NOT NULL,
+  `weekday_id` int(11) NOT NULL,
+  `durationweek` int(11) NOT NULL,
+  `insert_date` datetime NOT NULL,
+  `activationstatus_id` int(11) NOT NULL,
+  `emailtemplateurl` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_course_weekday1_idx` (`weekday_id`),
+  KEY `fk_course_activationstatus1_idx` (`activationstatus_id`),
+  CONSTRAINT `fk_course_weekday1` FOREIGN KEY (`weekday_id`) REFERENCES `weekday` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_course_activationstatus1` FOREIGN KEY (`activationstatus_id`) REFERENCES `activationstatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `exam`
+--
+
+DROP TABLE IF EXISTS `exam`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `exam` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
+  `description` text,
+  `imageurl` varchar(255) DEFAULT NULL,
+  `points_if_completed` int(11) NOT NULL,
+  `reduce_percentage_outtime` int(11) DEFAULT NULL,
+  `course_id` bigint(20) NOT NULL,
+  `insert_date` datetime NOT NULL,
+  `mandatory` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_exam_course1_idx` (`course_id`),
+  CONSTRAINT `fk_exam_course1` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `exam_has_item`
+--
+
+DROP TABLE IF EXISTS `exam_has_item`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `exam_has_item` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `exam_id` bigint(20) NOT NULL,
+  `item_id` bigint(20) NOT NULL,
+  `insert_date` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_exam_has_item_item1_idx` (`item_id`),
+  KEY `fk_exam_has_item_exam1_idx` (`exam_id`),
+  CONSTRAINT `fk_exam_has_item_exam1` FOREIGN KEY (`exam_id`) REFERENCES `exam` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_exam_has_item_item1` FOREIGN KEY (`item_id`) REFERENCES `item` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `image`
+--
+
+DROP TABLE IF EXISTS `image`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `image` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
   `url` varchar(255) NOT NULL,
-  `params` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `widget`
+-- Table structure for table `item`
 --
 
-DROP TABLE IF EXISTS `widget`;
+DROP TABLE IF EXISTS `item`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `widget` (
+CREATE TABLE `item` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `code` varchar(45) NOT NULL,
-  `widgettype_id` int(11) NOT NULL,
-  `structure` text NOT NULL,
-  `graphic` text NOT NULL,
+  `question` text NOT NULL,
+  `itemtype_id` int(11) NOT NULL,
+  `maxtries` int(11) NOT NULL DEFAULT '2',
+  `maxsecs` int(11) DEFAULT NULL,
   `context` text NOT NULL,
+  `item_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `code_UNIQUE` (`code`),
-  KEY `fk_widget_widgettype1_idx` (`widgettype_id`),
-  CONSTRAINT `fk_widget_widgettype1` FOREIGN KEY (`widgettype_id`) REFERENCES `widgettype` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `widget_use_service`
---
-
-DROP TABLE IF EXISTS `widget_use_service`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `widget_use_service` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `widget_id` bigint(20) NOT NULL,
-  `service_id` bigint(20) NOT NULL,
-  `params` text,
-  PRIMARY KEY (`id`),
-  KEY `fk_widget_has_service_service1_idx` (`service_id`),
-  KEY `fk_widget_has_service_widget1_idx` (`widget_id`),
-  CONSTRAINT `fk_widget_has_service_widget1` FOREIGN KEY (`widget_id`) REFERENCES `widget` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_widget_has_service_service1` FOREIGN KEY (`service_id`) REFERENCES `service` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  KEY `fk_item_itemtype1_idx` (`itemtype_id`),
+  KEY `fk_item_item1_idx` (`item_id`),
+  CONSTRAINT `fk_item_itemtype1` FOREIGN KEY (`itemtype_id`) REFERENCES `itemtype` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_item_item1` FOREIGN KEY (`item_id`) REFERENCES `item` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `widgetsize`
+-- Table structure for table `item_has_image`
 --
 
-DROP TABLE IF EXISTS `widgetsize`;
+DROP TABLE IF EXISTS `item_has_image`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `widgetsize` (
+CREATE TABLE `item_has_image` (
+  `item_id` bigint(20) NOT NULL,
+  `image_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`item_id`,`image_id`),
+  KEY `fk_item_has_image_image1_idx` (`image_id`),
+  KEY `fk_item_has_image_item_idx` (`item_id`),
+  CONSTRAINT `fk_item_has_image_item` FOREIGN KEY (`item_id`) REFERENCES `item` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_item_has_image_image1` FOREIGN KEY (`image_id`) REFERENCES `image` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `itemtype`
+--
+
+DROP TABLE IF EXISTS `itemtype`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `itemtype` (
+  `id` int(11) NOT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `student`
+--
+
+DROP TABLE IF EXISTS `student`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `student` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `firstname` varchar(100) NOT NULL,
+  `lastname` varchar(100) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `passwordsha1` varchar(40) NOT NULL,
+  `identifier` varchar(255) NOT NULL,
+  `activationstatus_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email_UNIQUE` (`email`),
+  UNIQUE KEY `identifier_UNIQUE` (`identifier`),
+  KEY `fk_student_activationstatus1_idx` (`activationstatus_id`),
+  CONSTRAINT `fk_student_activationstatus1` FOREIGN KEY (`activationstatus_id`) REFERENCES `activationstatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `student_has_course`
+--
+
+DROP TABLE IF EXISTS `student_has_course`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `student_has_course` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `student_id` bigint(20) NOT NULL,
+  `course_id` bigint(20) NOT NULL,
+  `insert_date` datetime NOT NULL,
+  `activationstatus_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_student_has_course_course1_idx` (`course_id`),
+  KEY `fk_student_has_course_student1_idx` (`student_id`),
+  KEY `fk_student_has_course_activationstatus1_idx` (`activationstatus_id`),
+  CONSTRAINT `fk_student_has_course_student1` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_student_has_course_course1` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_student_has_course_activationstatus1` FOREIGN KEY (`activationstatus_id`) REFERENCES `activationstatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `student_has_course_has_exam`
+--
+
+DROP TABLE IF EXISTS `student_has_course_has_exam`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `student_has_course_has_exam` (
+  `id` bigint(20) NOT NULL,
+  `student_has_course_id` bigint(20) NOT NULL,
+  `exam_id` bigint(20) NOT NULL,
+  `insert_date` datetime NOT NULL,
+  `start_date` datetime NOT NULL,
+  `end_date` datetime NOT NULL,
+  `completed` int(11) NOT NULL,
+  `points` int(11) NOT NULL,
+  `answer` text,
+  `token` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_student_has_course_has_exam_exam1_idx` (`exam_id`),
+  KEY `fk_student_has_course_has_exam_student_has_course1_idx` (`student_has_course_id`),
+  CONSTRAINT `fk_student_has_course_has_exam_student_has_course1` FOREIGN KEY (`student_has_course_id`) REFERENCES `student_has_course` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_student_has_course_has_exam_exam1` FOREIGN KEY (`exam_id`) REFERENCES `exam` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `studentgroup`
+--
+
+DROP TABLE IF EXISTS `studentgroup`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `studentgroup` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `insert_date` datetime DEFAULT NULL,
+  `activationstatus_id` int(11) NOT NULL,
+  `client_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_studentgroup_activationstatus1_idx` (`activationstatus_id`),
+  KEY `fk_studentgroup_client1_idx` (`client_id`),
+  CONSTRAINT `fk_studentgroup_activationstatus1` FOREIGN KEY (`activationstatus_id`) REFERENCES `activationstatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_studentgroup_client1` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `studentgroup_has_student`
+--
+
+DROP TABLE IF EXISTS `studentgroup_has_student`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `studentgroup_has_student` (
+  `id` bigint(20) NOT NULL,
+  `studentgroup_id` bigint(20) NOT NULL,
+  `student_id` bigint(20) NOT NULL,
+  `insert_date` datetime NOT NULL,
+  `activationstatus_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_studentgroup_has_student_student1_idx` (`student_id`),
+  KEY `fk_studentgroup_has_student_studentgroup1_idx` (`studentgroup_id`),
+  KEY `fk_studentgroup_has_student_activationstatus1_idx` (`activationstatus_id`),
+  CONSTRAINT `fk_studentgroup_has_student_studentgroup1` FOREIGN KEY (`studentgroup_id`) REFERENCES `studentgroup` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_studentgroup_has_student_student1` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_studentgroup_has_student_activationstatus1` FOREIGN KEY (`activationstatus_id`) REFERENCES `activationstatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `weekday`
+--
+
+DROP TABLE IF EXISTS `weekday`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `weekday` (
   `id` int(11) NOT NULL,
   `name` varchar(45) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `widgettype`
---
-
-DROP TABLE IF EXISTS `widgettype`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `widgettype` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -485,4 +421,4 @@ CREATE TABLE `widgettype` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-07-14 11:07:22
+-- Dump completed on 2015-07-24 23:08:28
