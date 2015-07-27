@@ -35,42 +35,21 @@ return array(
                     ),
                 ),
             ),
-        	'exam' => array(
-        		'type' => 'Literal',
+        	'exam_token' => array(
+        		'type' => 'segment',
         		'options' => array(
-        			'route'
+        			'route' => '/exam/token/:tkn[/]',
+        			'constraints' => array(
+        				'tkn' => '[A-Z0-9]+',
+        			),
+        			'defaults' => array(
+        				'__NAMESPACE__' => 'Application\Controller',
+        				'controller' => 'Exam',
+        				'action' => 'index',
+        			),
         		),
-        	)
-            // The following is a route to simplify getting started creating
-            // new controllers and actions without needing to create a new
-            // module. Simply drop new controllers in, and you can access them
-            // using the path /application/:controller/:action
-            'application' => array(
-                'type'    => 'Literal',
-                'options' => array(
-                    'route'    => '/application',
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'Application\Controller',
-                        'controller'    => 'Index',
-                        'action'        => 'index',
-                    ),
-                ),
-                'may_terminate' => true,
-                'child_routes' => array(
-                    'default' => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'    => '/[:controller[/:action]]',
-                            'constraints' => array(
-                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ),
-                            'defaults' => array(
-                            ),
-                        ),
-                    ),
-                ),
-            ),
+        		'may_terminate' => true,
+        	),
         ),
     ),
     'service_manager' => array(
