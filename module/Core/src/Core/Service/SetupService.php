@@ -125,6 +125,32 @@ final class SetupService implements ServiceLocatorAwareInterface
     }
     
     /**
+     * Load all the fixtures/test data into the database
+     *
+     * @param string $moduleName Name of the module
+     * @return boolean State of execution
+     */
+    private function loadTestFixtures($moduleName)
+    {
+    	try {
+    		$options = $this->loadDbOptions($moduleName);
+    
+    		// Insert seeds in db
+    		$buildResult = $this->getServiceLocator()->get('BsbPhingService')->build('test-fixtures',$options);
+    			
+    		if ($buildResult->getExitCode() > 0) {
+    			echo "[Error] - ".$this->formatConsoleOutput($buildResult->getErrorOutput()) . "\n\n";
+    			return false;
+    		} else {
+    			return true;
+    		}
+    	} catch (\FileNotFoundException $e) {
+    		echo "[Error] - ".$this->formatConsoleOutput($e->getMessage())."\n\n";
+    		return false;
+    	}
+    }
+    
+    /**
      * Generate entities in the specified module
      * 
      * @param string $moduleName Name of the module
@@ -203,6 +229,9 @@ final class SetupService implements ServiceLocatorAwareInterface
     			break;
     		case Setup::ACTION_SEED:
     			return $this->loadSeeds($moduleName);
+    			break;
+    		case Setup::ACTION_FIXTURES:
+    			return $this->loadTestFixtures($moduleName);
     			break;
     		case Setup::ACTION_ENTITIES;
     			return $this->generateEntities($moduleName);

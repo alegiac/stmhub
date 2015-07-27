@@ -1,5 +1,5 @@
 START TRANSACTION;
 
-INSERT INTO `smiletomove_learning`.`clientconfiguration` (`id`, `maxusers`) VALUES (1, 20);
+INSERT INTO `clientconfiguration` (`id`, `maxusers`,`client_id`) VALUES (1, 20,1);
 
 COMMIT;

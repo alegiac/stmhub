@@ -35,12 +35,13 @@ return array(
                     ),
                 ),
             ),
+        	
         	'exam_token' => array(
         		'type' => 'segment',
         		'options' => array(
         			'route' => '/exam/token/:tkn[/]',
         			'constraints' => array(
-        				'tkn' => '[A-Z0-9]+',
+        				'tkn' => '[a-zA-Z0-9\.]+',
         			),
         			'defaults' => array(
         				'__NAMESPACE__' => 'Application\Controller',
@@ -61,12 +62,8 @@ return array(
             'translator' => 'MvcTranslator',
         ),
     	'factories' => array(
-    		'Application\\SetupService' => 'Application\\Service\\SetupServiceFactory',
+    		'ExamService' => 'Application\\Service\\ExamServiceFactory',
     	),
-    	'invokables' => array(
-    		'exam' => 'Application\Service\ExamService',
-    		'course' => 'Application\Service\CourseService',
-    	)
     ),
     'translator' => array(
         'locale' => 'en_US',

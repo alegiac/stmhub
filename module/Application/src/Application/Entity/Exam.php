@@ -78,6 +78,13 @@ class Exam
     private $totalitems;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="prog_on_course", type="integer", nullable=false)
+     */
+    private $progOnCourse;
+
+    /**
      * @var \Application\Entity\Course
      *
      * @ORM\ManyToOne(targetEntity="Application\Entity\Course")
@@ -289,6 +296,30 @@ class Exam
     public function getTotalitems()
     {
         return $this->totalitems;
+    }
+
+    /**
+     * Set progOnCourse
+     *
+     * @param integer $progOnCourse
+     *
+     * @return Exam
+     */
+    public function setProgOnCourse($progOnCourse)
+    {
+        $this->progOnCourse = $progOnCourse;
+
+        return $this;
+    }
+
+    /**
+     * Get progOnCourse
+     *
+     * @return integer
+     */
+    public function getProgOnCourse()
+    {
+        return $this->progOnCourse;
     }
 
     /**

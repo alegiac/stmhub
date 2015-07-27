@@ -2,6 +2,7 @@
 
 namespace Application\Entity\Repository;
 
+use Application\Entity\StudentHasCourse;
 use Application\Entity\StudentHasCourseHasExam;
 use Doctrine\Common\Collections\Criteria;
 
@@ -22,8 +23,8 @@ class StudentHasCourseHasExamRepo extends \Doctrine\ORM\EntityRepository
 	public function findByIdentifier($identifier)
 	{
 		$criteria = Criteria::create()->where(Criteria::expr()->eq('token', $identifier))->orderBy(array('id'=>'ASC'));
-		$result = $this->findBy($criteria);
-		if (is_array($result) && !empty($result)) return $result[0];
+		$result = $this->matching($criteria);
+		if ($result->count()) return $result->last();
 		return null;
 	}
 	
@@ -36,6 +37,8 @@ class StudentHasCourseHasExamRepo extends \Doctrine\ORM\EntityRepository
 	public function findByStudentOnCourse(StudentHasCourse $studentCourse)
 	{
 		$criteria = Criteria::create()->where(Criteria::expr()->eq('studentHasCourse',$studentCourse));
-		return $this->findBy($criteria);
+		$result = $this->matching($criteria);
+		if ($result->count()) return $result->getValues();
+		return array();
 	}
 }

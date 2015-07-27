@@ -18,11 +18,11 @@ class ExamController extends AbstractActionController
 	/**
 	 * Ingresso nella funzione di accesso all'esame.
 	 * Questa action verifica la presenza del token utente (inviato via email).
-	 * In caso di consistenza, verifica se un utente pu� partecipare all'esame:
-	 * - se non c'� token, esce con un 404
-	 * - se c'� token:
+	 * In caso di consistenza, verifica se un utente puo' partecipare all'esame:
+	 * - se non c'e' token, esce con un 404
+	 * - se c'e' token:
 	 * 	-- esame da iniziare -> carica esame e via
-	 *  -- esame gi� in corso (legge sessione e invalida eventuale altra) --> carica macchina a stati
+	 *  -- esame gia' in corso (legge sessione e invalida eventuale altra) --> carica macchina a stati
 	 *  -- esame finito ---> carica pagina di notifica esame completato (o 404)
 	 *  
 	 *  
@@ -30,11 +30,11 @@ class ExamController extends AbstractActionController
 	 */
 	public function indexAction() 
 	{
-		echo "sdsdasdas";die();
 		$cfg = $this->getServiceLocator()->get('Config');
 		
 		// 1 - Verifica presenza di token
-		$stmt = $this->params('stmt');
+		$stmt = $this->params('tkn');
+		
 		if (!isset($stmt)) {
 			$this->redirect()->toUrl($cfg['corporateurl']);
 		}
@@ -44,16 +44,21 @@ class ExamController extends AbstractActionController
 			print_r($this->getExamService()->getExamSessionIdByToken($stmt));
 			die();
 		} catch (\Exception $e) {
-			echo "qui";die();
-			print_r($e);
+			echo $e->getMessage();die();
 		}
 	}
 	
+	/**
+	 * Visualizzazione pagina di errore da inviare all'utente finale in caso di errore, eccezione o problema
+	 * che in generale sia bloccante per l'esecuzione del task
+	 * 
+	 * @
+	 */
 	/**
 	 * @return Application\Service\ExamService
 	 */
 	private function getExamService()
 	{
-		return $this->getServiceLocator()->get('exam');
+		return $this->getServiceLocator()->get('ExamService');
 	}
 }

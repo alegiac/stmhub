@@ -28,11 +28,9 @@ final class ExamService implements ServiceLocatorAwareInterface
     
     /**
      * Costruttore di classe
-     * @param ServiceLocatorInterface $serviceLocator
      */
     public function __construct(ServiceLocatorInterface $serviceLocator)
     {
-
     	$this->serviceLocator = $serviceLocator;
     }
     
@@ -51,7 +49,7 @@ final class ExamService implements ServiceLocatorAwareInterface
      */
     private function getStudentRepo()
     {
-    	return $this->getEntityManager()->getRepository('Student');
+    	return $this->getEntityManager()->getRepository('Application\Entity\Student');
     }
     
     /**
@@ -60,7 +58,7 @@ final class ExamService implements ServiceLocatorAwareInterface
      */
     private function getStudentHasCourseHasExamRepo()
     {
-    	return $this->getEntityManager()->getRepository('StudentHasCourseHasExam');
+    	return $this->getEntityManager()->getRepository('Application\Entity\StudentHasCourseHasExam');
     }
     
     /**
@@ -77,34 +75,27 @@ final class ExamService implements ServiceLocatorAwareInterface
     public function getExamSessionIdByToken($token)
     {
     	// Validazione campi richiesta
-    	if (strpos($token, ".") === false) 
-    		throw new MalformedRequest("Token di richiesta non inserito");
+    	if (strpos($token, ".") === false) throw new MalformedRequest("Token di richiesta non formattato correttamente");
     	
-    	$studentToken = substr($token,0,strpos($token, "."));
-    	$sessionToken = substr($token,strpos($token, "."));
-    	
-    	if (!$studentToken || strlen($studentToken) == 0) 
-    		throw new MalformedRequest("Token richiesta non valido: subtoken studente non inserito");
-    	if (!$sessionToken || strlen($sessionToken) == 0)
-    		throw new MalformedRequest("Token richiesta non valido: subtoken sessione-esame non inserito");
-    	
+    	list($studentToken,$sessionToken) = explode(".",$token);
+    	if (strlen($studentToken) == 0) throw new MalformedRequest("Token richiesta non valido: subtoken studente non inserito");
+    	if (strlen($sessionToken) == 0) throw new MalformedRequest("Token richiesta non valido: subtoken sessione-esame non inserito");
+
     	// Acquisizione studente
     	$student = $this->getStudentRepo()->findByIdentifier($studentToken);
-    	if (!$student) 
-    		throw new ObjectNotFound(sprintf("Nessuno studente trovato con identificativo %s",$studentToken));
-    	if ($student->getActivationstatus()->getId() != ActivationStatus::STATUS_ENABLED) 
-    		throw new ObjectNotEnabled(sprintf("Studente con identificativo %s trovato ma non abilitato",$studentToken));
+    	
+    	if (is_null($student)) throw new ObjectNotFound(sprintf("Nessuno studente trovato con identificativo %s",$studentToken));
+    	if ($student->getActivationstatus()->getId() != ActivationStatus::STATUS_ENABLED) throw new ObjectNotEnabled(sprintf("Studente con identificativo %s trovato ma non abilitato",$studentToken));
 
     	// Acquisizione sessione di esame
     	$session = $this->getStudentHasCourseHasExamRepo()->findByIdentifier($sessionToken);
-    	if (!$session)
-    		throw new ObjectNotFound(sprintf("Nessuna sessione d'esame trovata con identificativo %s",$sessionToken));
+    	if (!$session) throw new ObjectNotFound(sprintf("Nessuna sessione d'esame trovata con identificativo %s",$sessionToken));
 
     	// Controllo incrociato studente/sessione
     	if ($session->getStudentHasCourse()->getStudent() != $student)
     		throw new InconsistentContent(sprintf("Sessione con token %s valida ma non assegnata all'account studente con identificativo %s. Probabile tentativo di hacking",$sessionToken,$studentToken));
     	
-    	// Da qui il processo di validazione è completato
+    	// Da qui il processo di validazione e' completato, non ritorna piu exception
     	$course = $session->getStudentHasCourse()->getCourse();
     	if ($course->getActivationstatus() != ActivationStatus::STATUS_ENABLED) {
     		// Corso disabilitato
@@ -112,12 +103,13 @@ final class ExamService implements ServiceLocatorAwareInterface
     	}
     	
     	// Tutti gli esami dello studente
-    	$allSessions = $this->getStudentHasCourseHasExamRepo()->findByStudentOnCourse($session->getStudentHasCourse()->getId());
+    	$studentCourse = $session->getStudentHasCourse();
     	
-    	// Sessione corrente già completata?
+    	$allSessions = $this->getStudentHasCourseHasExamRepo()->findByStudentOnCourse($studentCourse);
+    	
+    	// Sessione corrente gia' completata?
     	if ($session->getCompleted()) {
-
-    		foreach ($allSessions as $sess) {
+			foreach ($allSessions as $sess) {
     			/* @var $sess StudentHasCourseHasExam */
     			if ($sess->getCompleted() === 0 && $sess->getStartDate() < new \DateTime()) {
     				// Trovata sessione successiva
@@ -130,10 +122,11 @@ final class ExamService implements ServiceLocatorAwareInterface
     			/* @var $sess StudentHasCourseHasExam */
     			if ($sess->getCompleted() === 0 && $sess->getStartDate() < new \DateTime()) {
     				// Trovata sessione successiva
+    				if ($sess == $session) return array('id' => $session->getId(),'message' => null); 
     				return array('id' => $sess->getId(),'message' => 'Sessione precedente iniziata e non completata');
     			}
     		}
-    		return array('id' => $session->getId(),'message' => null);
+    		return array('id' => null,'message' => 'Nessuna sessione ancora disponibile');
     	}
 	} 
 }
