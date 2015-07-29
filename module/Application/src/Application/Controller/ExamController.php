@@ -47,7 +47,6 @@ class ExamController extends AbstractActionController
 			// Salvataggio token in sessione
 			$this->session->student = $res['student'];
 			
-			$this->session->examId = $res['id'];
 			$this->session->progress = $res['progress'];
 			$this->session->message = $res['message'];
 			
@@ -55,6 +54,7 @@ class ExamController extends AbstractActionController
 			if (strlen($res['message']) > 0 && is_null($res['id'])) {
 				$this->redirect()->toRoute('exam_error');
 			} else {
+				$this->session->exam = $this->getExamService()->getUserExamData($res['id']);
 				$this->redirect()->toRoute('exam_participate');
 			}
 		} catch (\Exception $e) {
@@ -91,30 +91,23 @@ class ExamController extends AbstractActionController
 		$this->init();
 		
 		// Acquisizione di tutti gli elementi di esame
-		$examStudentId = $this->session->examId;
+		$examStudent = $this->session->exam;
+	 	
+		// Visualizzazione 
+		$vm = new ViewModel();
+		$vm->firstName = $this->session->student['firstname'];
+		$vm->lastName = $this->session->student['lastname'];
+
 		
-		try {
-			$data = $this->getExamService()->getUserExamData($examStudentId);
-			
-			// Visualizzazione 
-		
-		
-			$vm = new ViewModel();
-			$vm->firstName = $this->session->student['firstname'];
-			$vm->lastName = $this->session->student['lastname'];
-		
-			if (strlen($this->session->message) > 0) {
-				$vm->enableMessage = true;
-				$vm->message = $this->session->message;
-			} else {
-				$vm->enableMessage = false;
-				$vm->message = "";
-			}
-		
-			return $vm;
-		} catch (\Exception $e) {
-			
+		if (strlen($this->session->message) > 0) {
+			$vm->enableMessage = true;
+			$vm->message = $this->session->message;
+		} else {
+			$vm->enableMessage = false;
+			$vm->message = "";
 		}
+	
+		return $vm;
 	}
 	
 	protected function init()

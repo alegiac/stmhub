@@ -6,21 +6,27 @@ use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
+use Zend\Crypt\BlockCipher;
+use Zend\Crypt\Symmetric\Mcrypt;
 
 use Application\Constants\ActivationStatus;
 
 use Application\Entity\Student;
 use Application\Entity\StudentHasCourseHasExam;
+use Application\Entity\ExamHasItem;
+use Application\Entity\Item;
+use Application\Entity\Image;
 
 use Application\Entity\Repository\StudentHasCourseHasExamRepo;
 use Application\Entity\Repository\StudentRepo;
+use Application\Entity\Repository\ExamHasItemRepo;
 
 use Core\Exception\MalformedRequest;
 use Core\Exception\ObjectNotFound;
 use Core\Exception\ObjectNotEnabled;
 use Core\Exception\InconsistentContent;
-use Zend\Crypt\BlockCipher;
-use Zend\Crypt\Symmetric\Mcrypt;
+
+
 
 final class ExamService implements ServiceLocatorAwareInterface
 {	
@@ -28,9 +34,11 @@ final class ExamService implements ServiceLocatorAwareInterface
     
     /**
      * Costruttore di classe
+     * @param ServiceLocatorInterface $serviceLocator
      */
     public function __construct(ServiceLocatorInterface $serviceLocator)
     {
+
     	$this->serviceLocator = $serviceLocator;
     }
     
@@ -49,7 +57,7 @@ final class ExamService implements ServiceLocatorAwareInterface
      */
     private function getStudentRepo()
     {
-    	return $this->getEntityManager()->getRepository('Application\Entity\Student');
+    	return $this->getEntityManager()->getRepository('Student');
     }
     
     /**
@@ -58,7 +66,67 @@ final class ExamService implements ServiceLocatorAwareInterface
      */
     private function getStudentHasCourseHasExamRepo()
     {
-    	return $this->getEntityManager()->getRepository('Application\Entity\StudentHasCourseHasExam');
+    	return $this->getEntityManager()->getRepository('StudentHasCourseHasExam');
+    }
+    
+    /**
+     * Acquisizione di tutto l'esame corrente per lo studente
+     * 
+     * @param StudentHasCourseHasExam $session Sessione corrente
+     * @return array Array dati sessione d'esame
+     */
+    private function getUserExamData(StudentHasCourseHasExam $session)
+    {
+    	$examData = array(
+    			'id' => $session->getExam()->getId(),
+    			'name' => $session->getExam()->getName(),
+    			'description' => $session->getExam()->getDescription(),
+    			'totalitems' => $session->getExam()->getTotalitems(),
+    			'photourl' => $session->getExam()->getImageurl(),
+    			'progress' => $session->getExam()->getProgOnCourse(),
+    			'course' => array(
+    				'id' => $session->getExam()->getCourse()->getId(),
+    				'name' => $session->getExam()->getCourse()->getName(),
+    				'description' => $session->getExam()->getCourse()->getDescription(),
+    			),
+    			'items' => array(),
+    	);
+    	
+    	// Acquisizione items
+    	$gwItems = new ExamHasItemRepo();
+    	$items = $gwItems->findByExam($session->getExam());
+    	$tmpItems = array();
+    	if (!is_null($items)) {
+    		foreach ($items as $eitem) {
+    			/* @var $eitem ExamHasItem */
+    			$tmpItems[$eitem->getProgressive()] = array(
+    		 		'id' => $eitem->getItem()->getId(),
+    		 		'question' => $eitem->getItem()->getQuestion(),
+    		 		'media' => $eitem->getItem()->getImage(),
+    		 		'maxsecs' => $eitem->getItem()->getMaxsecs(),
+    		 		'maxtries' => $eitem->getItem()->getMaxtries(),
+    		 		'type' => $eitem->getItem()->getItemtype()->getId(),
+    				'media' => array(),		
+    		 	);
+    			$images = $eitem->getItem()->getImage();
+    			if (!is_null($images)) {
+    				foreach ($images as $image) {
+    					/* @var $image Image */
+    					$tmpItems[$eitem->getProgressive()]['media'][] = $image->getUrl();
+    				}
+    			}
+    		}
+    	}
+    	$examData['items'] = $tmpItems;
+    	
+    	
+    	$allData = array(
+    		'id' => $session->getId(),
+    		'progressive' => $session->getProgressive(),
+    		'session' => $examData
+    	);
+    	 
+    	return $allData;
     }
     
     /**
@@ -71,69 +139,77 @@ final class ExamService implements ServiceLocatorAwareInterface
      * 3) eventuali sessioni precedenti non completate/iniziate
      * 
      * @param string $token Full request token 
+     * @return array Array dati studente e associazione esame
      */
     public function getExamSessionIdByToken($token)
     {
     	// Validazione campi richiesta
-    	if (strpos($token, ".") === false) throw new MalformedRequest("Token di richiesta non formattato correttamente");
+    	if (strpos($token, ".") === false) 
+    		throw new MalformedRequest("Token di richiesta non inserito");
     	
-    	list($studentToken,$sessionToken) = explode(".",$token);
-    	if (strlen($studentToken) == 0) throw new MalformedRequest("Token richiesta non valido: subtoken studente non inserito");
-    	if (strlen($sessionToken) == 0) throw new MalformedRequest("Token richiesta non valido: subtoken sessione-esame non inserito");
-
+    	$studentToken = substr($token,0,strpos($token, "."));
+    	$sessionToken = substr($token,strpos($token, ".")+1);
+    	
+    	if (!$studentToken || strlen($studentToken) == 0) 
+    		throw new MalformedRequest("Token richiesta non valido: subtoken studente non inserito");
+    	if (!$sessionToken || strlen($sessionToken) == 0)
+    		throw new MalformedRequest("Token richiesta non valido: subtoken sessione-esame non inserito");
+    	
     	// Acquisizione studente
     	$student = $this->getStudentRepo()->findByIdentifier($studentToken);
     	
-    	if (is_null($student)) throw new ObjectNotFound(sprintf("Nessuno studente trovato con identificativo %s",$studentToken));
-    	if ($student->getActivationstatus()->getId() != ActivationStatus::STATUS_ENABLED) throw new ObjectNotEnabled(sprintf("Studente con identificativo %s trovato ma non abilitato",$studentToken));
+    	if (!$student) 
+    		throw new ObjectNotFound(sprintf("Nessuno studente trovato con identificativo %s",$studentToken));
+    	if ($student->getActivationstatus()->getId() != ActivationStatus::STATUS_ENABLED) 
+    		throw new ObjectNotEnabled(sprintf("Studente con identificativo %s trovato ma non abilitato",$studentToken));
 
     	// Acquisizione sessione di esame
     	$session = $this->getStudentHasCourseHasExamRepo()->findByIdentifier($sessionToken);
-    	if (!$session) throw new ObjectNotFound(sprintf("Nessuna sessione d'esame trovata con identificativo %s",$sessionToken));
+    	if (!$session)
+    		throw new ObjectNotFound(sprintf("Nessuna sessione d'esame trovata con identificativo %s",$sessionToken));
 
     	// Controllo incrociato studente/sessione
     	if ($session->getStudentHasCourse()->getStudent() != $student)
     		throw new InconsistentContent(sprintf("Sessione con token %s valida ma non assegnata all'account studente con identificativo %s. Probabile tentativo di hacking",$sessionToken,$studentToken));
     	
-    	// Da qui il processo di validazione e' completato, non ritorna piu exception
+    	// Da qui il processo di validazione è completato
     	$course = $session->getStudentHasCourse()->getCourse();
     	if ($course->getActivationstatus() != ActivationStatus::STATUS_ENABLED) {
     		// Corso disabilitato
-    		return array('student' => $student->getId(),'id' => null,'progress' => null, 'message' => 'Corso disabilitato');
+    		return array('id' => null,'progressive'=> null,'message' => 'Corso disabilitato');
     	}
     	
     	// Tutti gli esami dello studente
-    	$studentCourse = $session->getStudentHasCourse();
+    	$allSessions = $this->getStudentHasCourseHasExamRepo()->findByStudentOnCourse($session->getStudentHasCourse()->getId());
     	
-    	$allSessions = $this->getStudentHasCourseHasExamRepo()->findByStudentOnCourse($studentCourse);
-    	
-    	$studentDataArr = array(
-    		'id' => $student->getId(),
-    		'email' => $student->getEmail(),
-    		'firstname' => $student->getFirstname(),
-    		'lastname' => $student->getLastname()
-    	);
-    	
-    	// Sessione corrente gia' completata?
+    	// Sessione corrente già completata?
     	if ($session->getCompleted()) {
-			foreach ($allSessions as $sess) {
+
+    		foreach ($allSessions as $sess) {
     			/* @var $sess StudentHasCourseHasExam */
     			if ($sess->getCompleted() === 0 && $sess->getStartDate() < new \DateTime()) {
     				// Trovata sessione successiva
-    				return array('student'=> $studentDataArr, 'id' => $sess->getId(),'progress' => $sess->getProgressive(),'message' => 'Sessione successiva iniziata e non completata');
+    				$retval = $this->getUserExamData($sess);
+    				$retval['message'] = 'Sessione successiva iniziata e non completata';
+    				return $retval;
     			} 
     		} 
-    		return array('student'=> $studentDataArr,'id' => null,'message' => 'Tutte le sessioni sono terminate');
+    		return array('id' => null,'progressive' => null,'message' => 'Tutte le sessioni sono terminate');
     	} else {
     		foreach ($allSessions as $sess) {
     			/* @var $sess StudentHasCourseHasExam */
     			if ($sess->getCompleted() === 0 && $sess->getStartDate() < new \DateTime()) {
     				// Trovata sessione successiva
-    				if ($sess == $session) return array('student'=> $studentDataArr,'id' => $session->getId(),'progress' => $session->getProgressive(),'message' => null); 
-    				return array('student'=> $studentDataArr,'id' => $sess->getId(),'progress'=> $sess->getProgressive(),'message' => 'Sessione precedente iniziata e non completata');
+    				if ($sess == $session) {
+    					$retval = $this->getUserExamData($sess);
+    					$retval['message'] = '';
+    				} else {
+    					$retval = $this->getUserExamData($sess);
+    					$retval['message'] = 'Sessione precedente iniziata da completare';
+    				}
+    				return $retval;
     			}
     		}
-    		return array('student'=> $studentDataArr,'id' => null,'message' => 'Nessuna sessione ancora disponibile');
     	}
 	} 
 }
