@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * ItemHasAnswer
  *
  * @ORM\Table(name="item_has_answer", indexes={@ORM\Index(name="fk_item_has_answer_answer1_idx", columns={"answer_id"}), @ORM\Index(name="fk_item_has_answer_item1_idx", columns={"item_id"})})
- * @ORM\Entity(repositoryClass="Application\Entity\Repository\ItemHasAnswerRepo")(repositoryClass="Application\Entity\Repository\ItemHasAnswerRepo")(repositoryClass="Application\Entity\Repository\ItemHasAnswerRepo")
+ * @ORM\Entity(repositoryClass="Application\Entity\Repository\ItemHasAnswerRepo")(repositoryClass="Application\Entity\Repository\ItemHasAnswerRepo")(repositoryClass="Application\Entity\Repository\ItemHasAnswerRepo")(repositoryClass="Application\Entity\Repository\ItemHasAnswerRepo")(repositoryClass="Application\Entity\Repository\ItemHasAnswerRepo")
  */
 class ItemHasAnswer
 {

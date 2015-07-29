@@ -99,7 +99,7 @@ final class ExamService implements ServiceLocatorAwareInterface
     	$course = $session->getStudentHasCourse()->getCourse();
     	if ($course->getActivationstatus() != ActivationStatus::STATUS_ENABLED) {
     		// Corso disabilitato
-    		return array('id' => null,'message' => 'Corso disabilitato');
+    		return array('student' => $student->getId(),'id' => null,'progress' => null, 'message' => 'Corso disabilitato');
     	}
     	
     	// Tutti gli esami dello studente
@@ -107,26 +107,33 @@ final class ExamService implements ServiceLocatorAwareInterface
     	
     	$allSessions = $this->getStudentHasCourseHasExamRepo()->findByStudentOnCourse($studentCourse);
     	
+    	$studentDataArr = array(
+    		'id' => $student->getId(),
+    		'email' => $student->getEmail(),
+    		'firstname' => $student->getFirstname(),
+    		'lastname' => $student->getLastname()
+    	);
+    	
     	// Sessione corrente gia' completata?
     	if ($session->getCompleted()) {
 			foreach ($allSessions as $sess) {
     			/* @var $sess StudentHasCourseHasExam */
     			if ($sess->getCompleted() === 0 && $sess->getStartDate() < new \DateTime()) {
     				// Trovata sessione successiva
-    				return array('id' => $sess->getEx(),'message' => 'Sessione successiva iniziata e non completata');
+    				return array('student'=> $studentDataArr, 'id' => $sess->getId(),'progress' => $sess->getProgressive(),'message' => 'Sessione successiva iniziata e non completata');
     			} 
     		} 
-    		return array('id' => null,'message' => 'Tutte le sessioni sono terminate');
+    		return array('student'=> $studentDataArr,'id' => null,'message' => 'Tutte le sessioni sono terminate');
     	} else {
     		foreach ($allSessions as $sess) {
     			/* @var $sess StudentHasCourseHasExam */
     			if ($sess->getCompleted() === 0 && $sess->getStartDate() < new \DateTime()) {
     				// Trovata sessione successiva
-    				if ($sess == $session) return array('id' => $session->getId(),'message' => null); 
-    				return array('id' => $sess->getId(),'message' => 'Sessione precedente iniziata e non completata');
+    				if ($sess == $session) return array('student'=> $studentDataArr,'id' => $session->getId(),'progress' => $session->getProgressive(),'message' => null); 
+    				return array('student'=> $studentDataArr,'id' => $sess->getId(),'progress'=> $sess->getProgressive(),'message' => 'Sessione precedente iniziata e non completata');
     			}
     		}
-    		return array('id' => null,'message' => 'Nessuna sessione ancora disponibile');
+    		return array('student'=> $studentDataArr,'id' => null,'message' => 'Nessuna sessione ancora disponibile');
     	}
 	} 
 }

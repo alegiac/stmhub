@@ -192,7 +192,7 @@ CREATE TABLE `exam` (
   PRIMARY KEY (`id`),
   KEY `fk_exam_course1_idx` (`course_id`),
   CONSTRAINT `fk_exam_course1` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -213,7 +213,7 @@ CREATE TABLE `exam_has_item` (
   KEY `fk_exam_has_item_exam1_idx` (`exam_id`),
   CONSTRAINT `fk_exam_has_item_exam1` FOREIGN KEY (`exam_id`) REFERENCES `exam` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_exam_has_item_item1` FOREIGN KEY (`item_id`) REFERENCES `item` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -251,7 +251,7 @@ CREATE TABLE `item` (
   KEY `fk_item_item1_idx` (`item_id`),
   CONSTRAINT `fk_item_item1` FOREIGN KEY (`item_id`) REFERENCES `item` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_item_itemtype1` FOREIGN KEY (`itemtype_id`) REFERENCES `itemtype` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -350,6 +350,7 @@ CREATE TABLE `student_has_course_has_exam` (
   `points` int(11) NOT NULL,
   `answer` text,
   `token` varchar(45) NOT NULL,
+  `progressive` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `fk_student_has_course_has_exam_exam1_idx` (`exam_id`),
   KEY `fk_student_has_course_has_exam_student_has_course1_idx` (`student_has_course_id`),
@@ -425,4 +426,4 @@ CREATE TABLE `weekday` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-07-27 14:37:29
+-- Dump completed on 2015-07-29 12:29:52

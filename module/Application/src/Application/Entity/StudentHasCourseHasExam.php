@@ -71,6 +71,13 @@ class StudentHasCourseHasExam
     private $token;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="progressive", type="integer", nullable=false)
+     */
+    private $progressive = '0';
+
+    /**
      * @var \Application\Entity\Exam
      *
      * @ORM\ManyToOne(targetEntity="Application\Entity\Exam")
@@ -268,6 +275,30 @@ class StudentHasCourseHasExam
     public function getToken()
     {
         return $this->token;
+    }
+
+    /**
+     * Set progressive
+     *
+     * @param integer $progressive
+     *
+     * @return StudentHasCourseHasExam
+     */
+    public function setProgressive($progressive)
+    {
+        $this->progressive = $progressive;
+
+        return $this;
+    }
+
+    /**
+     * Get progressive
+     *
+     * @return integer
+     */
+    public function getProgressive()
+    {
+        return $this->progressive;
     }
 
     /**

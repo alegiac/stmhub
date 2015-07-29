@@ -37,7 +37,7 @@ return array(
             ),
         	
         	'exam_token' => array(
-        		'type' => 'segment',
+        		'type' => 'Segment',
         		'options' => array(
         			'route' => '/exam/token/:tkn[/]',
         			'constraints' => array(
@@ -47,6 +47,31 @@ return array(
         				'__NAMESPACE__' => 'Application\Controller',
         				'controller' => 'Exam',
         				'action' => 'index',
+        			),
+        		),
+        		'may_terminate' => true,
+        	),
+        	'exam_participate' => array(
+        		'type' => 'Segment',
+        		'options' => array(
+        			'route' => '/exam/participate',
+        			'constraints' => array(),
+        			'defaults' => array(
+        				'__NAMESPACE__' => 'Application\Controller',
+        				'controller' => 'Exam',
+        				'action' => 'participate',
+        			),
+        		),
+        		'may_terminate' => true,
+			),
+        	'exam_error' => array(
+        		'type' => 'Segment',
+        		'options' => array(
+        			'route' => '/exam/error',
+        			'defaults' => array(
+        				'__NAMESPACE__' => 'Application\Controller',
+        				'controller' => 'Exam',
+        				'action' => 'error'
         			),
         		),
         		'may_terminate' => true,
