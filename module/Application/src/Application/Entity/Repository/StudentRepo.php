@@ -21,7 +21,6 @@ class StudentRepo extends \Doctrine\ORM\EntityRepository
 	public function findByIdentifier($identifier)
 	{
 		$criteria = Criteria::create()->where(Criteria::expr()->eq('identifier', $identifier));
-		var_dump($criteria);die();
 		$result = $this->matching($criteria);
 		if ($result->count()) return($result->last());
 		return null;

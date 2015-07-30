@@ -85,11 +85,27 @@ class Item
     private $image;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Application\Entity\Option", inversedBy="item")
+     * @ORM\JoinTable(name="item_has_option",
+     *   joinColumns={
+     *     @ORM\JoinColumn(name="item_id", referencedColumnName="id")
+     *   },
+     *   inverseJoinColumns={
+     *     @ORM\JoinColumn(name="option_id", referencedColumnName="id")
+     *   }
+     * )
+     */
+    private $option;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->image = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->option = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
 
@@ -279,5 +295,39 @@ class Item
     public function getImage()
     {
         return $this->image;
+    }
+
+    /**
+     * Add option
+     *
+     * @param \Application\Entity\Option $option
+     *
+     * @return Item
+     */
+    public function addOption(\Application\Entity\Option $option)
+    {
+        $this->option[] = $option;
+
+        return $this;
+    }
+
+    /**
+     * Remove option
+     *
+     * @param \Application\Entity\Option $option
+     */
+    public function removeOption(\Application\Entity\Option $option)
+    {
+        $this->option->removeElement($option);
+    }
+
+    /**
+     * Get option
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getOption()
+    {
+        return $this->option;
     }
 }

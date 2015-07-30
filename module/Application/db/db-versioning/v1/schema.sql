@@ -273,6 +273,24 @@ CREATE TABLE `item_has_image` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `item_has_option`
+--
+
+DROP TABLE IF EXISTS `item_has_option`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `item_has_option` (
+  `item_id` bigint(20) NOT NULL,
+  `option_id` int(11) NOT NULL,
+  PRIMARY KEY (`item_id`,`option_id`),
+  KEY `fk_item_has_option_option1_idx` (`option_id`),
+  KEY `fk_item_has_option_item1_idx` (`item_id`),
+  CONSTRAINT `fk_item_has_option_item1` FOREIGN KEY (`item_id`) REFERENCES `item` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_item_has_option_option1` FOREIGN KEY (`option_id`) REFERENCES `option` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `itemtype`
 --
 
@@ -282,6 +300,22 @@ DROP TABLE IF EXISTS `itemtype`;
 CREATE TABLE `itemtype` (
   `id` int(11) NOT NULL,
   `name` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `option`
+--
+
+DROP TABLE IF EXISTS `option`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `option` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `points` int(11) DEFAULT NULL,
+  `expectedpos` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -307,6 +341,30 @@ CREATE TABLE `student` (
   KEY `fk_student_activationstatus1_idx` (`activationstatus_id`),
   CONSTRAINT `fk_student_activationstatus1` FOREIGN KEY (`activationstatus_id`) REFERENCES `activationstatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `student_has_answered_to_item`
+--
+
+DROP TABLE IF EXISTS `student_has_answered_to_item`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `student_has_answered_to_item` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `student_has_course_has_exam_id` bigint(20) NOT NULL,
+  `item_id` bigint(20) NOT NULL,
+  `option_id` int(11) NOT NULL,
+  `points` int(11) NOT NULL,
+  `insert_date` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_student_has_answered_to_item_student_has_course_has_exam_idx` (`student_has_course_has_exam_id`),
+  KEY `fk_student_has_answered_to_item_item1_idx` (`item_id`),
+  KEY `fk_student_has_answered_to_item_option1_idx` (`option_id`),
+  CONSTRAINT `fk_student_has_answered_to_item_item1` FOREIGN KEY (`item_id`) REFERENCES `item` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_student_has_answered_to_item_option1` FOREIGN KEY (`option_id`) REFERENCES `option` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_student_has_answered_to_item_student_has_course_has_exam1` FOREIGN KEY (`student_has_course_has_exam_id`) REFERENCES `student_has_course_has_exam` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -426,4 +484,4 @@ CREATE TABLE `weekday` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-07-29 12:29:52
+-- Dump completed on 2015-07-30  9:26:27

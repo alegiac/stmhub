@@ -57,7 +57,7 @@ final class ExamService implements ServiceLocatorAwareInterface
      */
     private function getStudentRepo()
     {
-    	return $this->getEntityManager()->getRepository('Student');
+    	return $this->getEntityManager()->getRepository('Application\Entity\Student');
     }
     
     /**
@@ -66,7 +66,16 @@ final class ExamService implements ServiceLocatorAwareInterface
      */
     private function getStudentHasCourseHasExamRepo()
     {
-    	return $this->getEntityManager()->getRepository('StudentHasCourseHasExam');
+    	return $this->getEntityManager()->getRepository('Application\Entity\StudentHasCourseHasExam');
+    }
+    
+    /**
+     * Acquisizione repository exam_has_item
+     * @return ExamHasItemRepo
+     */
+    private function getExamHasItemRepo()
+    {
+    	return $this->getEntityManager()->getRepository('Application\Entity\ExamHasItem');
     }
     
     /**
@@ -93,7 +102,7 @@ final class ExamService implements ServiceLocatorAwareInterface
     	);
     	
     	// Acquisizione items
-    	$gwItems = new ExamHasItemRepo();
+    	$gwItems = $this->getExamHasItemRepo();
     	$items = $gwItems->findByExam($session->getExam());
     	$tmpItems = array();
     	if (!is_null($items)) {
@@ -157,7 +166,6 @@ final class ExamService implements ServiceLocatorAwareInterface
     	
     	// Acquisizione studente
     	$student = $this->getStudentRepo()->findByIdentifier($studentToken);
-    	
     	if (!$student) 
     		throw new ObjectNotFound(sprintf("Nessuno studente trovato con identificativo %s",$studentToken));
     	if ($student->getActivationstatus()->getId() != ActivationStatus::STATUS_ENABLED) 
@@ -172,7 +180,7 @@ final class ExamService implements ServiceLocatorAwareInterface
     	if ($session->getStudentHasCourse()->getStudent() != $student)
     		throw new InconsistentContent(sprintf("Sessione con token %s valida ma non assegnata all'account studente con identificativo %s. Probabile tentativo di hacking",$sessionToken,$studentToken));
     	
-    	// Da qui il processo di validazione è completato
+    	// Da qui il processo di validazione ï¿½ completato
     	$course = $session->getStudentHasCourse()->getCourse();
     	if ($course->getActivationstatus() != ActivationStatus::STATUS_ENABLED) {
     		// Corso disabilitato
@@ -180,9 +188,9 @@ final class ExamService implements ServiceLocatorAwareInterface
     	}
     	
     	// Tutti gli esami dello studente
-    	$allSessions = $this->getStudentHasCourseHasExamRepo()->findByStudentOnCourse($session->getStudentHasCourse()->getId());
+    	$allSessions = $this->getStudentHasCourseHasExamRepo()->findByStudentOnCourse($session->getStudentHasCourse());
     	
-    	// Sessione corrente già completata?
+    	// Sessione corrente giï¿½ completata?
     	if ($session->getCompleted()) {
 
     		foreach ($allSessions as $sess) {

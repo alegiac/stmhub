@@ -43,7 +43,7 @@ class ExamController extends AbstractActionController
 		try {
 			// 2 - Verifica stato token
 			$res = $this->getExamService()->getExamSessionIdByToken($stmt);
-			
+			print_r($res);die();
 			// Salvataggio token in sessione
 			$this->session->student = $res['student'];
 			
@@ -54,10 +54,11 @@ class ExamController extends AbstractActionController
 			if (strlen($res['message']) > 0 && is_null($res['id'])) {
 				$this->redirect()->toRoute('exam_error');
 			} else {
-				$this->session->exam = $this->getExamService()->getUserExamData($res['id']);
+				//$this->session->exam = $this->getExamService()->getUserExamData($res['id']);
 				$this->redirect()->toRoute('exam_participate');
 			}
 		} catch (\Exception $e) {
+			print_r($e);die();
 			// 4 - Gestione eccezioni
 			$this->getServiceLocator()->get("Logger")->err("Exception loading exam/student data. Message: ".$e->getMessage());
 			$this->getServiceLocator()->get("Logger")->info("Stack Trace: ".$e->getTraceAsString());
