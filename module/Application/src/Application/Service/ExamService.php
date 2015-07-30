@@ -85,11 +85,7 @@ final class ExamService implements ServiceLocatorAwareInterface
      */
     private function getResponseTemplate($message = "")
     {
-    	return array (
-    		'id' => null,
-    		'progressive' => null,
-    		'message' => $message
-    	);	
+  
     }
     
     /**
@@ -98,8 +94,15 @@ final class ExamService implements ServiceLocatorAwareInterface
      * @param StudentHasCourseHasExam $session Sessione corrente
      * @return array Array dati sessione d'esame
      */
-    private function getUserExamData(StudentHasCourseHasExam $session)
+    private function getUserExamData(StudentHasCourseHasExam $session,$message = "")
     {
+    	if (is_null($session)) {
+    		return array (
+    			'id' => null,
+    			'message' => $message
+    		);
+    	}
+    	
     	$examData = array(
     			'exam' => array(
     				'id' => $session->getExam()->getId(),
@@ -141,7 +144,10 @@ final class ExamService implements ServiceLocatorAwareInterface
     			if (count($images)) {
     				foreach ($images as $image) {
     					/* @var $image Image */
-    					$tmpItems[$eitem->getProgressive()]['media'][] = $image->getUrl();
+    					$tmpItems[$eitem->getProgressive()]['media'][] = array(
+    						'url' => $image->getUrl(),
+    						'type' => $image->getMediatype()->getId(),
+    					);
     				}
     			}
     			// Carica opzioni
@@ -159,12 +165,14 @@ final class ExamService implements ServiceLocatorAwareInterface
     	// Acquisizione numero dell'item da processare
     	
     	return array(
+    		'id' => $session->getId(),
     		'session' => $examData,
     		'student' => array(
     			'id' => $session->getStudentHasCourse()->getStudent()->getId(),
     			'firstname' => $session->getStudentHasCourse()->getStudent()->getFirstname(),
     			'lastname' => $session->getStudentHasCourse()->getStudent()->getLastname(),
-    		)
+    		),
+    		'message' => $message
     	);
     }
     
@@ -214,7 +222,7 @@ final class ExamService implements ServiceLocatorAwareInterface
     	$course = $session->getStudentHasCourse()->getCourse();
     	if ($course->getActivationstatus() != ActivationStatus::STATUS_ENABLED) {
     		// Corso disabilitato
-    		return $this->getResponseTemplate("Corso disabilitato");
+    		return $this->getUserExamData(null,"Corso disabilitato");
     	}
     	
     	// Tutti gli esami dello studente
@@ -227,19 +235,19 @@ final class ExamService implements ServiceLocatorAwareInterface
     			/* @var $sess StudentHasCourseHasExam */
     			if ($sess->getCompleted() === 0 && $sess->getStartDate() < new \DateTime()) {
     				// Trovata sessione successiva
-    				return  array_merge($this->getUserExamData($sess),$this->getResponseTemplate('Sessione successiva iniziata da completare'));
+    				return $this->getUserExamData($sess,'Sessione successiva iniziata da completare');
     			} 
     		} 
-    		return $this->getResponseTemplate('Tutte le sessioni sono terminate');
+    		return $this->getUserExamData(null,'Tutte le sessioni sono terminate');
     	} else {
     		foreach ($allSessions as $sess) {
     			/* @var $sess StudentHasCourseHasExam */
     			if ($sess->getCompleted() === 0 && $sess->getStartDate() < new \DateTime()) {
     				// Trovata sessione successiva
     				if ($sess == $session) {
-    					return  array_merge($this->getUserExamData($sess),$this->getResponseTemplate(''));
+    					return $this->getUserExamData($sess);
     				} 
-    				return  array_merge($this->getUserExamData($sess),$this->getResponseTemplate('Sessione precedente iniziata da completare'));
+    				return $this->getUserExamData($sess,'Sessione precedente iniziata da completare');
     			}
     		}
     	}

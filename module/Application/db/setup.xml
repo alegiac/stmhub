@@ -29,6 +29,7 @@
 	      	<transaction src="${basePath}/db-versioning/v1/filldata/activationstatus.sql" />
 	      	<transaction src="${basePath}/db-versioning/v1/filldata/weekday.sql" />
 	      	<transaction src="${basePath}/db-versioning/v1/filldata/itemtype.sql" />
+	      	<transaction src="${basePath}/db-versioning/v1/filldata/mediatype.sql" />
 	    </pdosqlexec>			
 	</target>
 	<target name="test-fixtures">

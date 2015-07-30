@@ -92,9 +92,13 @@
 	        			</div>
 	        		</div>
 	        		<div class="card-body card-padding">
-	        			<h2>Quesito n°{$itemProgressive}</h2>
-	        			<hr>
-	        			<h4>{$itemQuestion}</h4>
+	        			<div class="row">
+	        				<h2>Quesito {$itemProgressive}</h2>
+	        				<br>
+	        				{$media}
+	        				<hr>
+	        				<h4>{$itemQuestion}</h4>
+						</div>
 	        		</div>
 	        	</div>
 			</div>

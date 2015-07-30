@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Image
  *
- * @ORM\Table(name="image")
+ * @ORM\Table(name="image", indexes={@ORM\Index(name="fk_image_mediatype1_idx", columns={"mediatype_id"})})
  * @ORM\Entity(repositoryClass="Application\Entity\Repository\ImageRepo")
  */
 class Image
@@ -34,6 +34,16 @@ class Image
      * @ORM\Column(name="url", type="string", length=255, nullable=false)
      */
     private $url;
+
+    /**
+     * @var \Application\Entity\Mediatype
+     *
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Mediatype")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="mediatype_id", referencedColumnName="id")
+     * })
+     */
+    private $mediatype;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -107,6 +117,30 @@ class Image
     public function getUrl()
     {
         return $this->url;
+    }
+
+    /**
+     * Set mediatype
+     *
+     * @param \Application\Entity\Mediatype $mediatype
+     *
+     * @return Image
+     */
+    public function setMediatype(\Application\Entity\Mediatype $mediatype = null)
+    {
+        $this->mediatype = $mediatype;
+
+        return $this;
+    }
+
+    /**
+     * Get mediatype
+     *
+     * @return \Application\Entity\Mediatype
+     */
+    public function getMediatype()
+    {
+        return $this->mediatype;
     }
 
     /**
