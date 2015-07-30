@@ -87,17 +87,17 @@ class Item
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\ManyToMany(targetEntity="Application\Entity\Option", inversedBy="item")
-     * @ORM\JoinTable(name="item_has_option",
+     * @ORM\ManyToMany(targetEntity="Application\Entity\Itemoption", inversedBy="item")
+     * @ORM\JoinTable(name="item_has_itemoption",
      *   joinColumns={
      *     @ORM\JoinColumn(name="item_id", referencedColumnName="id")
      *   },
      *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="option_id", referencedColumnName="id")
+     *     @ORM\JoinColumn(name="itemoption_id", referencedColumnName="id")
      *   }
      * )
      */
-    private $option;
+    private $itemoption;
 
     /**
      * Constructor
@@ -105,7 +105,7 @@ class Item
     public function __construct()
     {
         $this->image = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->option = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->itemoption = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
 
@@ -298,36 +298,36 @@ class Item
     }
 
     /**
-     * Add option
+     * Add itemoption
      *
-     * @param \Application\Entity\Option $option
+     * @param \Application\Entity\Itemoption $itemoption
      *
      * @return Item
      */
-    public function addOption(\Application\Entity\Option $option)
+    public function addItemoption(\Application\Entity\Itemoption $itemoption)
     {
-        $this->option[] = $option;
+        $this->itemoption[] = $itemoption;
 
         return $this;
     }
 
     /**
-     * Remove option
+     * Remove itemoption
      *
-     * @param \Application\Entity\Option $option
+     * @param \Application\Entity\Itemoption $itemoption
      */
-    public function removeOption(\Application\Entity\Option $option)
+    public function removeItemoption(\Application\Entity\Itemoption $itemoption)
     {
-        $this->option->removeElement($option);
+        $this->itemoption->removeElement($itemoption);
     }
 
     /**
-     * Get option
+     * Get itemoption
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getOption()
+    public function getItemoption()
     {
-        return $this->option;
+        return $this->itemoption;
     }
 }

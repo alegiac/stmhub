@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * StudentHasAnsweredToItem
  *
- * @ORM\Table(name="student_has_answered_to_item", indexes={@ORM\Index(name="fk_student_has_answered_to_item_student_has_course_has_exam_idx", columns={"student_has_course_has_exam_id"}), @ORM\Index(name="fk_student_has_answered_to_item_item1_idx", columns={"item_id"}), @ORM\Index(name="fk_student_has_answered_to_item_option1_idx", columns={"option_id"})})
+ * @ORM\Table(name="student_has_answered_to_item", indexes={@ORM\Index(name="fk_student_has_answered_to_item_student_has_course_has_exam_idx", columns={"student_has_course_has_exam_id"}), @ORM\Index(name="fk_student_has_answered_to_item_item1_idx", columns={"item_id"})})
  * @ORM\Entity(repositoryClass="Application\Entity\Repository\StudentHasAnsweredToItemRepo")
  */
 class StudentHasAnsweredToItem
@@ -24,6 +24,13 @@ class StudentHasAnsweredToItem
     /**
      * @var integer
      *
+     * @ORM\Column(name="option_id", type="integer", nullable=false)
+     */
+    private $optionId;
+
+    /**
+     * @var integer
+     *
      * @ORM\Column(name="points", type="integer", nullable=false)
      */
     private $points;
@@ -36,6 +43,13 @@ class StudentHasAnsweredToItem
     private $insertDate;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="value", type="text", length=65535, nullable=false)
+     */
+    private $value;
+
+    /**
      * @var \Application\Entity\Item
      *
      * @ORM\ManyToOne(targetEntity="Application\Entity\Item")
@@ -44,16 +58,6 @@ class StudentHasAnsweredToItem
      * })
      */
     private $item;
-
-    /**
-     * @var \Application\Entity\Option
-     *
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Option")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="option_id", referencedColumnName="id")
-     * })
-     */
-    private $option;
 
     /**
      * @var \Application\Entity\StudentHasCourseHasExam
@@ -75,6 +79,30 @@ class StudentHasAnsweredToItem
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set optionId
+     *
+     * @param integer $optionId
+     *
+     * @return StudentHasAnsweredToItem
+     */
+    public function setOptionId($optionId)
+    {
+        $this->optionId = $optionId;
+
+        return $this;
+    }
+
+    /**
+     * Get optionId
+     *
+     * @return integer
+     */
+    public function getOptionId()
+    {
+        return $this->optionId;
     }
 
     /**
@@ -126,6 +154,30 @@ class StudentHasAnsweredToItem
     }
 
     /**
+     * Set value
+     *
+     * @param string $value
+     *
+     * @return StudentHasAnsweredToItem
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get value
+     *
+     * @return string
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
      * Set item
      *
      * @param \Application\Entity\Item $item
@@ -147,30 +199,6 @@ class StudentHasAnsweredToItem
     public function getItem()
     {
         return $this->item;
-    }
-
-    /**
-     * Set option
-     *
-     * @param \Application\Entity\Option $option
-     *
-     * @return StudentHasAnsweredToItem
-     */
-    public function setOption(\Application\Entity\Option $option = null)
-    {
-        $this->option = $option;
-
-        return $this;
-    }
-
-    /**
-     * Get option
-     *
-     * @return \Application\Entity\Option
-     */
-    public function getOption()
-    {
-        return $this->option;
     }
 
     /**

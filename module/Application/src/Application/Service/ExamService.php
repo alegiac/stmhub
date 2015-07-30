@@ -16,6 +16,7 @@ use Application\Entity\StudentHasCourseHasExam;
 use Application\Entity\ExamHasItem;
 use Application\Entity\Item;
 use Application\Entity\Image;
+use Application\Entity\Itemoption;
 
 use Application\Entity\Repository\StudentHasCourseHasExamRepo;
 use Application\Entity\Repository\StudentRepo;
@@ -25,8 +26,6 @@ use Core\Exception\MalformedRequest;
 use Core\Exception\ObjectNotFound;
 use Core\Exception\ObjectNotEnabled;
 use Core\Exception\InconsistentContent;
-
-
 
 final class ExamService implements ServiceLocatorAwareInterface
 {	
@@ -77,6 +76,21 @@ final class ExamService implements ServiceLocatorAwareInterface
     {
     	return $this->getEntityManager()->getRepository('Application\Entity\ExamHasItem');
     }
+   
+    /**
+     * Acquisizione di un risultato null/template
+     * 
+     * @param String $message Messaggio eventuale
+     * @return array Array di dati template/nulli
+     */
+    private function getResponseTemplate($message = "")
+    {
+    	return array (
+    		'id' => null,
+    		'progressive' => null,
+    		'message' => $message
+    	);	
+    }
     
     /**
      * Acquisizione di tutto l'esame corrente per lo studente
@@ -87,17 +101,20 @@ final class ExamService implements ServiceLocatorAwareInterface
     private function getUserExamData(StudentHasCourseHasExam $session)
     {
     	$examData = array(
-    			'id' => $session->getExam()->getId(),
-    			'name' => $session->getExam()->getName(),
-    			'description' => $session->getExam()->getDescription(),
-    			'totalitems' => $session->getExam()->getTotalitems(),
-    			'photourl' => $session->getExam()->getImageurl(),
-    			'progress' => $session->getExam()->getProgOnCourse(),
+    			'exam' => array(
+    				'id' => $session->getExam()->getId(),
+    				'name' => $session->getExam()->getName(),
+    				'description' => $session->getExam()->getDescription(),
+    				'totalitems' => $session->getExam()->getTotalitems(),
+    				'photourl' => $session->getExam()->getImageurl(),
+    				'progress' => $session->getExam()->getProgOnCourse(),
+    			),
     			'course' => array(
     				'id' => $session->getExam()->getCourse()->getId(),
     				'name' => $session->getExam()->getCourse()->getName(),
     				'description' => $session->getExam()->getCourse()->getDescription(),
     			),
+    			'progress' => $session->getProgressive(),
     			'items' => array(),
     	);
     	
@@ -115,27 +132,40 @@ final class ExamService implements ServiceLocatorAwareInterface
     		 		'maxsecs' => $eitem->getItem()->getMaxsecs(),
     		 		'maxtries' => $eitem->getItem()->getMaxtries(),
     		 		'type' => $eitem->getItem()->getItemtype()->getId(),
-    				'media' => array(),		
+    				'media' => array(),
+    				'options' => array(),		
     		 	);
+    			
+    			// Carica immagini/media
     			$images = $eitem->getItem()->getImage();
-    			if (!is_null($images)) {
+    			if (count($images)) {
     				foreach ($images as $image) {
     					/* @var $image Image */
     					$tmpItems[$eitem->getProgressive()]['media'][] = $image->getUrl();
+    				}
+    			}
+    			// Carica opzioni
+    			$options = $eitem->getItem()->getItemoption();
+    			if (count($options)) {
+    				foreach ($options as $option) {
+    					/* @var $option Itemoption */
+    					$tmpItems[$eitem->getProgressive()]['options'][] = array('id' => $option->getId(),'value' => $option->getName());
     				}
     			}
     		}
     	}
     	$examData['items'] = $tmpItems;
     	
+    	// Acquisizione numero dell'item da processare
     	
-    	$allData = array(
-    		'id' => $session->getId(),
-    		'progressive' => $session->getProgressive(),
-    		'session' => $examData
+    	return array(
+    		'session' => $examData,
+    		'student' => array(
+    			'id' => $session->getStudentHasCourse()->getStudent()->getId(),
+    			'firstname' => $session->getStudentHasCourse()->getStudent()->getFirstname(),
+    			'lastname' => $session->getStudentHasCourse()->getStudent()->getLastname(),
+    		)
     	);
-    	 
-    	return $allData;
     }
     
     /**
@@ -180,42 +210,36 @@ final class ExamService implements ServiceLocatorAwareInterface
     	if ($session->getStudentHasCourse()->getStudent() != $student)
     		throw new InconsistentContent(sprintf("Sessione con token %s valida ma non assegnata all'account studente con identificativo %s. Probabile tentativo di hacking",$sessionToken,$studentToken));
     	
-    	// Da qui il processo di validazione � completato
+    	// Da qui il processo di validazione e' completato
     	$course = $session->getStudentHasCourse()->getCourse();
     	if ($course->getActivationstatus() != ActivationStatus::STATUS_ENABLED) {
     		// Corso disabilitato
-    		return array('id' => null,'progressive'=> null,'message' => 'Corso disabilitato');
+    		return $this->getResponseTemplate("Corso disabilitato");
     	}
     	
     	// Tutti gli esami dello studente
     	$allSessions = $this->getStudentHasCourseHasExamRepo()->findByStudentOnCourse($session->getStudentHasCourse());
     	
-    	// Sessione corrente gi� completata?
+    	// Sessione corrente gia' completata?
     	if ($session->getCompleted()) {
 
     		foreach ($allSessions as $sess) {
     			/* @var $sess StudentHasCourseHasExam */
     			if ($sess->getCompleted() === 0 && $sess->getStartDate() < new \DateTime()) {
     				// Trovata sessione successiva
-    				$retval = $this->getUserExamData($sess);
-    				$retval['message'] = 'Sessione successiva iniziata e non completata';
-    				return $retval;
+    				return  array_merge($this->getUserExamData($sess),$this->getResponseTemplate('Sessione successiva iniziata da completare'));
     			} 
     		} 
-    		return array('id' => null,'progressive' => null,'message' => 'Tutte le sessioni sono terminate');
+    		return $this->getResponseTemplate('Tutte le sessioni sono terminate');
     	} else {
     		foreach ($allSessions as $sess) {
     			/* @var $sess StudentHasCourseHasExam */
     			if ($sess->getCompleted() === 0 && $sess->getStartDate() < new \DateTime()) {
     				// Trovata sessione successiva
     				if ($sess == $session) {
-    					$retval = $this->getUserExamData($sess);
-    					$retval['message'] = '';
-    				} else {
-    					$retval = $this->getUserExamData($sess);
-    					$retval['message'] = 'Sessione precedente iniziata da completare';
-    				}
-    				return $retval;
+    					return  array_merge($this->getUserExamData($sess),$this->getResponseTemplate(''));
+    				} 
+    				return  array_merge($this->getUserExamData($sess),$this->getResponseTemplate('Sessione precedente iniziata da completare'));
     			}
     		}
     	}

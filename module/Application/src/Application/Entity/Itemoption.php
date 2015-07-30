@@ -5,12 +5,12 @@ namespace Application\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Option
+ * Itemoption
  *
- * @ORM\Table(name="option")
- * @ORM\Entity(repositoryClass="Application\Entity\Repository\OptionRepo")
+ * @ORM\Table(name="itemoption")
+ * @ORM\Entity(repositoryClass="Application\Entity\Repository\ItemoptionRepo")
  */
-class Option
+class Itemoption
 {
     /**
      * @var integer
@@ -31,21 +31,14 @@ class Option
     /**
      * @var integer
      *
-     * @ORM\Column(name="points", type="integer", nullable=true)
+     * @ORM\Column(name="points", type="integer", nullable=false)
      */
     private $points;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="expectedpos", type="integer", nullable=true)
-     */
-    private $expectedpos = '0';
-
-    /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\ManyToMany(targetEntity="Application\Entity\Item", mappedBy="option")
+     * @ORM\ManyToMany(targetEntity="Application\Entity\Item", mappedBy="itemoption")
      */
     private $item;
 
@@ -73,7 +66,7 @@ class Option
      *
      * @param string $name
      *
-     * @return Option
+     * @return Itemoption
      */
     public function setName($name)
     {
@@ -97,7 +90,7 @@ class Option
      *
      * @param integer $points
      *
-     * @return Option
+     * @return Itemoption
      */
     public function setPoints($points)
     {
@@ -117,35 +110,11 @@ class Option
     }
 
     /**
-     * Set expectedpos
-     *
-     * @param integer $expectedpos
-     *
-     * @return Option
-     */
-    public function setExpectedpos($expectedpos)
-    {
-        $this->expectedpos = $expectedpos;
-
-        return $this;
-    }
-
-    /**
-     * Get expectedpos
-     *
-     * @return integer
-     */
-    public function getExpectedpos()
-    {
-        return $this->expectedpos;
-    }
-
-    /**
      * Add item
      *
      * @param \Application\Entity\Item $item
      *
-     * @return Option
+     * @return Itemoption
      */
     public function addItem(\Application\Entity\Item $item)
     {

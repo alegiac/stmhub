@@ -43,12 +43,9 @@ class ExamController extends AbstractActionController
 		try {
 			// 2 - Verifica stato token
 			$res = $this->getExamService()->getExamSessionIdByToken($stmt);
-			print_r($res);die();
+
 			// Salvataggio token in sessione
-			$this->session->student = $res['student'];
-			
-			$this->session->progress = $res['progress'];
-			$this->session->message = $res['message'];
+			$this->session->data = $res;
 			
 			// 3- Verifica risultato: inviare a pagina di stop o prosegue?
 			if (strlen($res['message']) > 0 && is_null($res['id'])) {
@@ -58,7 +55,7 @@ class ExamController extends AbstractActionController
 				$this->redirect()->toRoute('exam_participate');
 			}
 		} catch (\Exception $e) {
-			print_r($e);die();
+			
 			// 4 - Gestione eccezioni
 			$this->getServiceLocator()->get("Logger")->err("Exception loading exam/student data. Message: ".$e->getMessage());
 			$this->getServiceLocator()->get("Logger")->info("Stack Trace: ".$e->getTraceAsString());
@@ -91,14 +88,18 @@ class ExamController extends AbstractActionController
 		
 		$this->init();
 		
-		// Acquisizione di tutti gli elementi di esame
-		$examStudent = $this->session->exam;
-	 	
 		// Visualizzazione 
 		$vm = new ViewModel();
-		$vm->firstName = $this->session->student['firstname'];
-		$vm->lastName = $this->session->student['lastname'];
-
+		$vm->firstName = $this->session->data['student']['firstname'];
+		$vm->lastName = $this->session->data['student']['lastname'];
+		$vm->courseName = $this->session->data['session']['course']['name'];
+		$vm->courseDesc = $this->session->data['session']['course']['description'];
+		$vm->examName = $this->session->data['session']['name'];
+		$vm->examDesc = $this->session->data['session']['description'];
+		
+		$itemProg = (int)$this->session->data['session']['progress'];
+		$vm->itemProgressive = $this->session->data['session']['progress'];
+		$vm->itemQuestion = $this->session->data['session']['items'][$itemProg]['question'];
 		
 		if (strlen($this->session->message) > 0) {
 			$vm->enableMessage = true;
@@ -108,6 +109,7 @@ class ExamController extends AbstractActionController
 			$vm->message = "";
 		}
 	
+		
 		return $vm;
 	}
 	
