@@ -55,6 +55,6 @@
         <script src="/static/assets/js/demo.js"></script>
 
 		{block name="custom_js"}
-      	{/block}
+		{/block}
         
     </body>

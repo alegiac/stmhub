@@ -220,7 +220,7 @@ final class ExamService implements ServiceLocatorAwareInterface
     	
     	// Da qui il processo di validazione e' completato
     	$course = $session->getStudentHasCourse()->getCourse();
-    	if ($course->getActivationstatus() != ActivationStatus::STATUS_ENABLED) {
+    	if ($course->getActivationstatus()->getId() != ActivationStatus::STATUS_ENABLED) {
     		// Corso disabilitato
     		return $this->getUserExamData(null,"Corso disabilitato");
     	}

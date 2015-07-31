@@ -14,6 +14,8 @@ use Zend\View\Model\ViewModel;
 use Zend\Console\Request as ConsoleRequest;
 use Zend\Session\Container;
 use Application\Constants\MediaType;
+use Application\Constants\ItemType;
+use Application\Form\ExamSelect;
 
 class ExamController extends AbstractActionController
 {
@@ -110,146 +112,57 @@ class ExamController extends AbstractActionController
 			foreach ($item['media'] as $media) {
 				switch ($media['type']) {
 					case MediaType::TYPE_IMAGE:
-						$tmpMedia .= '<div><img src="'.$media['url'].'" alt="" style="width:50%;"></div><br>';
+						$tmpMedia .= 
+								'<div>
+									<img src="'.$media['url'].'" alt="" style="width:50%;"/>
+								</div>
+								<br>';
 						break;
 					case MediaType::TYPE_VIDEO:
-						$tmpMedia .= '<div class="tv-body"><div class="embed-responsive embed-responsive-16by9 m-b-20">
-								<iframe class="embed-responsive-item" src="'.$media['url'].'"></iframe></div></div><br>';
+						$tmpMedia .= 
+								'<div class="tv-body">
+									<div class="embed-responsive embed-responsive-16by9 m-b-20">
+										<iframe class="embed-responsive-item" src="'.$media['url'].'"></iframe>
+									</div>
+								</div>
+								<br>';
 						break;
 					case MediaType::TYPE_SLIDESHOW:
-						$tmpMedia .= '<div class="lightbox row">
-                                    <div data-src="media/gallery/1.jpg" class="col-md-3 col-sm-4 col-xs-6">
-                                        <div class="lightbox-item p-item">
-                                            <img src="media/gallery/thumbs/1.jpg" alt="">
-                                        </div>
-                                    </div>
-                                    
-                                    <div data-src="media/gallery/2.jpg" class="col-md-3 col-sm-4 col-xs-6">
-                                        <div class="lightbox-item p-item">
-                                            <img src="media/gallery/thumbs/2.jpg" alt="">
-                                        </div>
-                                    </div>
-                                    
-                                    <div data-src="media/gallery/3.jpg" class="col-md-3 col-sm-4 col-xs-6">
-                                        <div class="lightbox-item p-item">
-                                            <img src="media/gallery/thumbs/3.jpg" alt="">
-                                        </div>
-                                    </div>
-                                    
-                                    <div data-src="media/gallery/4.jpg" class="col-md-3 col-sm-4 col-xs-6">
-                                        <div class="lightbox-item p-item">
-                                            <img src="media/gallery/thumbs/4.jpg" alt="">
-                                        </div>
-                                    </div>
-                                    
-                                    <div data-src="media/gallery/5.jpg" class="col-md-3 col-sm-4 col-xs-6">
-                                        <div class="lightbox-item p-item">
-                                            <img src="media/gallery/thumbs/5.jpg" alt="">
-                                        </div>
-                                    </div>
-                                    <div data-src="media/gallery/6.jpg" class="col-md-3 col-sm-4 col-xs-6">
-                                        <div class="lightbox-item p-item">
-                                            <img src="media/gallery/thumbs/6.jpg" alt="">
-                                        </div>
-                                    </div>
-                                    <div data-src="media/gallery/7.jpg" class="col-md-3 col-sm-4 col-xs-6">
-                                        <div class="lightbox-item p-item">
-                                            <img src="media/gallery/thumbs/7.jpg" alt="">
-                                        </div>
-                                    </div>
-                                    <div data-src="media/gallery/8.jpg" class="col-md-3 col-sm-4 col-xs-6">
-                                        <div class="lightbox-item p-item">
-                                            <img src="media/gallery/thumbs/8.jpg" alt="">
-                                        </div>
-                                    </div>
-                                    <div data-src="media/gallery/9.jpg" class="col-md-3 col-sm-4 col-xs-6">
-                                        <div class="lightbox-item p-item">
-                                            <img src="media/gallery/thumbs/9.jpg" alt="">
-                                        </div>
-                                    </div>
-                                    <div data-src="media/gallery/10.jpg" class="col-md-3 col-sm-4 col-xs-6">
-                                        <div class="lightbox-item p-item">
-                                            <img src="media/gallery/thumbs/10.jpg" alt="">
-                                        </div>
-                                    </div>
-                                    <div data-src="media/gallery/11.jpg" class="col-md-3 col-sm-4 col-xs-6">
-                                        <div class="lightbox-item p-item">
-                                            <img src="media/gallery/thumbs/11.jpg" alt="">
-                                        </div>
-                                    </div>
-                                    <div data-src="media/gallery/12.jpg" class="col-md-3 col-sm-4 col-xs-6">
-                                        <div class="lightbox-item p-item">
-                                            <img src="media/gallery/thumbs/12.jpg" alt="">
-                                        </div>
-                                    </div>
-                                    <div data-src="media/gallery/13.jpg" class="col-md-3 col-sm-4 col-xs-6">
-                                        <div class="lightbox-item p-item">
-                                            <img src="media/gallery/thumbs/13.jpg" alt="">
-                                        </div>
-                                    </div>
-                                    <div data-src="media/gallery/14.jpg" class="col-md-3 col-sm-4 col-xs-6">
-                                        <div class="lightbox-item p-item">
-                                            <img src="media/gallery/thumbs/14.jpg" alt="">
-                                        </div>
-                                    </div>
-                                    <div data-src="media/gallery/15.jpg" class="col-md-3 col-sm-4 col-xs-6">
-                                        <div class="lightbox-item p-item">
-                                            <img src="media/gallery/thumbs/15.jpg" alt="">
-                                        </div>
-                                    </div>
-                                    <div data-src="media/gallery/16.jpg" class="col-md-3 col-sm-4 col-xs-6">
-                                        <div class="lightbox-item p-item">
-                                            <img src="media/gallery/thumbs/16.jpg" alt="">
-                                        </div>
-                                    </div>
-                                    <div data-src="media/gallery/17.jpg" class="col-md-3 col-sm-4 col-xs-6">
-                                        <div class="lightbox-item p-item">
-                                            <img src="media/gallery/thumbs/7.jpg" alt="">
-                                        </div>
-                                    </div>
-                                    <div data-src="media/gallery/18.jpg" class="col-md-3 col-sm-4 col-xs-6">
-                                        <div class="lightbox-item p-item">
-                                            <img src="media/gallery/thumbs/18.jpg" alt="">
-                                        </div>
-                                    </div>
-                                    <div data-src="media/gallery/19.jpg" class="col-md-3 col-sm-4 col-xs-6">
-                                        <div class="lightbox-item p-item">
-                                            <img src="media/gallery/thumbs/19.jpg" alt="">
-                                        </div>
-                                    </div>
-                                    <div data-src="media/gallery/20.jpg" class="col-md-3 col-sm-4 col-xs-6">
-                                        <div class="lightbox-item p-item">
-                                            <img src="media/gallery/thumbs/20.jpg" alt="">
-                                        </div>
-                                    </div>
-                                    <div data-src="media/gallery/21.jpg" class="col-md-3 col-sm-4 col-xs-6">
-                                        <div class="lightbox-item p-item">
-                                            <img src="media/gallery/thumbs/21.jpg" alt="">
-                                        </div>
-                                    </div>
-                                    <div data-src="media/gallery/22.jpg" class="col-md-3 col-sm-4 col-xs-6">
-                                        <div class="lightbox-item p-item">
-                                            <img src="media/gallery/thumbs/22.jpg" alt="">
-                                        </div>
-                                    </div>
-                                    <div data-src="media/gallery/23.jpg" class="col-md-3 col-sm-4 col-xs-6">
-                                        <div class="lightbox-item p-item">
-                                            <img src="media/gallery/thumbs/23.jpg" alt="">
-                                        </div>
-                                    </div>
-                                    <div data-src="media/gallery/24.jpg" class="col-md-3 col-sm-4 col-xs-6">
-                                        <div class="lightbox-item p-item">
-                                            <img src="media/gallery/thumbs/24.jpg" alt="">
-                                        </div>
-                                    </div>
-                                </div>'
+						$tmpMedia .= '<div class="lightbox row">';
+						$explodedMedia = explode("|",$media['url']);
+						foreach ($explodedMedia as $media) {
+							$tmpMedia .= 
+								'<div data-src="'.$media.'" class="col-md-3 col-sm-4 col-xs-6">
+									<div class="ligthtbox-item p-item">
+										<img src="'.$media.'" alt=""/>
+									</div>
+								</div>';
+						}
+						$tmpMedia .= '</div>';	
 						break;
 				}
-				
-						
 			}
 		}
-		switch ($item['']
+		$vm->media = $tmpMedia;
+		// Caricamento form in base al tipo di item
+		switch ($item['type']) {
+			case ItemType::TYPE_INSERT:
+				$form = new ExamSelect($arrOptions);
+				$vm->form = $form;
+				break;
+			case ItemType::TYPE_MULTIPLE:
+				$arrOptions = array();
+				foreach ($item['options'] as $k=>$v)
+				{
+					$arrOptions[$v['id']] = $v['value'];
+				}
+				$form = new ExamSelect($arrOptions);
+				break;
+			case ItemType::TYPE_TRUEFALSE;
+				break;
+				
+		}
+		$vm->form = $form;
 		
 		
 		if (strlen($this->session->message) > 0) {
@@ -259,7 +172,6 @@ class ExamController extends AbstractActionController
 			$vm->enableMessage = false;
 			$vm->message = "";
 		}
-	
 		
 		return $vm;
 	}

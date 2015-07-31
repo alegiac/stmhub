@@ -1,5 +1,12 @@
 {extends "../../_common/base.tpl"}
 
+{block name="custom_css"}
+      <!-- Vendor CSS -->
+        <link href="/static/assets/vendors/noUiSlider/jquery.nouislider.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/farbtastic/farbtastic.css" rel="stylesheet">
+        <link href="/static/assets/vendors/summernote/summernote.css" rel="stylesheet">
+{/block}
+
 {block name="content"}
 	<section id="content">
 		<div class="container">
@@ -98,10 +105,25 @@
 	        				{$media}
 	        				<hr>
 	        				<h4>{$itemQuestion}</h4>
+	        				<br>
+	        				<br>
+	        				asasasas{$form}
 						</div>
 	        		</div>
 	        	</div>
 			</div>
 		</div>
 	</section>
+{/block}
+
+{block name="custom_js"}
+		<!-- Javascript Libraries -->
+        <script src="/static/assets/vendors/bootstrap-select/bootstrap-select.min.js"></script>
+        <script src="/static/assets/vendors/chosen/chosen.jquery.min.js"></script>
+        <script src="/static/assets/vendors/noUiSlider/jquery.nouislider.all.min.js"></script>
+        <script src="/static/assets/vendors/input-mask/input-mask.min.js"></script>
+        <script src="/static/assets/vendors/farbtastic/farbtastic.min.js"></script>
+        <script src="/static/assets/vendors/summernote/summernote.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+        <script src="/static/assets/vendors/fileinput/fileinput.min.js"></script>
 {/block}

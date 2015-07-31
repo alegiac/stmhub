@@ -227,7 +227,10 @@ CREATE TABLE `image` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
   `url` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
+  `mediatype_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_image_mediatype1_idx` (`mediatype_id`),
+  CONSTRAINT `fk_image_mediatype1` FOREIGN KEY (`mediatype_id`) REFERENCES `mediatype` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -320,6 +323,20 @@ CREATE TABLE `itemtype` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `mediatype`
+--
+
+DROP TABLE IF EXISTS `mediatype`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mediatype` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `student`
 --
 
@@ -356,6 +373,7 @@ CREATE TABLE `student_has_answered_to_item` (
   `option_id` int(11) NOT NULL,
   `points` int(11) NOT NULL,
   `insert_date` datetime NOT NULL,
+  `value` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_student_has_answered_to_item_student_has_course_has_exam_idx` (`student_has_course_has_exam_id`),
   KEY `fk_student_has_answered_to_item_item1_idx` (`item_id`),
@@ -481,4 +499,4 @@ CREATE TABLE `weekday` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-07-30 14:10:04
+-- Dump completed on 2015-07-31  9:26:18
