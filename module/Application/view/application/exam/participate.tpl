@@ -1,10 +1,6 @@
 {extends "../../_common/base.tpl"}
 
 {block name="custom_css"}
-      <!-- Vendor CSS -->
-        <link href="/static/assets/vendors/noUiSlider/jquery.nouislider.min.css" rel="stylesheet">
-        <link href="/static/assets/vendors/farbtastic/farbtastic.css" rel="stylesheet">
-        <link href="/static/assets/vendors/summernote/summernote.css" rel="stylesheet">
 {/block}
 
 {block name="content"}
@@ -88,27 +84,29 @@
 	        	{/if}
 	        	<div class="card">
 	        		<div class="card-header">
-	        			<div class="row">
-	        				<div class="col-sm-4">
-	        					<h5>{$courseName} >> {$examName}</h5><br>
-	        					<small>{$courseDesc} &nbsp;&nbsp; {$examDesc}</h5>	
-	        				</div>
-	        				<div class="col-sm-4">
-	        				</div>
-	        				<div class="col-sm-4"></div>
+	        			<div class="col-sm-6 pull-left">
+	        				Corso:&nbsp;&nbsp;<strong>{$courseName}</strong><br>
+	        				Esame:&nbsp;&nbsp;<strong>{$examName}</strong><br>
+	        				Quesito:&nbsp;&nbsp;<strong>{$itemProgressive}/{$totalItems}</strong>
+	        			</div>
+	        			<div class="col-sm-6 pull-right">
+	        				{if $remainingTime eq -1}
+	        				{else}
+	        					<small>Secondi rimanenti</small>
+	        					<br>
+	        					<center><h3>100</h3></center>
+	        				{/if}
 	        			</div>
 	        		</div>
 	        		<div class="card-body card-padding">
-	        			<div class="row">
-	        				<h2>Quesito {$itemProgressive}</h2>
-	        				<br>
 	        				{$media}
 	        				<hr>
-	        				<h4>{$itemQuestion}</h4>
+	        				<center>
+	        				<h2>{$itemQuestion}</h2>
+	        				<center>
+	        				<hr>
 	        				<br>
-	        				<br>
-	        				asasasas{$form}
-						</div>
+	        				{$formm}
 	        		</div>
 	        	</div>
 			</div>
@@ -117,13 +115,4 @@
 {/block}
 
 {block name="custom_js"}
-		<!-- Javascript Libraries -->
-        <script src="/static/assets/vendors/bootstrap-select/bootstrap-select.min.js"></script>
-        <script src="/static/assets/vendors/chosen/chosen.jquery.min.js"></script>
-        <script src="/static/assets/vendors/noUiSlider/jquery.nouislider.all.min.js"></script>
-        <script src="/static/assets/vendors/input-mask/input-mask.min.js"></script>
-        <script src="/static/assets/vendors/farbtastic/farbtastic.min.js"></script>
-        <script src="/static/assets/vendors/summernote/summernote.min.js"></script>
-        <script src="/static/assets/vendors/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
-        <script src="/static/assets/vendors/fileinput/fileinput.min.js"></script>
 {/block}

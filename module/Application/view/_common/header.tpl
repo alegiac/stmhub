@@ -5,7 +5,7 @@
 		</li>
 
 		<li class="logo hidden-xs">
-			<!--<a href="."><img src="/static/assets/img/logo.png" alt="Smile to Move"/></a>-->
+			<a href="."><img src="/static/assets/img/logo.png" alt="Smile to Move"/></a>
 		</li>
 	</ul>
 </header>

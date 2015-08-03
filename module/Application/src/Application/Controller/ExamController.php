@@ -49,7 +49,6 @@ class ExamController extends AbstractActionController
 
 			// Salvataggio token in sessione
 			$this->session->data = $res;
-			
 			// 3- Verifica risultato: inviare a pagina di stop o prosegue?
 			if (strlen($res['message']) > 0 && is_null($res['id'])) {
 				$this->redirect()->toRoute('exam_error');
@@ -62,8 +61,8 @@ class ExamController extends AbstractActionController
 			// 4 - Gestione eccezioni
 			$this->getServiceLocator()->get("Logger")->err("Exception loading exam/student data. Message: ".$e->getMessage());
 			$this->getServiceLocator()->get("Logger")->info("Stack Trace: ".$e->getTraceAsString());
-			$this->session->message = "Impossibile accedere alla sessione di esame per inconsistenza dei dati.";
-			$this->redirect()->toRoute('exam_error');
+			$this->session->exception = "Impossibile accedere alla sessione di esame per inconsistenza dei dati.";
+			$this->redirect()->toRoute('exam_exception');
 		}
 	}
 	
@@ -99,6 +98,7 @@ class ExamController extends AbstractActionController
 		$vm->courseDesc = $this->session->data['session']['course']['description'];
 		$vm->examName = $this->session->data['session']['exam']['name'];
 		$vm->examDesc = $this->session->data['session']['exam']['description'];
+		$vm->totalItems = $this->session->data['session']['exam']['totalitems'];
 		
 		// Domanda
 		$itemProg = (int)$this->session->data['session']['progress']+1;
@@ -156,14 +156,19 @@ class ExamController extends AbstractActionController
 				{
 					$arrOptions[$v['id']] = $v['value'];
 				}
-				$form = new ExamSelect($arrOptions);
+				
+				$vm->formm = '<form method="POST" action="/exam/participate">
+	        					<select name="answer">
+	        					<option>boh</option>
+	        					</select>
+	        				</form>';
+				
 				break;
 			case ItemType::TYPE_TRUEFALSE;
 				break;
 				
 		}
-		$vm->form = $form;
-		
+		//$vm->formm = '<select><option name="boh">bah</option></select>';
 		
 		if (strlen($this->session->message) > 0) {
 			$vm->enableMessage = true;
