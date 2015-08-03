@@ -90,6 +90,8 @@ class ExamController extends AbstractActionController
 		
 		$this->init();
 		
+		//print_r($this->session->data);die();
+		
 		// Visualizzazione 
 		$vm = new ViewModel();
 		$vm->firstName = $this->session->data['student']['firstname'];
@@ -147,22 +149,16 @@ class ExamController extends AbstractActionController
 		// Caricamento form in base al tipo di item
 		switch ($item['type']) {
 			case ItemType::TYPE_INSERT:
-				$form = new ExamSelect($arrOptions);
-				$vm->form = $form;
-				break;
 			case ItemType::TYPE_MULTIPLE:
+			default:
 				$arrOptions = array();
 				foreach ($item['options'] as $k=>$v)
 				{
 					$arrOptions[$v['id']] = $v['value'];
 				}
 				
-				$vm->formm = '<form method="POST" action="/exam/participate">
-	        					<select name="answer">
-	        					<option>boh</option>
-	        					</select>
-	        				</form>';
-				
+				$form = new ExamSelect($arrOptions);
+				$vm->form = $form;
 				break;
 			case ItemType::TYPE_TRUEFALSE;
 				break;

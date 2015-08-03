@@ -1,23 +1,25 @@
 {extends "../../_common/base.tpl"}
 
 {block name="custom_css"}
+
 {/block}
 
-{block name="content"}
+
+{block name="main"}
 	<section id="content">
-		<div class="container">
-            {if $enableMessage eq true}
-             	<div class="col-xs-12 card">
-            		<div class="card-header bgm-purple">
-                    	<h2>NOTIFICA</h2>
-                    </div>
-                    
-                    <div class="card-body bgm-white">
-                        <p class="lead">{$message}</p>
-                    </div>
-                </div>
+	    <div class="container">
+	    	{if $enableMessage eq true}
+			 	<div class="col-xs-12 card">
+					<div class="card-header bgm-purple">
+			        	<h2>NOTIFICA</h2>
+	        		</div>
+	        
+			        <div class="card-body bgm-white">
+	    		        <p class="lead">{$message}</p>
+	        		</div>
+	    		</div>
 			{/if}
-            
+
             <div class="col-sm-3">
 				<!-- Profile view -->
                 <div class="card profile-view">
@@ -38,7 +40,7 @@
                         <a href="" class="pv-follow-btn">Logout</a>
                     </div>
                 </div>
-                
+                <!-- Chart pies -->
                 <div class="mini-charts-item bgm-cyan">
 					<div class="clearfix">
 	                    <div class="chart chart-pie stats-pie"></div>
@@ -59,6 +61,7 @@
                 </div>
             </div>
             <div class="col-sm-9">
+            	<!-- Content of questions -->
 	        	{if $enableMessage eq true}
 	        		<div class="card bgm-amber">
 						<div class="card-header c-white">
@@ -99,20 +102,20 @@
 	        			</div>
 	        		</div>
 	        		<div class="card-body card-padding">
+	        			<div class="row">
 	        				{$media}
-	        				<hr>
-	        				<center>
-	        				<h2>{$itemQuestion}</h2>
-	        				<center>
-	        				<hr>
-	        				<br>
-	        				{$formm}
+		        			<hr>
+		        			<center>
+		        				<h2>{$itemQuestion}</h2>
+		        			</center>
+		        			<hr>
+		        			<br>
+		        		</div>
+		        		<div class="row">
+		        		 	{$this->form($form)}
+	        			</div>
 	        		</div>
 	        	</div>
 			</div>
-		</div>
-	</section>
-{/block}
-
-{block name="custom_js"}
+        </section>
 {/block}
