@@ -16,6 +16,7 @@ use Zend\Session\Container;
 use Application\Constants\MediaType;
 use Application\Constants\ItemType;
 use Application\Form\ExamSelect;
+use Application\Form\ExamInput;
 
 class ExamController extends AbstractActionController
 {
@@ -149,23 +150,23 @@ class ExamController extends AbstractActionController
 		// Caricamento form in base al tipo di item
 		switch ($item['type']) {
 			case ItemType::TYPE_INSERT:
+				$form = new ExamInput();
+				break;
 			case ItemType::TYPE_MULTIPLE:
-			default:
 				$arrOptions = array();
 				foreach ($item['options'] as $k=>$v)
 				{
 					$arrOptions[$v['id']] = $v['value'];
 				}
-				
-				$form = new ExamSelect($arrOptions);
-				$vm->form = $form;
+	//			$form = new ExamSelect($arrOptions);
+				$form = new ExamInput();
 				break;
 			case ItemType::TYPE_TRUEFALSE;
 				break;
 				
 		}
-		//$vm->formm = '<select><option name="boh">bah</option></select>';
-		
+		$vm->form = $form;
+	
 		if (strlen($this->session->message) > 0) {
 			$vm->enableMessage = true;
 			$vm->message = $this->session->message;
