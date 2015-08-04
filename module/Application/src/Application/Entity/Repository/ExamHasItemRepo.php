@@ -2,6 +2,8 @@
 
 namespace Application\Entity\Repository;
 
+use Application\Entity\Exam;
+use Doctrine\Common\Collections\Criteria;
 /**
  * ExamHasItemRepo
  *
@@ -10,4 +12,18 @@ namespace Application\Entity\Repository;
  */
 class ExamHasItemRepo extends \Doctrine\ORM\EntityRepository
 {
+	/**
+	 * Acquisizione di tutti gli item per un esame
+	 *
+	 * @param Exam $exam
+	 * @return array
+	 */
+	public function findByExam(Exam $exam)
+	{
+		$criteria = Criteria::create()->where(Criteria::expr()->eq('exam',$exam));
+		$result = $this->matching($criteria);
+		if ($result->count()) return $result->getValues();
+		return array();
+	}
+	
 }

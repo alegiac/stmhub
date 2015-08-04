@@ -27,6 +27,9 @@ use Core\Exception\ObjectNotFound;
 use Core\Exception\ObjectNotEnabled;
 use Core\Exception\InconsistentContent;
 use Application\Entity\Repository\StudentHasAnsweredToItemRepo;
+use Application\Entity\Exam;
+use Application\Entity\Course;
+use Application\Entity\Repository\ExamRepo;
 
 final class ExamService implements ServiceLocatorAwareInterface
 {	
@@ -88,6 +91,166 @@ final class ExamService implements ServiceLocatorAwareInterface
     }
     
     /**
+     * Acquisizione repository exam
+     * @return ExamRepo
+     */
+    private function getExamRepo()
+    {
+    	return $this->getEntityManager()->getRepository('Application\Entity\Exam');
+    }
+    
+    /**
+     * Acquisizione di tutti gli item per un esame
+     * @param Exam $exam
+     * @return array
+     */
+    private function getExamItems(Exam $exam) 
+    {
+    	$retval = array();
+    	
+    	// Acquisizione items
+    	$gwItems = $this->getExamHasItemRepo();
+    	$items = $gwItems->findByExam($exam);
+    	if (!is_null($items)) {
+    		foreach ($items as $eitem) {
+    			/* @var $eitem ExamHasItem */
+    			$retval[$eitem->getProgressive()] = array(
+    					'id' => $eitem->getItem()->getId(),
+    					'question' => $eitem->getItem()->getQuestion(),
+    					'media' => $eitem->getItem()->getImage(),
+    					'maxsecs' => $eitem->getItem()->getMaxsecs(),
+    					'maxtries' => $eitem->getItem()->getMaxtries(),
+    					'type' => $eitem->getItem()->getItemtype()->getId(),
+    					'media' => $this->getExamItemMedia($eitem->getItem()),
+    					'options' => $this->getExamItemOptions($eitem->getItem()),
+    			);
+    	
+    		}
+    	}
+    	return $retval;
+    }
+    
+    /**
+     * Acquisizione di tutti i media di un item
+     * @param Item $item
+     * @return multitype:|multitype:multitype:string number
+     */
+    private function getExamItemMedia(Item $item)
+    {
+    	$retval = array();
+    	
+    	$images = $item->getImage();
+    	if (count($images)) {
+    		foreach ($images as $image) {
+    			/* @var $image Image */
+    			$retval[] = array(
+    				'url' => $image->getUrl(),
+    				'type' => $image->getMediatype()->getId(),
+    			);
+    		}
+    	}
+    	return $retval;
+    }
+    
+    /**
+     * Acquisizione di tutte le opzioni di un item
+     * @param Item $item
+     * @return unknown
+     */
+    private function getExamItemOptions(Item $item)
+    {
+    	$retval = array();
+    	
+    	// Carica opzioni
+    	$options = $item->getItemoption();
+    	
+    	if (count($options)) {
+    		
+    		foreach ($options->getValues() as $option) {
+    			
+    			/* @var $option Itemoption */
+    			$retval[] = array(
+    				'id' => $option->getId(),
+    				'value' => $option->getName()
+    			);
+    		}
+    	}	
+    	return $retval;
+    }
+
+    /** 
+     * Acquisizione del massimo di punti ottenibili per un item
+     * 
+     * @param Item $item
+     * @return number
+     */
+    private function getItemMaxPoints(Item $item)
+    {
+    	$totPoints = 0;
+    	$options = $item->getItemoption()->getValues();
+    	if (count($options)) {
+    		foreach ($options as $option) {
+    			/* @var $option Itemoption */
+    			if ($option->getCorrect() === 1) $totPoints += $option->getPoints();
+    		}
+    	}
+    	
+    	return $totPoints;
+    }
+    
+    /**
+     * Acquisizione del massimo di punti ottenibili per un esame
+     * 
+     * @param Exam $exam
+     * @return number
+     */
+    private function getExamMaxPoints(Exam $exam)
+    {
+    	$totPoints = 0;
+    	
+    	$gw = $this->getExamHasItemRepo();
+    	$items = $gw->findByExam($exam);
+    	
+    	if (count($items)) {
+    		foreach ($items as $item) {
+    			/* @var $item Item */
+    			$totPoints += $this->getItemMaxPoints($item);
+    		}
+    	}
+    	return $totPoints;
+    }
+    
+    /**
+     * Acquisizione del massimo di punti ottenibili per un corso
+     * 
+     * @param Course $course
+     * @return number
+     */
+    private function getCourseMaxPoints(Course $course)
+    {
+    	$totPoints = 0;
+    	
+    	$gwExams = $this->getExamRepo();
+    	$exams = $gwExams->findByCourse($course);
+
+    	if (count($exams)) {
+    		foreach ($exams as $exam) {
+    			/* @var $exam Exam */
+    			$totPoints += $this->getExamMaxPoints($exam);
+    		}
+    	}
+    	
+    	return $totPoints;
+    }
+    
+    private function getStatsForStudent(StudentHasCourseHasExam $student)
+    {
+    	$retval = array();
+    	
+    	// Numero totale di esami 
+    }
+    
+    /**
      * Acquisizione di tutto l'esame corrente per lo studente
      * 
      * @param StudentHasCourseHasExam $session Sessione corrente
@@ -117,63 +280,10 @@ final class ExamService implements ServiceLocatorAwareInterface
     				'description' => $session->getExam()->getCourse()->getDescription(),
     			),
     			'progress' => $session->getProgressive(),
-    			'items' => array(),
+    			'items' => $this->getExamItems($session->getExam()),
     	);
     	
-    	// Acquisizione dati motivazionali
-       	$allSessions = $this->getStudentHasCourseHasExamRepo()->findByStudentOnCourse($session->getStudentHasCourse(),true);
-       	
-    	$numCompletedExams = $repo->
-    	
-    	$motivationalData = array(
-    			'current_exam_points' => $session->getPoints(),
-    			'num_completed_exams' => $allSessions = $this->getStudentHasCourseHasExamRepo()->findByStudentOnCourse($session->getStudentHasCourse());
-    	)
-    	
-    	// Acquisizione items
-    	$gwItems = $this->getExamHasItemRepo();
-    	$items = $gwItems->findByExam($session->getExam());
-    	$tmpItems = array();
-    	if (!is_null($items)) {
-    		foreach ($items as $eitem) {
-    			/* @var $eitem ExamHasItem */
-    			$tmpItems[$eitem->getProgressive()] = array(
-    		 		'id' => $eitem->getItem()->getId(),
-    		 		'question' => $eitem->getItem()->getQuestion(),
-    		 		'media' => $eitem->getItem()->getImage(),
-    		 		'maxsecs' => $eitem->getItem()->getMaxsecs(),
-    		 		'maxtries' => $eitem->getItem()->getMaxtries(),
-    		 		'type' => $eitem->getItem()->getItemtype()->getId(),
-    				'media' => array(),
-    				'options' => array(),
-    		 	);
-    			
-    			// Carica immagini/media
-    			$images = $eitem->getItem()->getImage();
-    			if (count($images)) {
-    				foreach ($images as $image) {
-    					/* @var $image Image */
-    					$tmpItems[$eitem->getProgressive()]['media'][] = array(
-    						'url' => $image->getUrl(),
-    						'type' => $image->getMediatype()->getId(),
-    					);
-    				}
-    			}
-    			// Carica opzioni
-    			$options = $eitem->getItem()->getItemoption();
-    			if (count($options)) {
-    				foreach ($options as $option) {
-    					/* @var $option Itemoption */
-    					$tmpItems[$eitem->getProgressive()]['options'][] = array('id' => $option->getId(),'value' => $option->getName());
-    				}
-    			}
-    		}
-    	}
-    	$examData['items'] = $tmpItems;
-    	
-    	// Acquisizione numero dell'item da processare
-    	
-    	return array(
+    	$retval = array(
     		'id' => $session->getId(),
     		'session' => $examData,
     		'student' => array(
@@ -181,8 +291,11 @@ final class ExamService implements ServiceLocatorAwareInterface
     			'firstname' => $session->getStudentHasCourse()->getStudent()->getFirstname(),
     			'lastname' => $session->getStudentHasCourse()->getStudent()->getLastname(),
     		),
+    		'stats' => $this->getStatsForStudent($session->getStudentHasCourse()->getStudent()),
     		'message' => $message
     	);
+    	
+    	return $retval;
     }
     
     /**
@@ -254,6 +367,7 @@ final class ExamService implements ServiceLocatorAwareInterface
     			if ($sess->getCompleted() === 0 && $sess->getStartDate() < new \DateTime()) {
     				// Trovata sessione successiva
     				if ($sess == $session) {
+    					$a = $this->getUserExamData($sess);print_r($a);die();
     					return $this->getUserExamData($sess);
     				} 
     				return $this->getUserExamData($sess,'Sessione precedente iniziata da completare');

@@ -2,6 +2,8 @@
 
 namespace Application\Entity\Repository;
 
+use Application\Entity\Course;
+
 /**
  * ExamRepo
  *
@@ -10,4 +12,17 @@ namespace Application\Entity\Repository;
  */
 class ExamRepo extends \Doctrine\ORM\EntityRepository
 {
+	/**
+	 * Acquisizione di tutti gli esami per un corso
+	 *
+	 * @param Course $course
+	 * @return array
+	 */
+	public function findByCourse(Course $course)
+	{
+		$criteria = Criteria::create()->where(Criteria::expr()->eq('course',$course));
+		$result = $this->matching($criteria);
+		if ($result->count()) return $result->getValues();
+		return array();
+	}
 }
