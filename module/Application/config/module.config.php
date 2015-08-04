@@ -76,6 +76,17 @@ return array(
         		),
         		'may_terminate' => true,
         	),
+        	'exam_exception' => array(
+        		'type' => 'Segment',
+        		'options' => array(
+        			'route' => '/exam/exception',
+        			'default' => array(
+        				'__NAMESPACE__' => 'Application\Controller',
+        				'controller' => 'Exam',
+        				'action' => 'exception'
+        			),
+        		),
+        	),
         ),
     ),
     'service_manager' => array(

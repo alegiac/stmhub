@@ -26,6 +26,7 @@ use Core\Exception\MalformedRequest;
 use Core\Exception\ObjectNotFound;
 use Core\Exception\ObjectNotEnabled;
 use Core\Exception\InconsistentContent;
+use Application\Entity\Repository\StudentHasAnsweredToItemRepo;
 
 final class ExamService implements ServiceLocatorAwareInterface
 {	
@@ -77,15 +78,13 @@ final class ExamService implements ServiceLocatorAwareInterface
     	return $this->getEntityManager()->getRepository('Application\Entity\ExamHasItem');
     }
    
-    /**
-     * Acquisizione di un risultato null/template
-     * 
-     * @param String $message Messaggio eventuale
-     * @return array Array di dati template/nulli
-     */
-    private function getResponseTemplate($message = "")
+	/**
+	 * Acquisizione repository student_has_answered_to_item
+	 * @return StudentHasAnsweredToItemRepo
+	 */
+    private function getStudentHasAnsweredToItemRepo()
     {
-  
+    	return $this->getEntityManager()->getRepository('Application\Entity\StudentHasAnsweredToItem');
     }
     
     /**
@@ -121,6 +120,16 @@ final class ExamService implements ServiceLocatorAwareInterface
     			'items' => array(),
     	);
     	
+    	// Acquisizione dati motivazionali
+       	$allSessions = $this->getStudentHasCourseHasExamRepo()->findByStudentOnCourse($session->getStudentHasCourse(),true);
+       	
+    	$numCompletedExams = $repo->
+    	
+    	$motivationalData = array(
+    			'current_exam_points' => $session->getPoints(),
+    			'num_completed_exams' => $allSessions = $this->getStudentHasCourseHasExamRepo()->findByStudentOnCourse($session->getStudentHasCourse());
+    	)
+    	
     	// Acquisizione items
     	$gwItems = $this->getExamHasItemRepo();
     	$items = $gwItems->findByExam($session->getExam());
@@ -136,7 +145,7 @@ final class ExamService implements ServiceLocatorAwareInterface
     		 		'maxtries' => $eitem->getItem()->getMaxtries(),
     		 		'type' => $eitem->getItem()->getItemtype()->getId(),
     				'media' => array(),
-    				'options' => array(),		
+    				'options' => array(),
     		 	);
     			
     			// Carica immagini/media
@@ -188,7 +197,7 @@ final class ExamService implements ServiceLocatorAwareInterface
      * @param string $token Full request token 
      * @return array Array dati studente e associazione esame
      */
-    public function getExamSessionIdByToken($token)
+    public function getExamSessionByToken($token)
     {
     	// Validazione campi richiesta
     	if (strpos($token, ".") === false) 

@@ -46,7 +46,7 @@ class ExamController extends AbstractActionController
 		
 		try {
 			// 2 - Verifica stato token
-			$res = $this->getExamService()->getExamSessionIdByToken($stmt);
+			$res = $this->getExamService()->getExamSessionByToken($stmt);
 
 			// Salvataggio token in sessione
 			$this->session->data = $res;
@@ -58,10 +58,7 @@ class ExamController extends AbstractActionController
 				$this->redirect()->toRoute('exam_participate');
 			}
 		} catch (\Exception $e) {
-			
 			// 4 - Gestione eccezioni
-			$this->getServiceLocator()->get("Logger")->err("Exception loading exam/student data. Message: ".$e->getMessage());
-			$this->getServiceLocator()->get("Logger")->info("Stack Trace: ".$e->getTraceAsString());
 			$this->session->exception = "Impossibile accedere alla sessione di esame per inconsistenza dei dati.";
 			$this->redirect()->toRoute('exam_exception');
 		}
@@ -76,7 +73,7 @@ class ExamController extends AbstractActionController
 	 */
 	public function errorAction()
 	{
-		
+		echo "errore";die();
 	}
 	
 	/**
@@ -91,10 +88,9 @@ class ExamController extends AbstractActionController
 		
 		$this->init();
 		
-		//print_r($this->session->data);die();
-		
 		// Visualizzazione 
 		$vm = new ViewModel();
+		$vm->disableCssMM = 1;
 		$vm->firstName = $this->session->data['student']['firstname'];
 		$vm->lastName = $this->session->data['student']['lastname'];
 		$vm->courseName = $this->session->data['session']['course']['name'];
@@ -147,6 +143,7 @@ class ExamController extends AbstractActionController
 			}
 		}
 		$vm->media = $tmpMedia;
+		
 		// Caricamento form in base al tipo di item
 		switch ($item['type']) {
 			case ItemType::TYPE_INSERT:
@@ -158,7 +155,6 @@ class ExamController extends AbstractActionController
 				{
 					$arrOptions[$v['id']] = $v['value'];
 				}
-	//			$form = new ExamSelect($arrOptions);
 				$form = new ExamInput();
 				break;
 			case ItemType::TYPE_TRUEFALSE;
