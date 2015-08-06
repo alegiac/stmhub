@@ -3,6 +3,7 @@
 namespace Application\Entity\Repository;
 
 use Application\Entity\Course;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * ExamRepo

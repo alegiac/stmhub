@@ -17,6 +17,7 @@ use Application\Entity\ExamHasItem;
 use Application\Entity\Item;
 use Application\Entity\Image;
 use Application\Entity\Itemoption;
+use Application\Entity\StudentHasAnsweredToItem;
 
 use Application\Entity\Repository\StudentHasCourseHasExamRepo;
 use Application\Entity\Repository\StudentRepo;
@@ -30,6 +31,7 @@ use Application\Entity\Repository\StudentHasAnsweredToItemRepo;
 use Application\Entity\Exam;
 use Application\Entity\Course;
 use Application\Entity\Repository\ExamRepo;
+use Application\Entity\Repository\ItemoptionRepo;
 
 final class ExamService implements ServiceLocatorAwareInterface
 {	
@@ -97,6 +99,15 @@ final class ExamService implements ServiceLocatorAwareInterface
     private function getExamRepo()
     {
     	return $this->getEntityManager()->getRepository('Application\Entity\Exam');
+    }
+    
+    /**
+     * Acquisizione repository itemoption
+     * @return ItemoptionRepo
+     */
+    private function getItemoptionRepo()
+    {
+    	return $this->getEntityManager()->getRepository('Application\Entity\Itemoption');
     }
     
     /**
@@ -187,9 +198,11 @@ final class ExamService implements ServiceLocatorAwareInterface
     private function getItemMaxPoints(Item $item)
     {
     	$totPoints = 0;
-    	$options = $item->getItemoption()->getValues();
+    	$options = $item->getItemoption();
+    	
     	if (count($options)) {
-    		foreach ($options as $option) {
+    		foreach ($options->getValues() as $option) {
+    		
     			/* @var $option Itemoption */
     			if ($option->getCorrect() === 1) $totPoints += $option->getPoints();
     		}
@@ -213,8 +226,8 @@ final class ExamService implements ServiceLocatorAwareInterface
     	
     	if (count($items)) {
     		foreach ($items as $item) {
-    			/* @var $item Item */
-    			$totPoints += $this->getItemMaxPoints($item);
+    			/* @var $item ExamHasItem */
+    			$totPoints += $this->getItemMaxPoints($item->getItem());
     		}
     	}
     	return $totPoints;
@@ -243,11 +256,56 @@ final class ExamService implements ServiceLocatorAwareInterface
     	return $totPoints;
     }
     
-    private function getStatsForStudent(StudentHasCourseHasExam $student)
+    private function getStatsForStudent(StudentHasCourseHasExam $studentCourseExam)
     {
     	$retval = array();
+    	$retval['exams_completed'] = 0;
+    	$retval['exams_points'] = 0;
+    	$retval['course_total_points'] = 0;
+    	$retval['course_max_possible_points'] = 0;
     	
-    	// Numero totale di esami 
+    	// Numero totale di esami sostenuti per il corso corrente E punteggio totale raggiunto nel corso
+    	$gw_shche = $this->getStudentHasCourseHasExamRepo();
+    	$allExamsForStudent = $gw_shche->findByStudentOnCourse($studentCourseExam->getStudentHasCourse());
+    	if (count($allExamsForStudent)) {
+    		foreach ($allExamsForStudent as $examForStudent) {
+    			/* @var $examForStudent StudentHasCourseHasExam */
+    			$retval['exams_points'] += $examForStudent->getPoints();
+    			if ($examForStudent->getCompleted()) $retval['exams_completed']++;
+    		}
+    	}
+    	
+    	// Punteggio totale del corso (max possibile senza limiti utente)
+    	$retval['course_total_points'] = $this->getCourseMaxPoints($studentCourseExam->getStudentHasCourse()->getCourse());
+    	$retval['course_max_possible_points'] = $retval['course_total_points'];
+    	
+    	// Ciclo su tutti gli item del corso, guardando le risposte dell'utente. Se sono sbagliate, si decurta
+    	if (count($allExamsForStudent)) {
+    		foreach ($allExamsForStudent as $examForStudent) {
+    			/* @var $examForStudent StudentHasCourseHasExam */
+    			$gw_shati = $this->getStudentHasAnsweredToItemRepo();
+    			$answers = $gw_shati->findByStudentCourseExam($examForStudent);
+    			if (count($answers)) {
+    				foreach ($answers as $answer) {
+    					/* @var $answer StudentHasAnsweredToItem */
+    					$gw_itemoptions = $this->getItemoptionRepo();
+    					$correctItemOption = $gw_itemoptions->findCorrectForItem($answer->getItem());
+    					$actualItemOption = $gw_itemoptions->find($answer->getOptionId());
+    					if ($correctItemOption !== $actualItemOption) {
+    						$totPoints = $correctItemOption->getPoints();
+    						$actualPoints = $actualItemOption->getPoints();
+    						$exceedingPoints = $totPoints-$actualPoints;
+    						$retval['course_max_possible_points'] -= $exceedingPoints;
+    					}
+    				}
+    			}
+    			$retval['exams_points'] += $examForStudent->getPoints();
+    			if ($examForStudent->getCompleted()) $retval['exams_completed']++;
+    		}
+    	}
+    	 
+    	
+    	return $retval;
     }
     
     /**
@@ -291,7 +349,7 @@ final class ExamService implements ServiceLocatorAwareInterface
     			'firstname' => $session->getStudentHasCourse()->getStudent()->getFirstname(),
     			'lastname' => $session->getStudentHasCourse()->getStudent()->getLastname(),
     		),
-    		'stats' => $this->getStatsForStudent($session->getStudentHasCourse()->getStudent()),
+    		'stats' => $this->getStatsForStudent($session),
     		'message' => $message
     	);
     	
