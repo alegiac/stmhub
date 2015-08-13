@@ -2,6 +2,8 @@
 
 namespace Application\Entity\Repository;
 
+use Application\Entity\Item;
+use Doctrine\Common\Collections\Criteria;
 /**
  * ItemoptionRepo
  *
@@ -10,4 +12,5 @@ namespace Application\Entity\Repository;
  */
 class ItemoptionRepo extends \Doctrine\ORM\EntityRepository
 {
+	
 }

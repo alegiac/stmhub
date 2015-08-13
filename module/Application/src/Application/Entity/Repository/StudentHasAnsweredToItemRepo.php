@@ -12,23 +12,11 @@ use Doctrine\Common\Collections\Criteria;
  */
 class StudentHasAnsweredToItemRepo extends \Doctrine\ORM\EntityRepository
 {
-	
-	/**
-	 * Acquisizione unico studente per identificativo
-	 *
-	 * @param string $identifier Identificativo utente della richiesta
-	 * @return Student
-	 */
-	public function findByIdentifier($identifier)
-	{
-		$criteria = Criteria::create()->where(Criteria::expr()->eq('identifier', $identifier));
-		$result = $this->matching($criteria);
-		if ($result->count()) return($result->last());
-		return null;
-	}
-	
 	public function findByStudentCourseExam(StudentHasCourseHasExam $examForStudent)
 	{
-		$criteria = Criteria::create()->where(Criteria::expr()->eq('s'))
+		$criteria = Criteria::create()->where(Criteria::expr()->eq('studentHasCourseHasExam',$examForStudent));
+		$result = $this->matching($criteria);
+		if ($result->count()) return $result->getValues();
+		return array();
 	} 
 }

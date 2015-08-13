@@ -64,10 +64,10 @@ class Item extends \Application\Entity\Item implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'question', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'maxtries', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'maxsecs', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'context', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'item', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'itemtype', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'image', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'itemoption');
+            return array('__isInitialized__', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'question', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'maxtries', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'maxsecs', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'context', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'item', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'itemtype', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'image', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'itemoption', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'answer');
         }
 
-        return array('__isInitialized__', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'question', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'maxtries', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'maxsecs', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'context', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'item', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'itemtype', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'image', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'itemoption');
+        return array('__isInitialized__', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'question', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'maxtries', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'maxsecs', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'context', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'item', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'itemtype', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'image', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'itemoption', '' . "\0" . 'Application\\Entity\\Item' . "\0" . 'answer');
     }
 
     /**
@@ -384,6 +384,28 @@ class Item extends \Application\Entity\Item implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getItemoption', array());
 
         return parent::getItemoption();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setAnswer($answer)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setAnswer', array($answer));
+
+        return parent::setAnswer($answer);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAnswer()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getAnswer', array());
+
+        return parent::getAnswer();
     }
 
 }

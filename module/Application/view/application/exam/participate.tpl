@@ -71,7 +71,6 @@
                                     <a href="" data-toggle="dropdown" aria-expanded="false">
                                         <i class="md md-more-vert"></i>
                                     </a>
-                                    
                                     <ul class="dropdown-menu dropdown-menu-right">
                                         <li>
                                             <a href="">Chiudi</a>
@@ -95,9 +94,16 @@
 	        			<div class="col-sm-6 pull-right">
 	        				{if $remainingTime eq -1}
 	        				{else}
-	        					<small>Secondi rimanenti</small>
-	        					<br>
-	        					<center><h3>100</h3></center>
+	        				<div class="pull-left" id="countmesg">
+	        				</div><br><br>
+	          				<div class="media">
+                             	<div class="media-body">
+                                	<div class="progress">
+                                    	<div id="timerbar" class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="{$remainingTime}" style="width: {$remainingTime}%">
+                                        </div>
+									</div>
+                                </div>
+                            </div>
 	        				{/if}
 	        			</div>
 	        		</div>
@@ -118,4 +124,39 @@
 	        	</div>
 			</div>
         </section>
+{/block}
+
+{block name="custom_js"}
+	<script type="text/javascript">
+		{if $remainingTime > -1}
+			{literal}
+				$(document).ready(function() {
+			
+					var initial = {/literal}{$remainingTime}{literal} ;
+					var delay = {/literal}{$remainingTime}{literal} ;
+					var url = "/exam/participate/timeout/1";
+					
+					function countdown() {
+						setTimeout(countdown, 1000) ;
+						delay --;
+						if (delay < 0) {
+							delay = 0;
+							initial = 0;
+							window.location = url;
+						}
+						$('#countmesg').html("<h5>Tempo rimanente: </h5>"+delay+" secondi");
+						$('#timerbar').attr('style','width: '+(100*delay)/initial+'%');
+						if (delay/initial < 0.10) {
+							$('#timerbar').removeClass('progress-bar-warning');
+							$('#timerbar').addClass('progress-bar-danger');
+						} else if (delay/initial < 0.40) {
+							$('#timerbar').removeClass('progress-bar-success');
+							$('#timerbar').addClass('progress-bar-warning');
+						}
+					}
+					countdown();
+				});
+			{/literal}
+		{/if}
+</script>
 {/block}

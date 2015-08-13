@@ -4,9 +4,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>SmileToMove - Learning platform</title>
 
-{if $disableCssMM eq 1}
-{else}
-
         <!-- Vendor CSS -->
         <link href="/static/assets/vendors/animate-css/animate.min.css" rel="stylesheet">
         <link href="/static/assets/vendors/noUiSlider/jquery.nouislider.min.css" rel="stylesheet">
@@ -29,7 +26,7 @@
   				margin: 50px 0 50px 0;
 			}
         </style>
-{/if}
+
 		{block name="custom_css"}{/block}
 
     </head>

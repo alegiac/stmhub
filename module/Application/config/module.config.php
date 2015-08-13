@@ -51,6 +51,19 @@ return array(
         		),
         		'may_terminate' => true,
         	),
+        	'exam_start' => array(
+        		'type' => 'Segment',
+        		'options' => array(
+        			'route' => '/exam/start',
+        			'constraints' => array(),
+        			'defaults' => array(
+        				'__NAMESPACE__' => 'Application\Controller',
+        				'controller' => 'Exam',
+        				'action' => 'start',
+        			),
+        		),
+        		'may_terminate' => true,
+			),
         	'exam_participate' => array(
         		'type' => 'Segment',
         		'options' => array(

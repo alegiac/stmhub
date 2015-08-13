@@ -17,6 +17,7 @@ use Application\Constants\MediaType;
 use Application\Constants\ItemType;
 use Application\Form\ExamSelect;
 use Application\Form\ExamInput;
+use Application\Service\ExamService;
 
 class ExamController extends AbstractActionController
 {
@@ -54,8 +55,14 @@ class ExamController extends AbstractActionController
 			if (strlen($res['message']) > 0 && is_null($res['id'])) {
 				$this->redirect()->toRoute('exam_error');
 			} else {
-				//$this->session->exam = $this->getExamService()->getUserExamData($res['id']);
-				$this->redirect()->toRoute('exam_participate');
+				// Redirect ad inizio esame
+				if($res['session']['progress'] === 0) {
+					$newExam = 1;
+					$this->redirect()->toRoute('exam_start');
+				} else {
+					$newExam = 0;
+					$this->redirect()->toRoute('exam_restart');
+				}
 			}
 		} catch (\Exception $e) {
 			// 4 - Gestione eccezioni
@@ -77,6 +84,37 @@ class ExamController extends AbstractActionController
 	}
 	
 	/**
+	 * Visualizzazione pagina interstiziale di inizio esame. Viene visualizzata in fase di inizio esame
+	 * 
+	 * @return void
+	 * @see \Zend\Mvc\Controller\AbstractActionController 
+	 */
+	public function startAction()
+	{
+	}
+	
+	/**
+	 * Visualizzazione pagina interstiziale di inizio esame. Viene visualizzata in fase di ripresa esame
+	 * 
+	 * @return void
+	 * @see \Zend\Mvc\Controller\AbstractActionController 
+	 */
+	public function restartAction()
+	{
+	}
+	
+	/**
+	 * Visualizzazione pagina interstiziale di fine esame. Viene visualizzato al termine di una sessione
+	 * 
+	 * @return void
+	 * @see \Zend\Mvc\Controller\AbstractActionController
+	 */
+	public function endAction()
+	{
+		
+	}
+	
+	/**
 	 * Visualizzazione pagina di partecipazione al concorso: acquisisce lo step attuale, il relativo item 
 	 * e lo visualizza per ottenere la risposta dall'utente.
 	 * 
@@ -87,6 +125,9 @@ class ExamController extends AbstractActionController
 	{
 		
 		$this->init();
+		
+		// Se timeout, equivale a POST vuoto: avanzamento a record successivo (se presente
+		
 		
 		// Visualizzazione 
 		$vm = new ViewModel();
@@ -104,6 +145,8 @@ class ExamController extends AbstractActionController
 		$vm->itemProgressive = $itemProg;
 		$item = $this->session->data['session']['items'][$itemProg];
 		$vm->itemQuestion = $item['question'];
+		//$vm->remainingTime = $item['maxsecs'];
+		$vm->remainingTime = 40;
 		
 		// Media
 		$tmpMedia = "";
@@ -155,7 +198,7 @@ class ExamController extends AbstractActionController
 				{
 					$arrOptions[$v['id']] = $v['value'];
 				}
-				$form = new ExamInput();
+				$form = new ExamSelect($arrOptions);
 				break;
 			case ItemType::TYPE_TRUEFALSE;
 				break;
@@ -180,7 +223,7 @@ class ExamController extends AbstractActionController
 	}
 	
 	/**
-	 * @return Application\Service\ExamService
+	 * @return ExamService
 	 */
 	private function getExamService()
 	{

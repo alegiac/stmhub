@@ -256,55 +256,63 @@ final class ExamService implements ServiceLocatorAwareInterface
     	return $totPoints;
     }
     
+    /**
+     * Acquisizione delle statistiche per studente, a partire da una sessione di esame
+     * 
+     * @param StudentHasCourseHasExam $studentCourseExam
+     * @return array
+     */
     private function getStatsForStudent(StudentHasCourseHasExam $studentCourseExam)
     {
+    	// Inizializzazione array di ritorno
     	$retval = array();
     	$retval['exams_completed'] = 0;
     	$retval['exams_points'] = 0;
-    	$retval['course_total_points'] = 0;
-    	$retval['course_max_possible_points'] = 0;
-    	
-    	// Numero totale di esami sostenuti per il corso corrente E punteggio totale raggiunto nel corso
-    	$gw_shche = $this->getStudentHasCourseHasExamRepo();
-    	$allExamsForStudent = $gw_shche->findByStudentOnCourse($studentCourseExam->getStudentHasCourse());
-    	if (count($allExamsForStudent)) {
-    		foreach ($allExamsForStudent as $examForStudent) {
-    			/* @var $examForStudent StudentHasCourseHasExam */
-    			$retval['exams_points'] += $examForStudent->getPoints();
-    			if ($examForStudent->getCompleted()) $retval['exams_completed']++;
-    		}
-    	}
-    	
-    	// Punteggio totale del corso (max possibile senza limiti utente)
+    	// Calcolo punti totali possibili per il corso
     	$retval['course_total_points'] = $this->getCourseMaxPoints($studentCourseExam->getStudentHasCourse()->getCourse());
     	$retval['course_max_possible_points'] = $retval['course_total_points'];
     	
-    	// Ciclo su tutti gli item del corso, guardando le risposte dell'utente. Se sono sbagliate, si decurta
+    	// Numero totale di esami sostenuti per il corso corrente E punteggio totale raggiunto nel corso
+    	$gw_shche = $this->getStudentHasCourseHasExamRepo();
+    	$gw_shati = $this->getStudentHasAnsweredToItemRepo();
+    	$gw_itemoptions = $this->getItemoptionRepo();
+    	
+    	$allExamsForStudent = $gw_shche->findByStudentOnCourse($studentCourseExam->getStudentHasCourse());
+    	// Per tutti gli esemi sostenuti dallo studente leggo i punti e li sommo.
+    	// Se poi l'esame è completato, si aggiunge alla lista degli esami corso completato
     	if (count($allExamsForStudent)) {
     		foreach ($allExamsForStudent as $examForStudent) {
     			/* @var $examForStudent StudentHasCourseHasExam */
-    			$gw_shati = $this->getStudentHasAnsweredToItemRepo();
+    			$retval['exams_points'] += $examForStudent->getPoints();
+    			if ($examForStudent->getCompleted()) $retval['exams_completed']++;
+    			// Controlliamo se lo studente ha risposto a questa domanda
     			$answers = $gw_shati->findByStudentCourseExam($examForStudent);
     			if (count($answers)) {
+    				// L'utente ha risposto agli item dell'esame: confronto la risposta.
     				foreach ($answers as $answer) {
     					/* @var $answer StudentHasAnsweredToItem */
-    					$gw_itemoptions = $this->getItemoptionRepo();
-    					$correctItemOption = $gw_itemoptions->findCorrectForItem($answer->getItem());
-    					$actualItemOption = $gw_itemoptions->find($answer->getOptionId());
-    					if ($correctItemOption !== $actualItemOption) {
-    						$totPoints = $correctItemOption->getPoints();
-    						$actualPoints = $actualItemOption->getPoints();
-    						$exceedingPoints = $totPoints-$actualPoints;
+    					$realOption = null;
+    					$itemOptions = $answer->getItem()->getItemoption()->getValues();
+    					if (count($itemOptions)) {
+    						foreach ($itemOptions as $option) {
+    							if ($option->getCorrect() === 1) {
+    								$realOption = $option;
+    								break;
+    							}
+    						}
+    					}
+    					/* @var $actualOption Itemoption */
+    					$actualOption = $gw_itemoptions->find($answer->getOptionId());
+    					if ($realOption != $actualOption) {
+    						$points = $realOption->getPoints();
+    						$actualPoints = $actualOption->getPoints();
+    						$exceedingPoints = $points-$actualPoints;
     						$retval['course_max_possible_points'] -= $exceedingPoints;
     					}
     				}
-    			}
-    			$retval['exams_points'] += $examForStudent->getPoints();
-    			if ($examForStudent->getCompleted()) $retval['exams_completed']++;
+    			}		
     		}
     	}
-    	 
-    	
     	return $retval;
     }
     
@@ -425,7 +433,6 @@ final class ExamService implements ServiceLocatorAwareInterface
     			if ($sess->getCompleted() === 0 && $sess->getStartDate() < new \DateTime()) {
     				// Trovata sessione successiva
     				if ($sess == $session) {
-    					$a = $this->getUserExamData($sess);print_r($a);die();
     					return $this->getUserExamData($sess);
     				} 
     				return $this->getUserExamData($sess,'Sessione precedente iniziata da completare');

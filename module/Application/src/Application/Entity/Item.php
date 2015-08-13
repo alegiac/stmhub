@@ -100,6 +100,13 @@ class Item
     private $itemoption;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="answer", type="text", length=65535, nullable=false)
+     */
+    private $answer;
+    
+    /**
      * Constructor
      */
     public function __construct()
@@ -330,4 +337,29 @@ class Item
     {
         return $this->itemoption;
     }
+    
+    /**
+     * Set answer
+     *
+     * @param string $answer
+     *
+     * @return Item
+     */
+    public function setAnswer($answer)
+    {
+    	$this->answer = $answer;
+    
+    	return $this;
+    }
+    
+    /**
+     * Get answer
+     *
+     * @return string
+     */
+    public function getAnswer()
+    {
+    	return $this->answer;
+    }
+    
 }
