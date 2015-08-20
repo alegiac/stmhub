@@ -32,9 +32,10 @@
             	<div class="card">
 	        		<div class="card-header">
 	        			<div class="row">
-	        				<h2>Benvenut{$sexDesc}, {$firstName}</h2>
+	        				<h2>Bentornat{$sexDesc}, {$firstName}</h2>
 	        				<br>
-	        				<h3>Nuova sessione d'esame disponibile</h3>
+	        				<h3>Riprendi la sessione d'esame</h3>
+	        				<small>Hai una sessione non completata</small>
 	        				<hr>
 	        				<div class="col-xs-8">
 	        					<h4>Corso: {$courseName}</h4>
@@ -48,7 +49,7 @@
 	                    		<img src="{$examImage}" style="max-width:100%;max-height:100%;"/>
 	                    	</div>
 	                    	<br><br><br><br><br><br>
-	                    	<a href="/exam/participate" class="btn btn-primary btn-lg col-xs-8 col-xs-offset-2">INIZIA</a>
+	                    	<a href="/exam/participate" class="btn btn-primary btn-lg col-xs-8 col-xs-offset-2">RIPRENDI</a>
 	                    	<br><br><br>
 	                   	</div>
 	        		</div>

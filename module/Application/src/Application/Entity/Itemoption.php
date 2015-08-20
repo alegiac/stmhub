@@ -3,7 +3,6 @@
 namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Zend\Db\Sql\Ddl\Column\Integer;
 
 /**
  * Itemoption
@@ -38,11 +37,11 @@ class Itemoption
 
     /**
      * @var integer
-     * 
-     * @ORM\Column(name="correct",type="integer",nullable=false)
+     *
+     * @ORM\Column(name="correct", type="integer", nullable=false)
      */
-    private $correct;
-    
+    private $correct = '0';
+
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
@@ -116,29 +115,29 @@ class Itemoption
     {
         return $this->points;
     }
-    
+
     /**
      * Set correct
-     * 
+     *
      * @param integer $correct
-     * 
+     *
      * @return Itemoption
      */
     public function setCorrect($correct)
     {
-    	$this->correct = $correct;
-    	
-    	return $this;
+        $this->correct = $correct;
+
+        return $this;
     }
-    
+
     /**
      * Get correct
-     * 
+     *
      * @return integer
      */
     public function getCorrect()
     {
-    	return $this->correct;
+        return $this->correct;
     }
 
     /**

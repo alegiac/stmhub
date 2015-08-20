@@ -32,6 +32,8 @@ use Application\Entity\Exam;
 use Application\Entity\Course;
 use Application\Entity\Repository\ExamRepo;
 use Application\Entity\Repository\ItemoptionRepo;
+use Core\Constants\Errorcode;
+use Application\Entity\Repository\ItemRepo;
 
 final class ExamService implements ServiceLocatorAwareInterface
 {	
@@ -99,6 +101,15 @@ final class ExamService implements ServiceLocatorAwareInterface
     private function getExamRepo()
     {
     	return $this->getEntityManager()->getRepository('Application\Entity\Exam');
+    }
+    
+    /**
+     * Acquisizione repository item
+     * @return ItemRepo
+     */
+    private function getItemRepo()
+    {
+    	return $this->getEntityManager()->getRepository('Application\Entity\Item');
     }
     
     /**
@@ -271,6 +282,7 @@ final class ExamService implements ServiceLocatorAwareInterface
     	// Calcolo punti totali possibili per il corso
     	$retval['course_total_points'] = $this->getCourseMaxPoints($studentCourseExam->getStudentHasCourse()->getCourse());
     	$retval['course_max_possible_points'] = $retval['course_total_points'];
+    	$retval['exam_max_possible_points'] = $this->getExamMaxPoints($studentCourseExam->getExam());
     	
     	// Numero totale di esami sostenuti per il corso corrente E punteggio totale raggiunto nel corso
     	$gw_shche = $this->getStudentHasCourseHasExamRepo();
@@ -344,8 +356,10 @@ final class ExamService implements ServiceLocatorAwareInterface
     				'id' => $session->getExam()->getCourse()->getId(),
     				'name' => $session->getExam()->getCourse()->getName(),
     				'description' => $session->getExam()->getCourse()->getDescription(),
+    				'numexams' => $session->getExam()->getCourse()->getTotalexams(),
     			),
     			'progress' => $session->getProgressive(),
+    			'enddate' => $session->getEndDate()->format('d/m/Y'),
     			'items' => $this->getExamItems($session->getExam()),
     	);
     	
@@ -356,12 +370,49 @@ final class ExamService implements ServiceLocatorAwareInterface
     			'id' => $session->getStudentHasCourse()->getStudent()->getId(),
     			'firstname' => $session->getStudentHasCourse()->getStudent()->getFirstname(),
     			'lastname' => $session->getStudentHasCourse()->getStudent()->getLastname(),
+    			'sex' => $session->getStudentHasCourse()->getStudent()->getSex()
     		),
     		'stats' => $this->getStatsForStudent($session),
     		'message' => $message
     	);
-    	
     	return $retval;
+    }
+    
+    /**
+     * Aggiornamento progress (numero item attivo in quel momento).
+     * Decreta l'ingresso dello studente nella domanda
+     * 
+     * @param int $sessionId Identificativo sessione
+     * @param int $number Numero di item
+     */
+    public function setExamSessionProgress($sessionId,$number)
+    {
+    	$session = $this->getStudentHasCourseHasExamRepo()->find($sessionId);
+    	/* @var $session StudentHasCourseHasExam */
+    	$session->setProgressive($number);
+    	$this->getEntityManager()->persist($session);
+    	$this->getEntityManager()->flush();
+    }
+    
+    /**
+     * Gestione timeout (risposta non data in tempo utile)
+     * 
+     * @param int $sessionId Identificativo sessione
+     * @param int $itemId Identificativo domanda
+     */
+    public function responseWithATimeout($sessionId,$itemId)
+    {
+    	$session = $this->getStudentHasCourseHasExamRepo()->find($sessionId);
+    	$item = $this->getItemRepo()->find($itemId);
+    	
+    	$answer = new StudentHasAnsweredToItem();
+    	$answer->setInsertDate(new \DateTime());
+    	$answer->setStudentHasCourseHasExam($session);
+    	$answer->setItem($item);
+    	$answer->setTimeout(1);
+    	$answer->setPoints(0);
+    	$this->getEntityManager()->persist($answer);
+    	$this->getEntityManager()->flush();
     }
     
     /**
@@ -380,31 +431,31 @@ final class ExamService implements ServiceLocatorAwareInterface
     {
     	// Validazione campi richiesta
     	if (strpos($token, ".") === false) 
-    		throw new MalformedRequest("Token di richiesta non inserito");
+    		throw new MalformedRequest("The \".\" character is missing in the token [".$token."]");
     	
     	$studentToken = substr($token,0,strpos($token, "."));
     	$sessionToken = substr($token,strpos($token, ".")+1);
     	
     	if (!$studentToken || strlen($studentToken) == 0) 
-    		throw new MalformedRequest("Token richiesta non valido: subtoken studente non inserito");
+    		throw new MalformedRequest("The token student part is not valued [".$token."]");
     	if (!$sessionToken || strlen($sessionToken) == 0)
-    		throw new MalformedRequest("Token richiesta non valido: subtoken sessione-esame non inserito");
+    		throw new MalformedRequest("The token session part is not valued [".$token."]");
     	
     	// Acquisizione studente
     	$student = $this->getStudentRepo()->findByIdentifier($studentToken);
     	if (!$student) 
-    		throw new ObjectNotFound(sprintf("Nessuno studente trovato con identificativo %s",$studentToken));
+    		throw new ObjectNotFound("No student found for the token student part [".$studentToken."]",Errorcode::ERRCODE_STUDENT_NOT_FOUND);
     	if ($student->getActivationstatus()->getId() != ActivationStatus::STATUS_ENABLED) 
-    		throw new ObjectNotEnabled(sprintf("Studente con identificativo %s trovato ma non abilitato",$studentToken));
+    		throw new ObjectNotEnabled("Not enabled student found [".$student->getId()."] for the token student part [".$studentToken."]",Errorcode::ERRCODE_STUDENT_NOT_ENABLED);
 
     	// Acquisizione sessione di esame
     	$session = $this->getStudentHasCourseHasExamRepo()->findByIdentifier($sessionToken);
     	if (!$session)
-    		throw new ObjectNotFound(sprintf("Nessuna sessione d'esame trovata con identificativo %s",$sessionToken));
+    		throw new ObjectNotFound("No exam session found for the token session part [".$sessionToken."]",Errorcode::ERRCODE_SESSION_NOT_FOUND);
 
     	// Controllo incrociato studente/sessione
     	if ($session->getStudentHasCourse()->getStudent() != $student)
-    		throw new InconsistentContent(sprintf("Sessione con token %s valida ma non assegnata all'account studente con identificativo %s. Probabile tentativo di hacking",$sessionToken,$studentToken));
+    		throw new InconsistentContent("Both student and session token part are correct [".$studentToken."], [".$sessionToken."], but not related. Possible hacking trial");
     	
     	// Da qui il processo di validazione e' completato
     	$course = $session->getStudentHasCourse()->getCourse();

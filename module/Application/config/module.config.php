@@ -25,21 +25,11 @@ return array(
 	),
     'router' => array(
         'routes' => array(
-            'home' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
-                'options' => array(
-                    'route'    => '/',
-                    'defaults' => array(
-                        'controller' => 'Application\Controller\Index',
-                        'action'     => 'index',
-                    ),
-                ),
-            ),
-        	
-        	'exam_token' => array(
+        	// Route per la validazione di un token
+            'exam_token' => array(
         		'type' => 'Segment',
         		'options' => array(
-        			'route' => '/exam/token/:tkn[/]',
+        			'route' => '/exam/token[/][:tkn][/]',
         			'constraints' => array(
         				'tkn' => '[a-zA-Z0-9\.]+',
         			),
@@ -47,6 +37,19 @@ return array(
         				'__NAMESPACE__' => 'Application\Controller',
         				'controller' => 'Exam',
         				'action' => 'index',
+        			),
+        		),
+        		'may_terminate' => true,
+        	),
+        	// Route per la gestione di un errore
+        	'exam_error' => array(
+        		'type' => 'Segment',
+        		'options' => array(
+        			'route' => '/exam/error',
+        			'defaults' => array(
+        				'__NAMESPACE__' => 'Application\Controller',
+        				'controller' => 'Exam',
+        				'action' => 'error'
         			),
         		),
         		'may_terminate' => true,
@@ -64,10 +67,23 @@ return array(
         		),
         		'may_terminate' => true,
 			),
+        	'exam_restart' => array(
+        		'type' => 'Segment',
+        		'options' => array(
+        			'route' => '/exam/restart',
+        			'constraints' => array(),
+        			'defaults' => array(
+        				'__NAMESPACE__' => 'Application\Controller',
+        				'controller' => 'Exam',
+        				'action' => 'restart',
+        			),
+        		),
+        		'may_terminate' => true,
+        	),
         	'exam_participate' => array(
         		'type' => 'Segment',
         		'options' => array(
-        			'route' => '/exam/participate',
+        			'route' => '/exam/participate[/][timeout]',
         			'constraints' => array(),
         			'defaults' => array(
         				'__NAMESPACE__' => 'Application\Controller',
@@ -77,29 +93,19 @@ return array(
         		),
         		'may_terminate' => true,
 			),
-        	'exam_error' => array(
+        	'exam_timeout' => array(
         		'type' => 'Segment',
         		'options' => array(
-        			'route' => '/exam/error',
+        			'route' => '/exam/timeout',
+        			'constraints' => array(),
         			'defaults' => array(
         				'__NAMESPACE__' => 'Application\Controller',
         				'controller' => 'Exam',
-        				'action' => 'error'
+        				'action' => 'timeout',
         			),
         		),
         		'may_terminate' => true,
-        	),
-        	'exam_exception' => array(
-        		'type' => 'Segment',
-        		'options' => array(
-        			'route' => '/exam/exception',
-        			'default' => array(
-        				'__NAMESPACE__' => 'Application\Controller',
-        				'controller' => 'Exam',
-        				'action' => 'exception'
-        			),
-        		),
-        	),
+        	),        		
         ),
     ),
     'service_manager' => array(

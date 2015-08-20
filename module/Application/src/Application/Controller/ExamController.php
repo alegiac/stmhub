@@ -11,13 +11,18 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Zend\Console\Request as ConsoleRequest;
 use Zend\Session\Container;
 use Application\Constants\MediaType;
 use Application\Constants\ItemType;
 use Application\Form\ExamSelect;
 use Application\Form\ExamInput;
 use Application\Service\ExamService;
+use EddieJaoude\Zf2Logger\Log\Logger;
+use Core\Exception\MalformedRequest;
+use Core\Exception\ObjectNotEnabled;
+use Core\Exception\ObjectNotFound;
+use Core\Exception\InconsistentContent;
+use Application\Form\ExamEmpty;
 
 class ExamController extends AbstractActionController
 {
@@ -27,6 +32,20 @@ class ExamController extends AbstractActionController
 	 * @var Container
 	 */
 	private $session;
+	
+	/**
+	 * Oggetto configurazione di sistema
+	 * 
+	 * @var Zend\Config
+	 */
+	private $config;
+	
+	/**
+	 * Logger
+	 * 
+	 * @var Logger
+	 */
+	private $logger;
 	
 	/**
 	 * Ingresso nella funzione di accesso all'esame.
@@ -42,20 +61,27 @@ class ExamController extends AbstractActionController
 	{
 		$this->init();
 		
-		// 1 - Verifica presenza di token
+		// *** Verifica token. Se non presente, redirect a url definito in configurazione *** //
 		$stmt = $this->params('tkn');
 		
+		if (strlen($stmt) == 0) {
+			$this->logger->notice("Token is missing in /exam/token request. Redirecting to corporate url [".$this->config['corporateurl']."]");
+			$this->redirect()->toUrl($this->config['corporateurl']);
+			return;
+		}
+		
 		try {
-			// 2 - Verifica stato token
+			
+			// ** Acquisizione dati studente/sessione e salvataggio in sessione **//
 			$res = $this->getExamService()->getExamSessionByToken($stmt);
-
-			// Salvataggio token in sessione
-			$this->session->data = $res;
+			$this->session->exam = $res;
+			
 			// 3- Verifica risultato: inviare a pagina di stop o prosegue?
 			if (strlen($res['message']) > 0 && is_null($res['id'])) {
 				$this->redirect()->toRoute('exam_error');
 			} else {
-				// Redirect ad inizio esame
+				
+				// Redirect ad inizio esame (se progress è zero)
 				if($res['session']['progress'] === 0) {
 					$newExam = 1;
 					$this->redirect()->toRoute('exam_start');
@@ -65,9 +91,17 @@ class ExamController extends AbstractActionController
 				}
 			}
 		} catch (\Exception $e) {
-			// 4 - Gestione eccezioni
-			$this->session->exception = "Impossibile accedere alla sessione di esame per inconsistenza dei dati.";
-			$this->redirect()->toRoute('exam_exception');
+			$this->logger->warn($e->getMessage());
+			$this->logger->info($e->getTraceAsString());
+			
+			if ($e instanceof MalformedRequest || $e instanceof InconsistentContent) {
+				// Richiesta volutamente errata
+				$this->redirect()->toUrl($this->config['corporateurl']);
+			} else {
+				// Errore 500
+				$this->session->error_message = "Si &egrave; verificato un errore nella partecipazione all'esame (codice: ".$e->getCode().")";
+				$this->redirect()->toRoute('exam_500');
+			}
 		}
 	}
 	
@@ -80,7 +114,15 @@ class ExamController extends AbstractActionController
 	 */
 	public function errorAction()
 	{
-		echo "errore";die();
+		$this->init();
+		
+		$vm = new ViewModel();
+		if ($this->session->offsetExists('error_message')) {
+			$vm->error_message = $this->session->error_message;
+		} else {
+			$vm->error_message = "";
+		}
+		return $vm;
 	}
 	
 	/**
@@ -91,6 +133,23 @@ class ExamController extends AbstractActionController
 	 */
 	public function startAction()
 	{
+		$this->initExam();
+		
+		$vm = new ViewModel();
+		$this->session->exam['student']['sex'] == 'f' ? $vm->sexDesc = 'a' : $vm->sexDesc = 'o';
+		$vm->firstName = $this->session->exam['student']['firstname'];
+		$vm->lastName = $this->session->exam['student']['lastname'];
+		$vm->courseName = $this->session->exam['session']['course']['name'];
+		$vm->courseDesc = $this->session->exam['session']['course']['description'];
+		$vm->examName = $this->session->exam['session']['exam']['name'];
+		$vm->examDesc = $this->session->exam['session']['exam']['description'];
+		$vm->totalItems = $this->session->exam['session']['exam']['totalitems'];
+		$vm->examNumber = $this->session->exam['session']['exam']['progress'];
+		$vm->totExams = $this->session->exam['session']['course']['numexams'];
+		$vm->endDate = $this->session->exam['session']['enddate'];
+		$vm->maxPoints = $this->session->exam['stats']['exam_max_possible_points'];
+		$this->session->exam['session']['exam']['photourl'] == "" ? $vm->examImage = "" : $vm->examImage = "/static/assets/img/exam/".$this->session->exam['session']['exam']['photourl'];
+		return $vm;
 	}
 	
 	/**
@@ -101,6 +160,23 @@ class ExamController extends AbstractActionController
 	 */
 	public function restartAction()
 	{
+		$this->initExam();
+		
+		$vm = new ViewModel();
+		$this->session->exam['student']['sex'] == 'f' ? $vm->sexDesc = 'a' : $vm->sexDesc = 'o';
+		$vm->firstName = $this->session->exam['student']['firstname'];
+		$vm->lastName = $this->session->exam['student']['lastname'];
+		$vm->courseName = $this->session->exam['session']['course']['name'];
+		$vm->courseDesc = $this->session->exam['session']['course']['description'];
+		$vm->examName = $this->session->exam['session']['exam']['name'];
+		$vm->examDesc = $this->session->exam['session']['exam']['description'];
+		$vm->totalItems = $this->session->exam['session']['exam']['totalitems'];
+		$vm->examNumber = $this->session->exam['session']['exam']['progress'];
+		$vm->totExams = $this->session->exam['session']['course']['numexams'];
+		$vm->endDate = $this->session->exam['session']['enddate'];
+		$vm->maxPoints = $this->session->exam['stats']['exam_max_possible_points'];
+		$this->session->exam['session']['exam']['photourl'] == "" ? $vm->examImage = "" : $vm->examImage = "/static/assets/img/exam/".$this->session->exam['session']['exam']['photourl'];
+		return $vm;
 	}
 	
 	/**
@@ -114,6 +190,19 @@ class ExamController extends AbstractActionController
 		
 	}
 	
+	public function timeoutAction()
+	{
+		$this->initExam();
+		
+		
+		// Domanda
+		$itemProg = (int)$this->session->exam['session']['progress'];
+		$item = $this->session->exam['session']['items'][$itemProg]['id'];
+		
+		$this->getExamService()->responseWithATimeout($this->session->exam['id'], $item);
+		$this->redirect()->toRoute('exam_participate');
+	}
+	
 	/**
 	 * Visualizzazione pagina di partecipazione al concorso: acquisisce lo step attuale, il relativo item 
 	 * e lo visualizza per ottenere la risposta dall'utente.
@@ -124,68 +213,119 @@ class ExamController extends AbstractActionController
 	public function participateAction()
 	{
 		
+		$this->initExam();
+		
+		$request = $this->getRequest();
+		if ($request->isPost()) {
+			if ($form->isValid()) {
+			}
+		}
+		
+		// Impostazione valore corrente per la sessione d'esame
+		$this->getExamService()->setExamSessionProgress($this->session->exam['id'], $itemProg);
+		
+		return $this->composeParticipationVM();
+	}
+	
+	/**
+	 * Impostazioni di default (acquisizione sessione, impostazione config e logger).
+	 * Verifica la presenza dei dati di accesso in sessione, altrimenti invalida e 
+	 * re-invia l'utente a STM
+	 * 
+	 * @return void
+	 */
+	protected function init()
+	{
+		$this->session = new Container('exam');
+		$this->config = $this->getServiceLocator()->get('Config');
+		$this->logger = $this->getServiceLocator()->get('Logger');
+	}
+	
+	/**
+	 * Verifica la presenza dei dati di accesso in sessione, altrimenti invalida e
+	 * re-invia l'utente a STM
+	 *
+	 * @return void
+	 * @see ExamController::init()
+	 */
+	protected function initExam()
+	{
 		$this->init();
 		
-		// Se timeout, equivale a POST vuoto: avanzamento a record successivo (se presente
+		$this->session->error_message = "";
 		
+		if (!$this->session->offsetExists('exam')) {
+			// Accesso utente a pagina senza sessione
+			$this->logger->notice("Utente ha eseguito l'accesso diretto alla pagina di partecipazione (o affini) senza esame in sessione");
+			$this->redirect()->toUrl($this->config['corporateurl']);
+		}
+	}
+	
+	/**
+	 * Composizione dati multimediali
+	 * @param array $mediaArr Array media
+	 * @return string
+	 */
+	protected function composeMedia(array $mediaArr)
+	{
+		$retval = "";
 		
-		// Visualizzazione 
-		$vm = new ViewModel();
-		$vm->disableCssMM = 1;
-		$vm->firstName = $this->session->data['student']['firstname'];
-		$vm->lastName = $this->session->data['student']['lastname'];
-		$vm->courseName = $this->session->data['session']['course']['name'];
-		$vm->courseDesc = $this->session->data['session']['course']['description'];
-		$vm->examName = $this->session->data['session']['exam']['name'];
-		$vm->examDesc = $this->session->data['session']['exam']['description'];
-		$vm->totalItems = $this->session->data['session']['exam']['totalitems'];
-		
-		// Domanda
-		$itemProg = (int)$this->session->data['session']['progress']+1;
-		$vm->itemProgressive = $itemProg;
-		$item = $this->session->data['session']['items'][$itemProg];
-		$vm->itemQuestion = $item['question'];
-		//$vm->remainingTime = $item['maxsecs'];
-		$vm->remainingTime = 40;
-		
-		// Media
-		$tmpMedia = "";
-		if (count($item['media'])) {
-			foreach ($item['media'] as $media) {
+		if (count($mediaArr)) {
+			foreach ($mediaArr as $media) {
 				switch ($media['type']) {
 					case MediaType::TYPE_IMAGE:
-						$tmpMedia .= 
-								'<div>
-									<img src="'.$media['url'].'" alt="" style="width:50%;"/>
-								</div>
-								<br>';
+						$retval .= '<div><img src="'.$media['url'].'" alt="" style="width:50%;"/></div><br>';
 						break;
 					case MediaType::TYPE_VIDEO:
-						$tmpMedia .= 
-								'<div class="tv-body">
-									<div class="embed-responsive embed-responsive-16by9 m-b-20">
-										<iframe class="embed-responsive-item" src="'.$media['url'].'"></iframe>
-									</div>
-								</div>
-								<br>';
+						$retval .= '<div class="tv-body"><div class="embed-responsive embed-responsive-16by9 m-b-20"><iframe class="embed-responsive-item" src="'.$media['url'].'"></iframe></div></div><br>';
 						break;
 					case MediaType::TYPE_SLIDESHOW:
-						$tmpMedia .= '<div class="lightbox row">';
+						$retval .= '<div class="lightbox row">';
 						$explodedMedia = explode("|",$media['url']);
 						foreach ($explodedMedia as $media) {
-							$tmpMedia .= 
-								'<div data-src="'.$media.'" class="col-md-3 col-sm-4 col-xs-6">
-									<div class="ligthtbox-item p-item">
-										<img src="'.$media.'" alt=""/>
-									</div>
-								</div>';
+							$retval .= '<div data-src="'.$media.'" class="col-md-3 col-sm-4 col-xs-6"><div class="ligthtbox-item p-item"><img src="'.$media.'" alt=""/></div></div>';
 						}
-						$tmpMedia .= '</div>';	
+						$retval .= '</div>';
 						break;
 				}
 			}
 		}
-		$vm->media = $tmpMedia;
+		
+		return $retval;
+	}	
+	
+	/**
+	 * Composizione ViewModel di partecipazione
+	 * @return ViewModel
+	 */
+	protected function composeParticipationVM()
+	{
+		$tmpMedia = "";
+		
+		$vm = new ViewModel();
+		
+		// Dati studente
+		$vm->firstName 		= $this->session->exam['student']['firstname'];
+		$vm->lastName 		= $this->session->exam['student']['lastname'];
+		
+		// Dati corso
+		$vm->courseName 	= $this->session->exam['session']['course']['name'];
+		$vm->courseDesc 	= $this->session->exam['session']['course']['description'];
+		
+		// Dati esame
+		$vm->examName 		= $this->session->exam['session']['exam']['name'];
+		$vm->examDesc 		= $this->session->exam['session']['exam']['description'];
+		$vm->totalItems 	= $this->session->exam['session']['exam']['totalitems'];
+		
+		// Domanda corrente (in base a progressivo)
+		$itemProg = (int)$this->session->exam['session']['progress']+1;
+		$item = $this->session->exam['session']['items'][$itemProg];
+		$vm->itemProgressive = $itemProg;
+		$vm->itemQuestion = $item['question'];
+		$vm->remainingTime = $item['maxsecs'];
+		
+		// Gestione elementi multimediali
+		$vm->media = $this->composeMedia($item['media']);
 		
 		// Caricamento form in base al tipo di item
 		switch ($item['type']) {
@@ -200,12 +340,14 @@ class ExamController extends AbstractActionController
 				}
 				$form = new ExamSelect($arrOptions);
 				break;
-			case ItemType::TYPE_TRUEFALSE;
+			case ItemType::TYPE_TRUEFALSE:
 				break;
-				
+			case ItemType::TYPE_EMPTY:
+				$form = new ExamEmpty();
+				break;
 		}
 		$vm->form = $form;
-	
+		
 		if (strlen($this->session->message) > 0) {
 			$vm->enableMessage = true;
 			$vm->message = $this->session->message;
@@ -215,11 +357,6 @@ class ExamController extends AbstractActionController
 		}
 		
 		return $vm;
-	}
-	
-	protected function init()
-	{
-		$this->session = new Container('exam');
 	}
 	
 	/**

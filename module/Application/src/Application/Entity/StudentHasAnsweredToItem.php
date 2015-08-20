@@ -24,7 +24,7 @@ class StudentHasAnsweredToItem
     /**
      * @var integer
      *
-     * @ORM\Column(name="option_id", type="integer", nullable=false)
+     * @ORM\Column(name="option_id", type="integer", nullable=true)
      */
     private $optionId;
 
@@ -48,6 +48,13 @@ class StudentHasAnsweredToItem
      * @ORM\Column(name="value", type="text", length=65535, nullable=false)
      */
     private $value;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="timeout", type="integer", nullable=false)
+     */
+    private $timeout = '0';
 
     /**
      * @var \Application\Entity\Item
@@ -175,6 +182,30 @@ class StudentHasAnsweredToItem
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * Set timeout
+     *
+     * @param integer $timeout
+     *
+     * @return StudentHasAnsweredToItem
+     */
+    public function setTimeout($timeout)
+    {
+        $this->timeout = $timeout;
+
+        return $this;
+    }
+
+    /**
+     * Get timeout
+     *
+     * @return integer
+     */
+    public function getTimeout()
+    {
+        return $this->timeout;
     }
 
     /**

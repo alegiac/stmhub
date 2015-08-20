@@ -134,7 +134,7 @@
 			
 					var initial = {/literal}{$remainingTime}{literal} ;
 					var delay = {/literal}{$remainingTime}{literal} ;
-					var url = "/exam/participate/timeout/1";
+					var url = "/exam/timeout";
 					
 					function countdown() {
 						setTimeout(countdown, 1000) ;

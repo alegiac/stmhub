@@ -50,6 +50,13 @@ class Item
     private $context;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="answer", type="text", length=65535, nullable=true)
+     */
+    private $answer;
+
+    /**
      * @var \Application\Entity\Item
      *
      * @ORM\ManyToOne(targetEntity="Application\Entity\Item")
@@ -99,13 +106,6 @@ class Item
      */
     private $itemoption;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="answer", type="text", length=65535, nullable=false)
-     */
-    private $answer;
-    
     /**
      * Constructor
      */
@@ -223,6 +223,30 @@ class Item
     }
 
     /**
+     * Set answer
+     *
+     * @param string $answer
+     *
+     * @return Item
+     */
+    public function setAnswer($answer)
+    {
+        $this->answer = $answer;
+
+        return $this;
+    }
+
+    /**
+     * Get answer
+     *
+     * @return string
+     */
+    public function getAnswer()
+    {
+        return $this->answer;
+    }
+
+    /**
      * Set item
      *
      * @param \Application\Entity\Item $item
@@ -337,29 +361,4 @@ class Item
     {
         return $this->itemoption;
     }
-    
-    /**
-     * Set answer
-     *
-     * @param string $answer
-     *
-     * @return Item
-     */
-    public function setAnswer($answer)
-    {
-    	$this->answer = $answer;
-    
-    	return $this;
-    }
-    
-    /**
-     * Get answer
-     *
-     * @return string
-     */
-    public function getAnswer()
-    {
-    	return $this->answer;
-    }
-    
 }

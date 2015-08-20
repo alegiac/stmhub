@@ -57,6 +57,13 @@ class Student
     private $identifier;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="sex", type="string", length=1, nullable=true)
+     */
+    private $sex;
+
+    /**
      * @var \Application\Entity\Activationstatus
      *
      * @ORM\ManyToOne(targetEntity="Application\Entity\Activationstatus")
@@ -196,6 +203,30 @@ class Student
     public function getIdentifier()
     {
         return $this->identifier;
+    }
+
+    /**
+     * Set sex
+     *
+     * @param string $sex
+     *
+     * @return Student
+     */
+    public function setSex($sex)
+    {
+        $this->sex = $sex;
+
+        return $this;
+    }
+
+    /**
+     * Get sex
+     *
+     * @return string
+     */
+    public function getSex()
+    {
+        return $this->sex;
     }
 
     /**

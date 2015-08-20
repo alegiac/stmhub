@@ -5,38 +5,38 @@
 * The previous config file has been stored in application.config.old
 */
 return array(
-		'modules' => array(
-				'DoctrineModule',
-				'DoctrineORMModule',
-				'ZF\\Apigility',
-				'ZF\\Apigility\\Provider',
-				'ZF\\ApiProblem',
-				'ZF\\MvcAuth',
-				'ZF\\OAuth2',
-				'ZF\\Hal',
-				'ZF\\ContentNegotiation',
-				'ZF\\ContentValidation',
-				'ZF\\Rest',
-				'ZF\\Rpc',
-				'ZF\\Versioning',
-				'ZF\\DevelopmentMode',
-				'ZendDeveloperTools',
-				'AssetManager',
-				'EddieJaoude\\Zf2Logger',
-				'BsbPhingService',
-				'SmartyModule',
-				'Application',
-				'Core',
-				'ZF\Apigility\Admin',
-				'ZF\Configuration'
+	'modules' => array(
+		'DoctrineModule',
+		'DoctrineORMModule',
+		'ZF\\Apigility',
+		'ZF\\Apigility\\Provider',
+		'ZF\\ApiProblem',
+		'ZF\\MvcAuth',
+		'ZF\\OAuth2',
+		'ZF\\Hal',
+		'ZF\\ContentNegotiation',
+		'ZF\\ContentValidation',
+		'ZF\\Rest',
+		'ZF\\Rpc',
+		'ZF\\Versioning',
+		'ZF\\DevelopmentMode',
+		'ZendDeveloperTools',
+		'AssetManager',
+		'EddieJaoude\\Zf2Logger',
+		'BsbPhingService',
+		'SmartyModule',
+		'Application',
+		'Core',
+		'ZF\Apigility\Admin',
+		'ZF\Configuration'
+	),
+	'module_listener_options' => array(
+		'module_paths' => array(
+			'./module',
+			'./vendor',
 		),
-		'module_listener_options' => array(
-				'module_paths' => array(
-						'./module',
-						'./vendor',
-				),
-				'config_glob_paths' => array(
-						'config/autoload/development/{,*.}{global,local}.php',
-				),
+		'config_glob_paths' => array(
+			'config/autoload/development/{,*.}{global,local}.php',
 		),
+	),
 );

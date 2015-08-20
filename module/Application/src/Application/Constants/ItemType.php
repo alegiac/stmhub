@@ -24,4 +24,9 @@ class ItemType
      */
     const TYPE_INSERT = 4;
     
+    /**
+     * Tipo empty (solo ok)
+     */
+    const TYPE_EMPTY = 5;
+    
 }   
