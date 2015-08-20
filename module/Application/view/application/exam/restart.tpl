@@ -34,8 +34,8 @@
 	        			<div class="row">
 	        				<h2>Bentornat{$sexDesc}, {$firstName}</h2>
 	        				<br>
-	        				<h3>Riprendi la sessione d'esame</h3>
 	        				<small>Hai una sessione non completata</small>
+	        				<h3>Riprendi la sessione d'esame</h3>
 	        				<hr>
 	        				<div class="col-xs-8">
 	        					<h4>Corso: {$courseName}</h4>

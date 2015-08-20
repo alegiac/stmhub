@@ -23,6 +23,7 @@ use Core\Exception\ObjectNotEnabled;
 use Core\Exception\ObjectNotFound;
 use Core\Exception\InconsistentContent;
 use Application\Form\ExamEmpty;
+use Zend\Form\Form;
 
 class ExamController extends AbstractActionController
 {
@@ -212,19 +213,39 @@ class ExamController extends AbstractActionController
 	 */
 	public function participateAction()
 	{
-		
 		$this->initExam();
 		
-		$request = $this->getRequest();
-		if ($request->isPost()) {
-			if ($form->isValid()) {
+		try {
+			// Impostazione valore corrente per la sessione d'esame
+			
+			$view = $this->composeParticipationVM();
+		
+			$form = $this->composeForm();
+			$request = $this->getRequest();
+			
+			if ($request->isPost()) {
+				if ($form->isValid()) {
+					$itemProg = (int)$this->session->exam['session']['progress']+1;
+					$this->getExamService()->setExamSessionProgress($this->session->exam['id'], $itemProg);
+					
+				}
+			}
+			
+			$view->form = $form;
+			return $view;
+		} catch (\Exception $e) {
+			$this->logger->warn($e->getMessage());
+			$this->logger->info($e->getTraceAsString());
+			
+			if ($e instanceof MalformedRequest || $e instanceof InconsistentContent) {
+				// Richiesta volutamente errata
+				$this->redirect()->toUrl($this->config['corporateurl']);
+			} else {
+				// Errore 500
+				$this->session->error_message = "Si &egrave; verificato un errore nella partecipazione all'esame (codice: ".$e->getCode().")";
+				$this->redirect()->toRoute('exam_500');
 			}
 		}
-		
-		// Impostazione valore corrente per la sessione d'esame
-		$this->getExamService()->setExamSessionProgress($this->session->exam['id'], $itemProg);
-		
-		return $this->composeParticipationVM();
 	}
 	
 	/**
@@ -266,7 +287,7 @@ class ExamController extends AbstractActionController
 	 * @param array $mediaArr Array media
 	 * @return string
 	 */
-	protected function composeMedia(array $mediaArr)
+	protected function composeMedia(array $mediaArr = null)
 	{
 		$retval = "";
 		
@@ -295,6 +316,36 @@ class ExamController extends AbstractActionController
 	}	
 	
 	/**
+	 * Composizione form
+	 * @return Form
+	 */
+	protected function composeForm()
+	{
+
+		$itemProg = (int)$this->session->exam['session']['progress']+1;
+		$item = $this->session->exam['session']['items'][$itemProg];
+
+		// Caricamento form in base al tipo di item
+		switch ($item['type']) {
+			case ItemType::TYPE_INSERT:
+				return new ExamInput();
+				break;
+			case ItemType::TYPE_MULTIPLE:
+				$arrOptions = array();
+				foreach ($item['options'] as $k=>$v) $arrOptions[$v['id']] = $v['value'];
+				return new ExamSelect($arrOptions);
+				break;
+			case ItemType::TYPE_TRUEFALSE:
+				return null;
+				break;
+			case ItemType::TYPE_EMPTY:
+				return new ExamEmpty();
+				break;
+		}
+		
+	}
+	
+	/**
 	 * Composizione ViewModel di partecipazione
 	 * @return ViewModel
 	 */
@@ -305,17 +356,17 @@ class ExamController extends AbstractActionController
 		$vm = new ViewModel();
 		
 		// Dati studente
-		$vm->firstName 		= $this->session->exam['student']['firstname'];
-		$vm->lastName 		= $this->session->exam['student']['lastname'];
+		$vm->firstName = $this->session->exam['student']['firstname'];
+		$vm->lastName = $this->session->exam['student']['lastname'];
 		
 		// Dati corso
-		$vm->courseName 	= $this->session->exam['session']['course']['name'];
-		$vm->courseDesc 	= $this->session->exam['session']['course']['description'];
+		$vm->courseName = $this->session->exam['session']['course']['name'];
+		$vm->courseDesc = $this->session->exam['session']['course']['description'];
 		
 		// Dati esame
-		$vm->examName 		= $this->session->exam['session']['exam']['name'];
-		$vm->examDesc 		= $this->session->exam['session']['exam']['description'];
-		$vm->totalItems 	= $this->session->exam['session']['exam']['totalitems'];
+		$vm->examName = $this->session->exam['session']['exam']['name'];
+		$vm->examDesc = $this->session->exam['session']['exam']['description'];
+		$vm->totalItems = $this->session->exam['session']['exam']['totalitems'];
 		
 		// Domanda corrente (in base a progressivo)
 		$itemProg = (int)$this->session->exam['session']['progress']+1;
@@ -327,33 +378,12 @@ class ExamController extends AbstractActionController
 		// Gestione elementi multimediali
 		$vm->media = $this->composeMedia($item['media']);
 		
-		// Caricamento form in base al tipo di item
-		switch ($item['type']) {
-			case ItemType::TYPE_INSERT:
-				$form = new ExamInput();
-				break;
-			case ItemType::TYPE_MULTIPLE:
-				$arrOptions = array();
-				foreach ($item['options'] as $k=>$v)
-				{
-					$arrOptions[$v['id']] = $v['value'];
-				}
-				$form = new ExamSelect($arrOptions);
-				break;
-			case ItemType::TYPE_TRUEFALSE:
-				break;
-			case ItemType::TYPE_EMPTY:
-				$form = new ExamEmpty();
-				break;
-		}
-		$vm->form = $form;
-		
 		if (strlen($this->session->message) > 0) {
-			$vm->enableMessage = true;
-			$vm->message = $this->session->message;
+			$vm->enableMessage 	= true;
+			$vm->message 		= $this->session->message;
 		} else {
-			$vm->enableMessage = false;
-			$vm->message = "";
+			$vm->enableMessage 	= false;
+			$vm->message 		= "";
 		}
 		
 		return $vm;

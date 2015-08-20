@@ -288,7 +288,7 @@ final class ExamService implements ServiceLocatorAwareInterface
     	$gw_shche = $this->getStudentHasCourseHasExamRepo();
     	$gw_shati = $this->getStudentHasAnsweredToItemRepo();
     	$gw_itemoptions = $this->getItemoptionRepo();
-    	
+    
     	$allExamsForStudent = $gw_shche->findByStudentOnCourse($studentCourseExam->getStudentHasCourse());
     	// Per tutti gli esemi sostenuti dallo studente leggo i punti e li sommo.
     	// Se poi l'esame è completato, si aggiunge alla lista degli esami corso completato
@@ -314,12 +314,14 @@ final class ExamService implements ServiceLocatorAwareInterface
     						}
     					}
     					/* @var $actualOption Itemoption */
-    					$actualOption = $gw_itemoptions->find($answer->getOptionId());
-    					if ($realOption != $actualOption) {
-    						$points = $realOption->getPoints();
-    						$actualPoints = $actualOption->getPoints();
-    						$exceedingPoints = $points-$actualPoints;
-    						$retval['course_max_possible_points'] -= $exceedingPoints;
+    					if ($answer->getOptionId() != null) {
+    						$actualOption = $gw_itemoptions->find($answer->getOptionId());
+    						if ($realOption != $actualOption) {
+    							$points = $realOption->getPoints();
+    							$actualPoints = $actualOption->getPoints();
+    							$exceedingPoints = $points-$actualPoints;
+    							$retval['course_max_possible_points'] -= $exceedingPoints;
+    						}
     					}
     				}
     			}		
@@ -375,6 +377,8 @@ final class ExamService implements ServiceLocatorAwareInterface
     		'stats' => $this->getStatsForStudent($session),
     		'message' => $message
     	);
+    	
+    	
     	return $retval;
     }
     
