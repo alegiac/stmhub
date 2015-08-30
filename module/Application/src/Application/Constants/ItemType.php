@@ -10,9 +10,9 @@ class ItemType
 	const TYPE_MULTIPLE = 1;
 	
 	/**
-	 * Tipo vero-falso
+	 * Tipo multi submit (vero-falso, etc)
 	 */
-    const TYPE_TRUEFALSE = 2;
+    const TYPE_MULTISUBMIT = 2;
     
     /**
      * Tipo riordinamento

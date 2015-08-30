@@ -15,7 +15,8 @@ class ExamSelect extends Form
 		
 		$this->add(array(
 			'type' => 'Zend\Form\Element\Select',
-			'name' => 'ans',
+			'required' => true,
+			'name' => 'input',
 			'options' => array (
 				'label' => '',
 				'empty_option' => 'Seleziona',
@@ -31,8 +32,9 @@ class ExamSelect extends Form
 			'type' => 'Zend\Form\Element\Submit',
 			'name' => 'subbb',
 			'attributes' => array(
+				'id' => 'subbb',
 				'value' => 'INVIA',
-				'class' => "btn btn-primary btn-lg col-xs-8 col-xs-offset-2"
+				'class' => "btn btn-primary btn-lg col-xs-8 col-xs-offset-2",
 			)
 			
 		));

@@ -92,27 +92,11 @@ class Item
     private $image;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
-     * @ORM\ManyToMany(targetEntity="Application\Entity\Itemoption", inversedBy="item")
-     * @ORM\JoinTable(name="item_has_itemoption",
-     *   joinColumns={
-     *     @ORM\JoinColumn(name="item_id", referencedColumnName="id")
-     *   },
-     *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="itemoption_id", referencedColumnName="id")
-     *   }
-     * )
-     */
-    private $itemoption;
-
-    /**
      * Constructor
      */
     public function __construct()
     {
         $this->image = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->itemoption = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
 
@@ -326,39 +310,5 @@ class Item
     public function getImage()
     {
         return $this->image;
-    }
-
-    /**
-     * Add itemoption
-     *
-     * @param \Application\Entity\Itemoption $itemoption
-     *
-     * @return Item
-     */
-    public function addItemoption(\Application\Entity\Itemoption $itemoption)
-    {
-        $this->itemoption[] = $itemoption;
-
-        return $this;
-    }
-
-    /**
-     * Remove itemoption
-     *
-     * @param \Application\Entity\Itemoption $itemoption
-     */
-    public function removeItemoption(\Application\Entity\Itemoption $itemoption)
-    {
-        $this->itemoption->removeElement($itemoption);
-    }
-
-    /**
-     * Get itemoption
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getItemoption()
-    {
-        return $this->itemoption;
     }
 }

@@ -4,6 +4,7 @@ namespace Application\Form;
 
 use Zend\Form\Form;
 use Zend\Form\Element\Submit;
+use Zend\Validator\NotEmpty;
 
 class ExamInput extends Form
 {
@@ -14,9 +15,20 @@ class ExamInput extends Form
 		
 		$this->add(array(
 			'type' => 'Zend\Form\Element\Text',
-			'name' => 'inpu',
+			'name' => 'input',
+			'required' => true,
 			'options' => array (
 				'label' => '',
+			),
+			'validators' => array(
+				array(
+					'name'=>'NotEmpty',
+					'options' => array(
+						'messages' => array(
+							NotEmpty::IS_EMPTY => 'La risposta a questo quesito non &egrave; opzionale!'
+						),
+					),
+				),
 			),
 			'attributes' => array(
 				'class' => 'form-control input-lg col-xs-12',

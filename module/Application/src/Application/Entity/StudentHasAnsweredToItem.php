@@ -45,7 +45,7 @@ class StudentHasAnsweredToItem
     /**
      * @var string
      *
-     * @ORM\Column(name="value", type="text", length=65535, nullable=false)
+     * @ORM\Column(name="value", type="text", length=65535, nullable=true)
      */
     private $value;
 
@@ -55,6 +55,13 @@ class StudentHasAnsweredToItem
      * @ORM\Column(name="timeout", type="integer", nullable=false)
      */
     private $timeout = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="correct", type="integer", nullable=false)
+     */
+    private $correct = '0';
 
     /**
      * @var \Application\Entity\Item
@@ -206,6 +213,30 @@ class StudentHasAnsweredToItem
     public function getTimeout()
     {
         return $this->timeout;
+    }
+
+    /**
+     * Set correct
+     *
+     * @param integer $correct
+     *
+     * @return StudentHasAnsweredToItem
+     */
+    public function setCorrect($correct)
+    {
+        $this->correct = $correct;
+
+        return $this;
+    }
+
+    /**
+     * Get correct
+     *
+     * @return integer
+     */
+    public function getCorrect()
+    {
+        return $this->correct;
     }
 
     /**

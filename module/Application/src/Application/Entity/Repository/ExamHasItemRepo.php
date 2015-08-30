@@ -4,6 +4,7 @@ namespace Application\Entity\Repository;
 
 use Application\Entity\Exam;
 use Doctrine\Common\Collections\Criteria;
+use Application\Entity\ExamHasItem;
 /**
  * ExamHasItemRepo
  *
@@ -25,5 +26,22 @@ class ExamHasItemRepo extends \Doctrine\ORM\EntityRepository
 		if ($result->count()) return $result->getValues();
 		return array();
 	}
+	
+	/**
+	 * Acquisizione di un item per un esame, con esame e progressivo
+	 * 
+	 * @param Exam $exam
+	 * @param int $progressive
+	 * 
+	 * @return ExamHasItem
+	 */
+	public function findByExamAndProgressive(Exam $exam, $progressive)
+	{
+		$criteria = Criteria::create()->where(Criteria::expr()->eq('exam',$exam))->andWhere(Criteria::expr()->eq('progressive',$progressive));
+		$result = $this->matching($criteria);
+		if ($result->count()) return $result->getValues()[0];
+		return null;
+	}
+	
 	
 }

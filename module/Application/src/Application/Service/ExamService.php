@@ -184,16 +184,18 @@ final class ExamService implements ServiceLocatorAwareInterface
     	$retval = array();
     	
     	// Carica opzioni
-    	$options = $item->getItemoption();
-    	
+    	$optionGw = $this->getItemoptionRepo();
+    	$options = $optionGw->findByItem($item);
     	if (count($options)) {
     		
-    		foreach ($options->getValues() as $option) {
+    		foreach ($options as $option) {
     			
     			/* @var $option Itemoption */
     			$retval[] = array(
     				'id' => $option->getId(),
-    				'value' => $option->getName()
+    				'value' => $option->getName(),
+    				'correct' => $option->getCorrect(),
+    				'points' => $option->getPoints()
     			);
     		}
     	}	
@@ -209,10 +211,10 @@ final class ExamService implements ServiceLocatorAwareInterface
     private function getItemMaxPoints(Item $item)
     {
     	$totPoints = 0;
-    	$options = $item->getItemoption();
+    	$options = $this->getItemoptionRepo()->findByItem($item);
     	
     	if (count($options)) {
-    		foreach ($options->getValues() as $option) {
+    		foreach ($options as $option) {
     		
     			/* @var $option Itemoption */
     			if ($option->getCorrect() === 1) $totPoints += $option->getPoints();
@@ -304,9 +306,9 @@ final class ExamService implements ServiceLocatorAwareInterface
     				foreach ($answers as $answer) {
     					/* @var $answer StudentHasAnsweredToItem */
     					$realOption = null;
-    					$itemOptions = $answer->getItem()->getItemoption()->getValues();
-    					if (count($itemOptions)) {
-    						foreach ($itemOptions as $option) {
+    					$itOptions = $this->getItemoptionRepo()->findByItem($answer->getItem());
+    					if (count($itOptions)) {
+    						foreach ($itOptions as $option) {
     							if ($option->getCorrect() === 1) {
     								$realOption = $option;
     								break;
@@ -327,6 +329,74 @@ final class ExamService implements ServiceLocatorAwareInterface
     			}		
     		}
     	}
+    	return $retval;
+    }
+    
+    private function composeAnswer(StudentHasCourseHasExam $session,$isError = false,$message = "")
+    {
+    	$retval = array();
+    	$retval['result'] = (int)!$isError;
+    	$retval['message'] = $message;
+    	
+    	if ($session) {
+    		$retval['course'] = array(
+    			'id' => $session->getStudentHasCourse()->getCourse()->getId(),
+    			'name' => $session->getStudentHasCourse()->getCourse()->getName(),
+    			'description' => $session->getStudentHasCourse()->getCourse()->getDescription(),
+    			'durationweek' => $session->getStudentHasCourse()->getCourse()->getDurationweek(),
+    			'periodicity' => $session->getStudentHasCourse()->getCourse()->getPeriodicityweek(),
+    			'numexams' => $session->getStudentHasCourse()->getCourse()->getTotalexams(),
+    			'weekday' => $session->getStudentHasCourse()->getCourse()->getWeekday()->getId()	
+    		);
+    		
+    		$retval['exam'] = array(
+    			'id' => $session->getExam()->getId(),
+    			'name' => $session->getExam()->getName(),
+    			'description' => $session->getExam()->getDescription(),
+    			'totalitems' => $session->getExam()->getTotalitems(),
+    			'photourl' => $session->getExam()->getImageurl(),
+    			'progress' => $session->getExam()->getProgOnCourse(),
+    			'totalpoints' => $session->getExam()->getPointsIfCompleted(),
+    			'outtimereduction' => $session->getExam()->getReducePercentageOuttime(),
+    		);
+    		
+    		$retval['student'] = array(
+    			'id' => $session->getStudentHasCourse()->getStudent()->getId(),
+    			'firstname' => $session->getStudentHasCourse()->getStudent()->getFirstname(),
+    			'lastname' => $session->getStudentHasCourse()->getStudent()->getLastname(),
+    			'sex' => $session->getStudentHasCourse()->getStudent()->getSex()
+    		);
+    		
+    		$retval['session'] = array(
+    			'id' => $session->getId(),
+    			'answer' => $session->getAnswer(),
+    			'completed' => $session->getCompleted(),
+    			'enddate' => $session->getEndDate(),
+    			'points' => $session->getPoints(),
+    			'progressive' => $session->getProgressive(),
+    			'startdate' => $session->getStartDate(),
+    		);
+    		
+    		$retval['stats'] = $this->getStatsForStudent($session);
+    
+    		$ei = $this->getExamHasItemRepo()->findByExamAndProgressive($session->getExam(),$session->getProgressive());
+    		
+    		if ($ei) {
+    			$retval['current_item'] = array(
+    				'examitemid' => $ei->getId(),
+	    			'id' => $ei->getItem()->getId(),
+    				'question' => $ei->getItem()->getQuestion(),
+    				'answer' => $ei->getItem()->getAnswer(),
+	    			'context' => $ei->getItem()->getContext(),
+	    			'media' => $this->getExamItemMedia($ei->getItem()),
+	    			'options' => $this->getExamItemOptions($ei->getItem()),
+	    			'type' => $ei->getItem()->getItemtype()->getId(),
+	    			'maxsecs' => $ei->getItem()->getMaxsecs(),
+	    			'maxtries' => $ei->getItem()->getMaxtries(),
+	    		);
+    		}
+    	}
+    	
     	return $retval;
     }
     
@@ -399,6 +469,59 @@ final class ExamService implements ServiceLocatorAwareInterface
     }
     
     /**
+     * Verifica veridicità risposta
+     * @param int $itemId Identificativo item
+     * @param int $optionId Identificativo option
+     * 
+     * @return boolean
+     */
+    public function checkOptionCorrect($optionId)
+    {
+    	$option = $this->getItemoptionRepo()->find($optionId);
+    	if (!$option) return false;
+    	return ($option->getCorrect() === 1);
+    }
+    
+    /**
+     * Memorizzazione di una risposta fornita dall'utente
+     * 
+     * @param int $sessionId
+     * @param int $examId
+     * @param int $itemId
+     * @param int $optionId
+     * 
+     * @return void;
+     */
+    public function responseWithAnOption($sessionId, $examId, $itemId, $optionId)
+    {
+    	$this->getEntityManager()->beginTransaction();
+    	
+    	$session = $this->getStudentHasCourseHasExamRepo()->find($sessionId);
+    	$item = $this->getItemRepo()->find($itemId);
+    	$option = $this->getItemoptionRepo()->find($optionId);
+    	
+    	// Creazione risposta
+    	$answer = new StudentHasAnsweredToItem();
+    	$answer->setInsertDate(new \DateTime());
+    	$answer->setStudentHasCourseHasExam($session);
+    	$answer->setItem($item);
+    	$answer->setTimeout(0);
+    	$answer->setPoints($option->getPoints());
+    	$answer->setValue($option);
+    	$answer->setCorrect($option->getCorrect());
+    	$this->getEntityManager()->persist($answer);
+    	
+    	// Aggiornamento punti
+    	$session->setPoints($session->getPoints()+$option->getPoints());
+    	$this->getEntityManager()->persist($session);
+    	
+    	$this->getEntityManager()->flush();
+    	
+    	$this->getEntityManager()->commit();
+    	
+    }
+    
+    /**
      * Gestione timeout (risposta non data in tempo utile)
      * 
      * @param int $sessionId Identificativo sessione
@@ -415,8 +538,93 @@ final class ExamService implements ServiceLocatorAwareInterface
     	$answer->setItem($item);
     	$answer->setTimeout(1);
     	$answer->setPoints(0);
+    	$answer->setCorrect(0);
     	$this->getEntityManager()->persist($answer);
     	$this->getEntityManager()->flush();
+    }
+    
+    /**
+     * Acquisizione dell'item corrente della session d'esame corrente
+     * @param unknown $token
+     */
+    public function getCurrentExamSessionItemByToken($token)
+    {
+    	if (strpos($token,".") === false) 
+    		throw new MalformedRequest("The \".\" character is missing in the token [".$token."]");
+    		 
+    	$studentToken = substr($token,0,strpos($token, "."));
+    	$sessionToken = substr($token,strpos($token, ".")+1);
+    		 
+    	if (!$studentToken || strlen($studentToken) == 0)
+    		throw new MalformedRequest("The token student part is not valued [".$token."]");
+    	if (!$sessionToken || strlen($sessionToken) == 0)
+    		throw new MalformedRequest("The token session part is not valued [".$token."]");
+    		 
+    	// Acquisizione studente
+    	$student = $this->getStudentRepo()->findByIdentifier($studentToken);
+    	if (!$student)
+    		throw new ObjectNotFound("No student found for the token student part [".$studentToken."]",Errorcode::ERRCODE_STUDENT_NOT_FOUND);
+    	if ($student->getActivationstatus()->getId() != ActivationStatus::STATUS_ENABLED)
+    		throw new ObjectNotEnabled("Not enabled student found [".$student->getId()."] for the token student part [".$studentToken."]",Errorcode::ERRCODE_STUDENT_NOT_ENABLED);
+    	
+    	// Acquisizione sessione di esame
+    	$session = $this->getStudentHasCourseHasExamRepo()->findByIdentifier($sessionToken);
+    	if (!$session)
+    		throw new ObjectNotFound("No exam session found for the token session part [".$sessionToken."]",Errorcode::ERRCODE_SESSION_NOT_FOUND);
+    	
+    	// Controllo incrociato studente/sessione
+    	if ($session->getStudentHasCourse()->getStudent() != $student)
+    		throw new InconsistentContent("Both student and session token part are correct [".$studentToken."], [".$sessionToken."], but not related. Possible hacking trial");
+    		 
+    	// Da qui il processo di validazione e' completato
+    	$course = $session->getStudentHasCourse()->getCourse();
+    	if ($course->getActivationstatus()->getId() != ActivationStatus::STATUS_ENABLED) {
+    		// Corso disabilitato
+    		return $this->composeAnswer($session,true,"Il corso è stato disattivato");
+    	}
+    		 
+    	// Tutti gli esami dello studente
+    	$allSessions = $this->getStudentHasCourseHasExamRepo()->findByStudentOnCourse($session->getStudentHasCourse());
+   
+    	// Sessione corrente gia' completata?
+    	if ($session->getCompleted()) {
+    			
+    		// Esistono sessioni da completare?
+    		$remainingSessions = 0;
+    			
+    		foreach ($allSessions as $sess) {
+    			/* @var $sess StudentHasCourseHasExam */
+    			if ($sess->getCompleted() === 0) {
+    				$remainingSessions++;
+    			}
+    		}
+    		if (!$remainingSessions) {
+    			// Tutte le sessioni sono completate
+    			return $this->composeAnswer(null,true,"Tutte le sessioni sono state completate");
+    		}
+    			
+    		foreach ($allSessions as $sess) {
+    			if ($sess->getCompleted() === 0 && $sess->getStartDate() < new \DateTime()) {
+   					// Trovata sessione successiva
+   					return $this->composeAnswer($sess,false,"Questa sessione risulta completata. Trovata una sessione successiva da completare");
+   				}
+   			}
+   			// Nessuna sessione disponibile
+   			return $this->composeAnswer(null,true,"Nessuna sessione attualmente disponibile");
+    			
+   		} else {
+   			// Prima di mandare l'utente all'esame, verifica se ci sono sessioni precedenti
+   			foreach ($allSessions as $sess) {
+   				/* @var $sess StudentHasCourseHasExam */
+   				if ($sess->getCompleted() === 0 && $sess->getStartDate() < new \DateTime()) {
+   					// Trovata sessione precedente
+   					if ($sess == $session) {
+   						return $this->composeAnswer($sess,false,"");
+   					}
+   					return $this->composeAnswer($sess,false,'Sessione precedente trovata da completare');
+   				}
+   			}
+		}
     }
     
     /**

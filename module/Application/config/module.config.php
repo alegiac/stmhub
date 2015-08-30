@@ -25,6 +25,18 @@ return array(
 	),
     'router' => array(
         'routes' => array(
+        		'exam_js' => array(
+        				'type' => 'Segment',
+        				'options' => array(
+        						'route' => '/exam/ajcheckanswer/:optionid',
+        						'defaults' => array(
+        								'__NAMESPACE__' => 'Application\Controller',
+        								'controller' => 'Exam',
+        								'action' => 'ajcheckanswer',
+        						),
+        				),
+        				'may_terminate' => true,
+        		),
         	// Route per la validazione di un token
             'exam_token' => array(
         		'type' => 'Segment',
@@ -79,6 +91,18 @@ return array(
         			),
         		),
         		'may_terminate' => true,
+        	),
+        	'exam_saveanswer' => array(
+        		'type' => 'Segment',
+        		'options' => array(
+        			'route' => '/exam/saveanswer/:optionValue',
+        			'constraints' => array(),
+        			'defaults' => array(
+        				'__NAMESPACE__' => 'Application\Controller',
+        				'controller' => 'Exam',
+        				'action' => 'saveanswer',
+        			),
+        		),
         	),
         	'exam_participate' => array(
         		'type' => 'Segment',
@@ -150,6 +174,9 @@ return array(
 		),
 		'template_path_stack' => array(
 			__DIR__ . '/../view',
+		),
+		'strategies' => array(
+			'ViewJsonStrategy'
 		),
 	),
 );

@@ -12,5 +12,17 @@ use Doctrine\Common\Collections\Criteria;
  */
 class ItemoptionRepo extends \Doctrine\ORM\EntityRepository
 {
-	
+	/**
+	 * Acquisizione di tutti gli itemoptions per un item
+	 *
+	 * @param Item $item Item di riferimento
+	 * @return array
+	 */
+	public function findByItem(Item $item)
+	{
+		$criteria = Criteria::create()->where(Criteria::expr()->eq('item', $item))->orderBy(array('id'=>'ASC'));
+		$result = $this->matching($criteria);
+		if ($result->count()) return $result;
+		return null;
+	}
 }

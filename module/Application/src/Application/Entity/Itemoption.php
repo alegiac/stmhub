@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Itemoption
  *
- * @ORM\Table(name="itemoption")
+ * @ORM\Table(name="itemoption", indexes={@ORM\Index(name="fk_itemoption_item1_idx", columns={"item_id"})})
  * @ORM\Entity(repositoryClass="Application\Entity\Repository\ItemoptionRepo")
  */
 class Itemoption
@@ -43,19 +43,15 @@ class Itemoption
     private $correct = '0';
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var \Application\Entity\Item
      *
-     * @ORM\ManyToMany(targetEntity="Application\Entity\Item", mappedBy="itemoption")
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Item")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="item_id", referencedColumnName="id")
+     * })
      */
     private $item;
 
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->item = new \Doctrine\Common\Collections\ArrayCollection();
-    }
 
 
     /**
@@ -141,33 +137,23 @@ class Itemoption
     }
 
     /**
-     * Add item
+     * Set item
      *
      * @param \Application\Entity\Item $item
      *
      * @return Itemoption
      */
-    public function addItem(\Application\Entity\Item $item)
+    public function setItem(\Application\Entity\Item $item = null)
     {
-        $this->item[] = $item;
+        $this->item = $item;
 
         return $this;
     }
 
     /**
-     * Remove item
-     *
-     * @param \Application\Entity\Item $item
-     */
-    public function removeItem(\Application\Entity\Item $item)
-    {
-        $this->item->removeElement($item);
-    }
-
-    /**
      * Get item
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Application\Entity\Item
      */
     public function getItem()
     {

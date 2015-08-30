@@ -32,15 +32,7 @@ return array (
 				'options' => array (
 					'output' => 'data/development___'.date('Ymd')."___app.log",
 				),
-				'filter' => \Zend\Log\Logger::INFO,
-				'enabled' => true,
-			),
-			'standard-error-file' => array (
-				'adapter' => '\Zend\Log\Writer\Stream',
-				'options' => array (
-					'output' => 'data/development___'.date('Ymd')."___err.log",
-				),
-				'filter' => \Zend\Log\Logger::WARN,
+				'filter' => \Zend\Log\Logger::DEBUG,
 				'enabled' => true,
 			),
 		)

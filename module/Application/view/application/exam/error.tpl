@@ -3,7 +3,7 @@
 {block name="main"}
 
 	<div class="four-zero">
-		<h2>Errore!</h2>
+		<h2>500</h2>
         <small>{$error_message}</small>
         <footer>
         	<a href="/"><i class="md md-arrow-back"></i></a>

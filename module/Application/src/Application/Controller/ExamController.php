@@ -24,6 +24,9 @@ use Core\Exception\ObjectNotFound;
 use Core\Exception\InconsistentContent;
 use Application\Form\ExamEmpty;
 use Zend\Form\Form;
+use Application\Form\ExamMultisubmit;
+use Application\Form\ExamDragDrop;
+use Zend\View\Model\JsonModel;
 
 class ExamController extends AbstractActionController
 {
@@ -47,6 +50,46 @@ class ExamController extends AbstractActionController
 	 * @var Logger
 	 */
 	private $logger;
+	
+	/**
+	 * Richiesta JS di verifica risultato di una risposta utente.
+	 * Serve in caso di risposta con piu tentativi
+	 * @return ViewModel
+	 */
+	public function ajcheckanswerAction()
+	{
+		$this->initExam();
+		
+		$optionId = $this->params('optionid');
+		$this->session->currentSelectedOption = $optionId;
+		
+		$result = -1;
+		
+		foreach ($this->session->exam['current_item']['options'] as $i => $option) {
+			if ($option['id'] == $optionId) {
+				if ($option['correct'] === 1) {
+					$result = array(
+						'result' => 1,
+						'points' => $option['points'],
+						'answer' => $this->session->exam['current_item']['context']
+					);
+				} else {
+					$result = array('result' => 0);
+					$this->session->usedTries++;
+					if ($this->session->usedTries == $this->session->exam['current_item']['maxtries']) {
+						$result['tryagain'] = 0;
+						$result['points'] = $option['points'];
+						$result['answer'] = $this->session->exam['current_item']['context'];
+					} else {
+						$result['tryagain'] = 1;
+					}
+				}
+				break;
+			}
+		}
+		
+		echo json_encode($result);die();
+	}
 	
 	/**
 	 * Ingresso nella funzione di accesso all'esame.
@@ -74,23 +117,26 @@ class ExamController extends AbstractActionController
 		try {
 			
 			// ** Acquisizione dati studente/sessione e salvataggio in sessione **//
-			$res = $this->getExamService()->getExamSessionByToken($stmt);
+			//$res = $this->getExamService()->getExamSessionByToken($stmt);
+			$res = $this->getExamService()->getCurrentExamSessionItemByToken($stmt);
 			$this->session->exam = $res;
 			
 			// 3- Verifica risultato: inviare a pagina di stop o prosegue?
-			if (strlen($res['message']) > 0 && is_null($res['id'])) {
+			if ($res['result'] === 0) {
 				$this->redirect()->toRoute('exam_error');
-			} else {
-				
-				// Redirect ad inizio esame (se progress è zero)
-				if($res['session']['progress'] === 0) {
-					$newExam = 1;
-					$this->redirect()->toRoute('exam_start');
-				} else {
-					$newExam = 0;
-					$this->redirect()->toRoute('exam_restart');
-				}
 			}
+			
+			// Redirect ad inizio esame (se progressive è zero)
+			if($res['session']['progressive'] === 0) {
+				
+				// Alla prima domanda visualizzo la pagina iniziale corso
+				$newExam = 1;
+				$this->redirect()->toRoute('exam_start');
+			} else {
+				$newExam = 0;
+				$this->redirect()->toRoute('exam_restart');
+			}
+			
 		} catch (\Exception $e) {
 			$this->logger->warn($e->getMessage());
 			$this->logger->info($e->getTraceAsString());
@@ -100,8 +146,8 @@ class ExamController extends AbstractActionController
 				$this->redirect()->toUrl($this->config['corporateurl']);
 			} else {
 				// Errore 500
-				$this->session->error_message = "Si &egrave; verificato un errore nella partecipazione all'esame (codice: ".$e->getCode().")";
-				$this->redirect()->toRoute('exam_500');
+				$this->session->error_message = "Errore interno del Server (codice: ".$e->getMessage().")";
+				$this->redirect()->toRoute('exam_error');
 			}
 		}
 	}
@@ -136,20 +182,24 @@ class ExamController extends AbstractActionController
 	{
 		$this->initExam();
 		
+		// Inizializza variabili d'ambiente
+		$this->session->offsetUnset('startedTime');
+		$this->session->offsetUnset('usedTries');
+		
 		$vm = new ViewModel();
 		$this->session->exam['student']['sex'] == 'f' ? $vm->sexDesc = 'a' : $vm->sexDesc = 'o';
 		$vm->firstName = $this->session->exam['student']['firstname'];
 		$vm->lastName = $this->session->exam['student']['lastname'];
-		$vm->courseName = $this->session->exam['session']['course']['name'];
-		$vm->courseDesc = $this->session->exam['session']['course']['description'];
-		$vm->examName = $this->session->exam['session']['exam']['name'];
-		$vm->examDesc = $this->session->exam['session']['exam']['description'];
-		$vm->totalItems = $this->session->exam['session']['exam']['totalitems'];
-		$vm->examNumber = $this->session->exam['session']['exam']['progress'];
-		$vm->totExams = $this->session->exam['session']['course']['numexams'];
-		$vm->endDate = $this->session->exam['session']['enddate'];
+		$vm->courseName = $this->session->exam['course']['name'];
+		$vm->courseDesc = $this->session->exam['course']['description'];
+		$vm->examName = $this->session->exam['exam']['name'];
+		$vm->examDesc = $this->session->exam['exam']['description'];
+		$vm->totalItems = $this->session->exam['exam']['totalitems'];
+		$vm->examNumber = $this->session->exam['exam']['progress'];
+		$vm->totExams = $this->session->exam['course']['numexams'];
+		$vm->endDate = $this->session->exam['session']['enddate']->format('d/m/Y');
 		$vm->maxPoints = $this->session->exam['stats']['exam_max_possible_points'];
-		$this->session->exam['session']['exam']['photourl'] == "" ? $vm->examImage = "" : $vm->examImage = "/static/assets/img/exam/".$this->session->exam['session']['exam']['photourl'];
+		$this->session->exam['exam']['photourl'] == "" ? $vm->examImage = "" : $vm->examImage = "/static/assets/img/exam/".$this->session->exam['exam']['photourl'];
 		return $vm;
 	}
 	
@@ -162,21 +212,25 @@ class ExamController extends AbstractActionController
 	public function restartAction()
 	{
 		$this->initExam();
+
+		// Inizializza variabili d'ambiente
+		$this->session->offsetUnset('startedTime');
+		$this->session->offsetUnset('usedTries');
 		
 		$vm = new ViewModel();
 		$this->session->exam['student']['sex'] == 'f' ? $vm->sexDesc = 'a' : $vm->sexDesc = 'o';
 		$vm->firstName = $this->session->exam['student']['firstname'];
 		$vm->lastName = $this->session->exam['student']['lastname'];
-		$vm->courseName = $this->session->exam['session']['course']['name'];
-		$vm->courseDesc = $this->session->exam['session']['course']['description'];
-		$vm->examName = $this->session->exam['session']['exam']['name'];
-		$vm->examDesc = $this->session->exam['session']['exam']['description'];
-		$vm->totalItems = $this->session->exam['session']['exam']['totalitems'];
-		$vm->examNumber = $this->session->exam['session']['exam']['progress'];
-		$vm->totExams = $this->session->exam['session']['course']['numexams'];
-		$vm->endDate = $this->session->exam['session']['enddate'];
+		$vm->courseName = $this->session->exam['course']['name'];
+		$vm->courseDesc = $this->session->exam['course']['description'];
+		$vm->examName = $this->session->exam['exam']['name'];
+		$vm->examDesc = $this->session->exam['exam']['description'];
+		$vm->totalItems = $this->session->exam['exam']['totalitems'];
+		$vm->examNumber = $this->session->exam['exam']['progress'];
+		$vm->totExams = $this->session->exam['course']['numexams'];
+		$vm->endDate = $this->session->exam['session']['enddate']->format('d/m/Y');
 		$vm->maxPoints = $this->session->exam['stats']['exam_max_possible_points'];
-		$this->session->exam['session']['exam']['photourl'] == "" ? $vm->examImage = "" : $vm->examImage = "/static/assets/img/exam/".$this->session->exam['session']['exam']['photourl'];
+		$this->session->exam['exam']['photourl'] == "" ? $vm->examImage = "" : $vm->examImage = "/static/assets/img/exam/".$this->session->exam['exam']['photourl'];
 		return $vm;
 	}
 	
@@ -195,15 +249,25 @@ class ExamController extends AbstractActionController
 	{
 		$this->initExam();
 		
-		
 		// Domanda
-		$itemProg = (int)$this->session->exam['session']['progress'];
-		$item = $this->session->exam['session']['items'][$itemProg]['id'];
+		$itemProg = (int)$this->session->exam['session']['progressive'];
+		$item = $this->session->exam['current_item']['id'];
 		
 		$this->getExamService()->responseWithATimeout($this->session->exam['id'], $item);
 		$this->redirect()->toRoute('exam_participate');
 	}
 	
+	/**
+	 * Memorizzazione risultato risposta utente e redirect ad analisi della partecipazione 
+	 * seguente.
+	 * 
+	 * @return void
+	 * @see \Zend\Mvc\Controller\AbstractActionController
+	 */
+	public function saveanswerAction()
+	{
+		$this->initExam();
+	}
 	/**
 	 * Visualizzazione pagina di partecipazione al concorso: acquisisce lo step attuale, il relativo item 
 	 * e lo visualizza per ottenere la risposta dall'utente.
@@ -225,8 +289,26 @@ class ExamController extends AbstractActionController
 			
 			if ($request->isPost()) {
 				if ($form->isValid()) {
-					$itemProg = (int)$this->session->exam['session']['progress']+1;
-					$this->getExamService()->setExamSessionProgress($this->session->exam['id'], $itemProg);
+					// Domanda
+					$itemProg = (int)$this->session->exam['session']['progressive'];
+					$item = $this->session->exam['session']['items'][$itemProg]['id'];
+
+					if ($form instanceof ExamInput) {
+						$value = $form->get('inpu')->getValue();
+					} else if ($form instanceof ExamSelect) {
+						$value = $form->get('ans')->getValue();
+					} else if ($form instanceof ExamEmpty) {
+						
+					} else if ($form instanceof ExamDragDrop) {
+						
+					} else if ($form instanceof ExamMultisubmit) {
+						
+					}
+					
+					$this->getExamService()->responseWithAnOption($this->session->exam['id'], $item,$value);
+					$this->redirect()->toRoute('exam_participate');
+						
+					$this->getExamService()->setExamSessionProgress($this->session->exam['id'], $itemProg+1);
 					
 				}
 			}
@@ -322,8 +404,8 @@ class ExamController extends AbstractActionController
 	protected function composeForm()
 	{
 
-		$itemProg = (int)$this->session->exam['session']['progress']+1;
-		$item = $this->session->exam['session']['items'][$itemProg];
+		$itemProg = (int)$this->session->exam['session']['progressive'];
+		$item = $this->session->exam['current_item'];
 
 		// Caricamento form in base al tipo di item
 		switch ($item['type']) {
@@ -335,14 +417,17 @@ class ExamController extends AbstractActionController
 				foreach ($item['options'] as $k=>$v) $arrOptions[$v['id']] = $v['value'];
 				return new ExamSelect($arrOptions);
 				break;
-			case ItemType::TYPE_TRUEFALSE:
-				return null;
+			case ItemType::TYPE_MULTISUBMIT:
+				$arrOptions = array(1 => 'VERO', 0 => 'FALSO');
+				return new ExamMultisubmit($arrOptions);
+				break;
+			case ItemType::TYPE_REORDER:
+				return new ExamDragDrop();
 				break;
 			case ItemType::TYPE_EMPTY:
 				return new ExamEmpty();
 				break;
 		}
-		
 	}
 	
 	/**
@@ -360,20 +445,39 @@ class ExamController extends AbstractActionController
 		$vm->lastName = $this->session->exam['student']['lastname'];
 		
 		// Dati corso
-		$vm->courseName = $this->session->exam['session']['course']['name'];
-		$vm->courseDesc = $this->session->exam['session']['course']['description'];
+		$vm->courseName = $this->session->exam['course']['name'];
+		$vm->courseDesc = $this->session->exam['course']['description'];
 		
 		// Dati esame
-		$vm->examName = $this->session->exam['session']['exam']['name'];
-		$vm->examDesc = $this->session->exam['session']['exam']['description'];
-		$vm->totalItems = $this->session->exam['session']['exam']['totalitems'];
+		$vm->examName = $this->session->exam['exam']['name'];
+		$vm->examDesc = $this->session->exam['exam']['description'];
+		$vm->totalItems = $this->session->exam['exam']['totalitems'];
 		
 		// Domanda corrente (in base a progressivo)
-		$itemProg = (int)$this->session->exam['session']['progress']+1;
-		$item = $this->session->exam['session']['items'][$itemProg];
+		$itemProg = (int)$this->session->exam['session']['progressive'];
+		$item = $this->session->exam['current_item'];
+		
 		$vm->itemProgressive = $itemProg;
 		$vm->itemQuestion = $item['question'];
-		$vm->remainingTime = $item['maxsecs'];
+		
+		// Calcolo di tempo rimanente e tentativi rimanenti basandosi su eventuali dati di sessione
+		if ($this->session->startedTime) {
+			$now = new \DateTime();
+			$diffInSeconds = $now->getTimestamp() - $this->session->startedTime->getTimestamp();
+			$vm->remainingTime = $item['maxsecs']-$diffInSeconds;
+		} else {
+			$vm->remainingTime = $item['maxsecs'];
+			$this->session->startedTime = new \DateTime();
+		}
+		
+		if ($this->session->usedTries) {
+			$vm->maxTries = $item['maxtries']-$this->session->usedTries;
+			$vm->usedTries = $this->session->usedTries;
+		} else {
+			$vm->maxTries = $item['maxtries'];
+			$this->session->usedTries = 0;
+			$vm->usedTries = $this->session->usedTries;
+		}
 		
 		// Gestione elementi multimediali
 		$vm->media = $this->composeMedia($item['media']);
