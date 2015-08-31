@@ -18,8 +18,9 @@ class ExamMultisubmit extends Form
 				'type' => 'Zend\Form\Element\Submit',
 				'name' => 'submit_'.$value,
 				'attributes' => array(
+					'id' => $value,
 					'value' => strtoupper($description),
-					'class' => 'btn btn-primary btn-lg-col-xs-8 col-xs-offset-2',
+					'class' => 'btn btn-primary btn-lg col-xs-12',
 				)
 			));
 		}

@@ -66,6 +66,19 @@ return array(
         		),
         		'may_terminate' => true,
         	),
+        	'exam_nothing' => array(
+        		'type' => 'Segment',
+        		'options' => array(
+        			'route' => '/exam/nothing',
+        			'constraints' => array(),
+        			'defaults' => array(
+        				'__NAMESPACE__' => 'Application\Controller',
+        				'controller' => 'Exam',
+        				'action' => 'nothing',
+        			),
+        		),
+        		'may_terminate' => true,
+        	),
         	'exam_start' => array(
         		'type' => 'Segment',
         		'options' => array(
@@ -104,10 +117,22 @@ return array(
         			),
         		),
         	),
+        	'exam_end' => array(
+        		'type' => 'Segment',
+        		'options' => array(
+        			'route' => '/exam/end[/:congrats]',
+        			'constraints' => array(),
+        			'defaults' => array(
+        				'__NAMESPACE__' => 'Application\Controller',
+        				'controller' => 'Exam',
+        				'action' => 'end',
+        			),
+        		),
+        	),
         	'exam_participate' => array(
         		'type' => 'Segment',
         		'options' => array(
-        			'route' => '/exam/participate[/][timeout]',
+        			'route' => '/exam/participate',
         			'constraints' => array(),
         			'defaults' => array(
         				'__NAMESPACE__' => 'Application\Controller',

@@ -38,7 +38,7 @@ class StudentHasCourseHasExam
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="end_date", type="datetime", nullable=false)
+     * @ORM\Column(name="end_date", type="datetime", nullable=true)
      */
     private $endDate;
 
@@ -76,6 +76,13 @@ class StudentHasCourseHasExam
      * @ORM\Column(name="progressive", type="integer", nullable=false)
      */
     private $progressive = '0';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="expected_end_date", type="datetime", nullable=false)
+     */
+    private $expectedEndDate;
 
     /**
      * @var \Application\Entity\Exam
@@ -299,6 +306,30 @@ class StudentHasCourseHasExam
     public function getProgressive()
     {
         return $this->progressive;
+    }
+
+    /**
+     * Set expectedEndDate
+     *
+     * @param \DateTime $expectedEndDate
+     *
+     * @return StudentHasCourseHasExam
+     */
+    public function setExpectedEndDate($expectedEndDate)
+    {
+        $this->expectedEndDate = $expectedEndDate;
+
+        return $this;
+    }
+
+    /**
+     * Get expectedEndDate
+     *
+     * @return \DateTime
+     */
+    public function getExpectedEndDate()
+    {
+        return $this->expectedEndDate;
     }
 
     /**

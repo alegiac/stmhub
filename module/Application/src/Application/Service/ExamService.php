@@ -371,7 +371,7 @@ final class ExamService implements ServiceLocatorAwareInterface
     			'id' => $session->getId(),
     			'answer' => $session->getAnswer(),
     			'completed' => $session->getCompleted(),
-    			'enddate' => $session->getEndDate(),
+    			'expectedenddate' => $session->getExpectedEndDate(),
     			'points' => $session->getPoints(),
     			'progressive' => $session->getProgressive(),
     			'startdate' => $session->getStartDate(),
@@ -490,13 +490,14 @@ final class ExamService implements ServiceLocatorAwareInterface
      * @param int $itemId
      * @param int $optionId
      * 
-     * @return void;
+     * @return integer
      */
     public function responseWithAnOption($sessionId, $examId, $itemId, $optionId)
     {
     	$this->getEntityManager()->beginTransaction();
     	
     	$session = $this->getStudentHasCourseHasExamRepo()->find($sessionId);
+    	$exam = $this->getExamRepo()->find($examId);
     	$item = $this->getItemRepo()->find($itemId);
     	$option = $this->getItemoptionRepo()->find($optionId);
     	
@@ -507,7 +508,7 @@ final class ExamService implements ServiceLocatorAwareInterface
     	$answer->setItem($item);
     	$answer->setTimeout(0);
     	$answer->setPoints($option->getPoints());
-    	$answer->setValue($option);
+    	$answer->setValue($option->getName());
     	$answer->setCorrect($option->getCorrect());
     	$this->getEntityManager()->persist($answer);
     	
@@ -515,21 +516,43 @@ final class ExamService implements ServiceLocatorAwareInterface
     	$session->setPoints($session->getPoints()+$option->getPoints());
     	$this->getEntityManager()->persist($session);
     	
-    	$this->getEntityManager()->flush();
+    	// Aggiornamento avanzamento
+    	$currentProgressive = $session->getProgressive();
+    	$session->setProgressive($currentProgressive+1);
+    	if ($exam->getTotalitems() == $currentProgressive+1) {
+    		$endDate = new \DateTime();
+    		$session->setCompleted(1);
+    		$session->setEndDate($endDate);
+    		if ($endDate > $session->getExpectedEndDate()) {
+    			// Decurtare il punteggio finale
+    			$perc = $exam->getReducePercentageOuttime();
+    			$newPoints = ceil($session->getPoints() - (($session->getPoints()*$perc)/100));
+    			$this->getEntityManager()->persist($session);
+    			$retval = 1;
+    		} else {
+    			$retval = 0;
+    		}
+    	}
     	
+    	$this->getEntityManager()->flush();
     	$this->getEntityManager()->commit();
     	
+    	return $retval;
     }
     
     /**
      * Gestione timeout (risposta non data in tempo utile)
      * 
      * @param int $sessionId Identificativo sessione
+     * @param int $examId Identificativo esame
      * @param int $itemId Identificativo domanda
      */
-    public function responseWithATimeout($sessionId,$itemId)
+    public function responseWithATimeout($sessionId,$examId,$itemId)
     {
+    	$this->getEntityManager()->beginTransaction();
+    	
     	$session = $this->getStudentHasCourseHasExamRepo()->find($sessionId);
+    	$exam = $this->getExamRepo()->find($examId);
     	$item = $this->getItemRepo()->find($itemId);
     	
     	$answer = new StudentHasAnsweredToItem();
@@ -540,7 +563,29 @@ final class ExamService implements ServiceLocatorAwareInterface
     	$answer->setPoints(0);
     	$answer->setCorrect(0);
     	$this->getEntityManager()->persist($answer);
+    	
+    	// Aggiornamento avanzamento
+    	$currentProgressive = $session->getProgressive();
+    	$session->setProgressive($currentProgressive+1);
+    	if ($exam->getTotalitems() == $currentProgressive+1) {
+    		$endDate = new \DateTime();
+    		$session->setCompleted(1);
+    		$session->setEndDate($endDate);
+    		if ($endDate > $session->getExpectedEndDate()) {
+    			// Decurtare il punteggio finale
+    			$perc = $exam->getReducePercentageOuttime();
+    			$newPoints = ceil($session->getPoints() - (($session->getPoints()*$perc)/100));
+    			$this->getEntityManager()->persist($session);
+    			$retval = 1;
+    		} else {
+    			$retval = 0;
+    		}
+    	}
+
     	$this->getEntityManager()->flush();
+    	$this->getEntityManager()->commit();
+    	
+    	return $retval;
     }
     
     /**

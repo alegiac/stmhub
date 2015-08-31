@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Itemoption
  *
- * @ORM\Table(name="itemoption", indexes={@ORM\Index(name="fk_itemoption_item1_idx", columns={"item_id"})})
+ * @ORM\Table(name="itemoption", indexes={@ORM\Index(name="fk_itemoption_item1_idx", columns={"item_id"}), @ORM\Index(name="fk_itemoption_itemoptiontype1_idx", columns={"itemoptiontype_id"})})
  * @ORM\Entity(repositoryClass="Application\Entity\Repository\ItemoptionRepo")
  */
 class Itemoption
@@ -51,6 +51,16 @@ class Itemoption
      * })
      */
     private $item;
+
+    /**
+     * @var \Application\Entity\Itemoptiontype
+     *
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Itemoptiontype")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="itemoptiontype_id", referencedColumnName="id")
+     * })
+     */
+    private $itemoptiontype;
 
 
 
@@ -158,5 +168,29 @@ class Itemoption
     public function getItem()
     {
         return $this->item;
+    }
+
+    /**
+     * Set itemoptiontype
+     *
+     * @param \Application\Entity\Itemoptiontype $itemoptiontype
+     *
+     * @return Itemoption
+     */
+    public function setItemoptiontype(\Application\Entity\Itemoptiontype $itemoptiontype = null)
+    {
+        $this->itemoptiontype = $itemoptiontype;
+
+        return $this;
+    }
+
+    /**
+     * Get itemoptiontype
+     *
+     * @return \Application\Entity\Itemoptiontype
+     */
+    public function getItemoptiontype()
+    {
+        return $this->itemoptiontype;
     }
 }

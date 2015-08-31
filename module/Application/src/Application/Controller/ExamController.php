@@ -76,7 +76,7 @@ class ExamController extends AbstractActionController
 				} else {
 					$result = array('result' => 0);
 					$this->session->usedTries++;
-					if ($this->session->usedTries == $this->session->exam['current_item']['maxtries']) {
+					if ($this->session->usedTries >= $this->session->exam['current_item']['maxtries']) {
 						$result['tryagain'] = 0;
 						$result['points'] = $option['points'];
 						$result['answer'] = $this->session->exam['current_item']['context'];
@@ -115,16 +115,16 @@ class ExamController extends AbstractActionController
 		}
 		
 		try {
-			
 			// ** Acquisizione dati studente/sessione e salvataggio in sessione **//
 			//$res = $this->getExamService()->getExamSessionByToken($stmt);
-			$res = $this->getExamService()->getCurrentExamSessionItemByToken($stmt);
-			$this->session->exam = $res;
-			
-			// 3- Verifica risultato: inviare a pagina di stop o prosegue?
+		 	$res = $this->getExamService()->getCurrentExamSessionItemByToken($stmt);
+		 	// 3- Verifica risultato: inviare a pagina di stop o prosegue?
 			if ($res['result'] === 0) {
-				$this->redirect()->toRoute('exam_error');
+				$this->redirect()->toRoute('exam_nothing');
+				return;
 			}
+			$this->session->token = $stmt;
+			$this->session->exam = $res;
 			
 			// Redirect ad inizio esame (se progressive è zero)
 			if($res['session']['progressive'] === 0) {
@@ -150,6 +150,10 @@ class ExamController extends AbstractActionController
 				$this->redirect()->toRoute('exam_error');
 			}
 		}
+	}
+	public function nothingAction()
+	{
+		return new ViewModel();
 	}
 	
 	/**
@@ -197,7 +201,7 @@ class ExamController extends AbstractActionController
 		$vm->totalItems = $this->session->exam['exam']['totalitems'];
 		$vm->examNumber = $this->session->exam['exam']['progress'];
 		$vm->totExams = $this->session->exam['course']['numexams'];
-		$vm->endDate = $this->session->exam['session']['enddate']->format('d/m/Y');
+		$vm->endDate = $this->session->exam['session']['expectedenddate']->format('d/m/Y');
 		$vm->maxPoints = $this->session->exam['stats']['exam_max_possible_points'];
 		$this->session->exam['exam']['photourl'] == "" ? $vm->examImage = "" : $vm->examImage = "/static/assets/img/exam/".$this->session->exam['exam']['photourl'];
 		return $vm;
@@ -228,7 +232,7 @@ class ExamController extends AbstractActionController
 		$vm->totalItems = $this->session->exam['exam']['totalitems'];
 		$vm->examNumber = $this->session->exam['exam']['progress'];
 		$vm->totExams = $this->session->exam['course']['numexams'];
-		$vm->endDate = $this->session->exam['session']['enddate']->format('d/m/Y');
+		$vm->endDate = $this->session->exam['session']['expectedenddate']->format('d/m/Y');
 		$vm->maxPoints = $this->session->exam['stats']['exam_max_possible_points'];
 		$this->session->exam['exam']['photourl'] == "" ? $vm->examImage = "" : $vm->examImage = "/static/assets/img/exam/".$this->session->exam['exam']['photourl'];
 		return $vm;
@@ -243,6 +247,27 @@ class ExamController extends AbstractActionController
 	public function endAction()
 	{
 		
+		$this->initExam();
+		
+		// Inizializza variabili d'ambiente
+		$this->session->offsetUnset('startedTime');
+		$this->session->offsetUnset('usedTries');
+		
+		$vm = new ViewModel();
+		$this->session->exam['student']['sex'] == 'f' ? $vm->sexDesc = 'a' : $vm->sexDesc = 'o';
+		$vm->firstName = $this->session->exam['student']['firstname'];
+		$vm->lastName = $this->session->exam['student']['lastname'];
+		$vm->courseName = $this->session->exam['course']['name'];
+		$vm->courseDesc = $this->session->exam['course']['description'];
+		$vm->examName = $this->session->exam['exam']['name'];
+		$vm->examDesc = $this->session->exam['exam']['description'];
+		$vm->totalItems = $this->session->exam['exam']['totalitems'];
+		$vm->examNumber = $this->session->exam['exam']['progress'];
+		$vm->totExams = $this->session->exam['course']['numexams'];
+		$vm->endDate = $this->session->exam['session']['expectedenddate']->format('d/m/Y');
+		$vm->maxPoints = $this->session->exam['stats']['exam_max_possible_points'];
+		$this->session->exam['exam']['photourl'] == "" ? $vm->examImage = "" : $vm->examImage = "/static/assets/img/exam/".$this->session->exam['exam']['photourl'];
+		return $vm;
 	}
 	
 	public function timeoutAction()
@@ -250,11 +275,26 @@ class ExamController extends AbstractActionController
 		$this->initExam();
 		
 		// Domanda
-		$itemProg = (int)$this->session->exam['session']['progressive'];
-		$item = $this->session->exam['current_item']['id'];
+		$sessionId = $this->session->exam['session']['id'];
+		$examId = $this->session->exam['exam']['id'];
+		$itemId = $this->session->exam['current_item']['id'];
 		
-		$this->getExamService()->responseWithATimeout($this->session->exam['id'], $item);
-		$this->redirect()->toRoute('exam_participate');
+		$this->session->offsetUnset('currentSelectedOption');
+		$this->session->offsetUnset('startedTime');
+		$this->session->offsetUnset('usedTries');
+		
+		$retval = $this->getExamService()->responseWithATimeout($sessionId, $examId, $itemId);
+		
+		if ($retval === 1) {
+			// Finito esame
+			$this->redirect()->toRoute('exam_end');
+			return;
+		} else {
+			$res = $this->getExamService()->getCurrentExamSessionItemByToken($this->session->token);
+			$this->session->exam = $res;
+			$this->redirect()->toRoute('exam_participate');
+			return;
+		}
 	}
 	
 	/**
@@ -267,6 +307,29 @@ class ExamController extends AbstractActionController
 	public function saveanswerAction()
 	{
 		$this->initExam();
+		
+		$optionValue = $this->params('optionValue');
+		
+		$sessionId = $this->session->exam['session']['id'];
+		$examId = $this->session->exam['exam']['id'];
+		$itemId = $this->session->exam['current_item']['id'];
+		$optionId = $optionValue;
+		
+		$this->session->offsetUnset('currentSelectedOption');
+		$this->session->offsetUnset('startedTime');
+		$this->session->offsetUnset('usedTries');
+		
+		$retval = $this->getExamService()->responseWithAnOption($sessionId, $examId, $itemId, $optionId);
+		if ($retval === 1) {
+			// Finito esame
+			$this->redirect()->toRoute('exam_end');
+			return;
+		} else {
+			$res = $this->getExamService()->getCurrentExamSessionItemByToken($this->session->token);
+			$this->session->exam = $res;
+			$this->redirect()->toRoute('exam_participate');
+			return;
+		}
 	}
 	/**
 	 * Visualizzazione pagina di partecipazione al concorso: acquisisce lo step attuale, il relativo item 
@@ -283,36 +346,7 @@ class ExamController extends AbstractActionController
 			// Impostazione valore corrente per la sessione d'esame
 			
 			$view = $this->composeParticipationVM();
-		
 			$form = $this->composeForm();
-			$request = $this->getRequest();
-			
-			if ($request->isPost()) {
-				if ($form->isValid()) {
-					// Domanda
-					$itemProg = (int)$this->session->exam['session']['progressive'];
-					$item = $this->session->exam['session']['items'][$itemProg]['id'];
-
-					if ($form instanceof ExamInput) {
-						$value = $form->get('inpu')->getValue();
-					} else if ($form instanceof ExamSelect) {
-						$value = $form->get('ans')->getValue();
-					} else if ($form instanceof ExamEmpty) {
-						
-					} else if ($form instanceof ExamDragDrop) {
-						
-					} else if ($form instanceof ExamMultisubmit) {
-						
-					}
-					
-					$this->getExamService()->responseWithAnOption($this->session->exam['id'], $item,$value);
-					$this->redirect()->toRoute('exam_participate');
-						
-					$this->getExamService()->setExamSessionProgress($this->session->exam['id'], $itemProg+1);
-					
-				}
-			}
-			
 			$view->form = $form;
 			return $view;
 		} catch (\Exception $e) {
@@ -398,6 +432,22 @@ class ExamController extends AbstractActionController
 	}	
 	
 	/**
+	 * Rimozione elementi di sessione usati durante la sessione d'esame
+	 * 
+	 * @return void
+	 */
+	protected function cleanSessionExamVars()
+	{
+		$this->session->offsetUnset('exam');
+		$this->session->offsetUnset('currentSelectedOption');
+		$this->session->offsetUnset('token');
+		$this->session->offsetUnset('startedTime');
+		$this->session->offsetUnset('message');
+		$this->session->offsetUnset('error_message');
+		$this->session->offsetUnset('usedTries');
+	}
+	
+	/**
 	 * Composizione form
 	 * @return Form
 	 */
@@ -418,7 +468,8 @@ class ExamController extends AbstractActionController
 				return new ExamSelect($arrOptions);
 				break;
 			case ItemType::TYPE_MULTISUBMIT:
-				$arrOptions = array(1 => 'VERO', 0 => 'FALSO');
+				$arrOptions = array();
+				foreach ($item['options'] as $k=>$v) $arrOptions[$v['id']]= $v['value'];
 				return new ExamMultisubmit($arrOptions);
 				break;
 			case ItemType::TYPE_REORDER:

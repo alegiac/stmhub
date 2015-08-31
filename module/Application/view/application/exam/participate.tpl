@@ -37,7 +37,7 @@
                         <ul class="pv-follow">
                         </ul>
                         
-                        <a href="" class="pv-follow-btn">Logout</a>
+                        <a href="" class="pv-follow-btn">Statistiche</a>
                     </div>
                 </div>
                 <!-- Chart pies -->
@@ -90,7 +90,7 @@
 	        				Corso:&nbsp;&nbsp;<strong>{$courseName}</strong><br>
 	        				Esame:&nbsp;&nbsp;<strong>{$examName}</strong><br>
 	        				Quesito:&nbsp;&nbsp;<strong>{$itemProgressive}/{$totalItems}</strong><br>
-	        				Tentativi usati:&nbsp;&nbsp;<strong><div id="used">{$usedTries}</div>/{$maxTries}</strong>
+	        				Tentativi totali risposta:&nbsp;&nbsp;<strong>/{$maxTries}</strong>
 	        			</div>
 	        			<div class="col-sm-6 pull-right">
 	        				{if $remainingTime eq -1}
@@ -120,7 +120,9 @@
 		        			<hr>
 		        		</div>
 		        		<div class="row">
+		        			<center>
 		        		 	{$this->form($form)}
+		        		 	</center>
 	        			</div>
 	        		</div>
 	        	</div>
@@ -133,105 +135,85 @@
 	<script type="text/javascript">
 		
 		var selectedOption = "";
-				
-		{if $remainingTime > -1}
-			{literal}
-				$(document).ready(function() {
+		{literal}
+			$(document).ready(function() {
 					
-					selectedOption = $('select :selected').val();
+				selectedOption = $('select :selected').val();
+				if (selectedOption == "") {
+					// Disabilitare il pulsante submit
+				    $("input[type=submit]").attr("disabled", "disabled");
+    			} else {
+    			    $("input[type=submit]").removeAttr("disabled", "disabled");
+    			}
+					
+				// Gestione cambio di valore select
+				$('select').change(function() {   
+    				selectedOption = $('select :selected').val();
 					if (selectedOption == "") {
 						// Disabilitare il pulsante submit
 					    $("input[type=submit]").attr("disabled", "disabled");
     				} else {
     				    $("input[type=submit]").removeAttr("disabled", "disabled");
     				}
+				});
 					
-					// Gestione cambio di valore select
-					$('select').change(function() {   
-    					selectedOption = $('select :selected').val();
-						if (selectedOption == "") {
-							// Disabilitare il pulsante submit
-						    $("input[type=submit]").attr("disabled", "disabled");
-    					} else {
-    					    $("input[type=submit]").removeAttr("disabled", "disabled");
-    					}
-					});
-					
-					// Gestione submit (pre pre-check)
-					$(":submit").click(function()
-					{
-						var form_id = $(this).closest("form").attr('id');
-						var ajax_post_data_value = "";
-						var postdata = [];
+				// Gestione submit (pre pre-check)
+				$(":submit").click(function()
+				{
+					var form_id = $(this).closest("form").attr('id');
+					var ajax_post_data_value = "";
+					var postdata = [];
 						
-						// Se la domanda è nulla, nessun check. Si va direttamente al submit
-						if (form_id == "null_question") {
-							console.log("Null-question: redirect a pagina successiva");
-							return true;
-						// Se la domanda è di un multisubmit, si deve inviare il submit premuto
-						} else if (form_id == "multisubmit_question") {
-							ajax_post_data_value = $(this).id;
-						// D&D
-						} else if (form_id == "dnd_question") {
-							ajax_post_data_value = "";
-						// Inserimento manuale
-						} else if (form_id == "input_question") {
-							ajax_post_data_value = $(this).closest(":input").val();
-						// Selezione tendina
-						} else {
-							ajax_post_data_value = selectedOption;
-						}
-						$.ajax({
-							type: "GET",
-  							url: "/exam/ajcheckanswer/"+ajax_post_data_value,
-  							data: ajax_post_data_value,
+					// Se la domanda è nulla, nessun check. Si va direttamente al submit
+					if (form_id == "null_question") {
+						console.log("Null-question: redirect a pagina successiva");
+						return true;
+					// Se la domanda è di un multisubmit, si deve inviare il submit premuto
+					} else if (form_id == "multisubmit_question") {
+						ajax_post_data_value = $(this).attr("id");
+					// D&D
+					} else if (form_id == "dnd_question") {
+						ajax_post_data_value = "";
+					// Inserimento manuale
+					} else if (form_id == "input_question") {
+						ajax_post_data_value = $(this).closest(":input").val();
+					// Selezione tendina
+					} else {
+						ajax_post_data_value = selectedOption;
+					}
+					$.ajax({
+						type: "GET",
+  						url: "/exam/ajcheckanswer/"+ajax_post_data_value,
+  						data: ajax_post_data_value,
   							success: function(data) {
-  								var checkResult = jQuery.parseJSON(data).result;
-  								var earnedPoints = jQuery.parseJSON(data).points;
-  								var itemAnswer = jQuery.parseJSON(data).answer;
-  								var tryagain = jQuery.parseJSON(data).tryagain;
-  								
-  								var errorTitle = "Errato, ma puoi riprovare";
-  								var errorMessage = "Puoi modificare la tua risposta";
-  								if (tryagain == 0) {
-  									errorTitle = "Errato, hai guadagnato "+earnedPoints+" punti";
-  									errorMessage = itemAnswer;
-  								}
-  								switch(checkResult) {
-  									// Sbagliato
-  									case 0:
-  										if (tryagain == 1) {
-  											swal({
-  												title: "Errato, puoi riprovare",
-  												text: "Puoi modificare la tua risposta",
-  												type: "warning",
-  												showCancelButton: false,
-  												confirmButtonText: "OK",
-  												closeOnConfirm: true,
-  											});
-  										} else {
-  											swal({
-  												title: "Errato, hai guadagnato "+earnedPoints+" punti",
-  												text: itemAnswer,
-  												type: "error",
-  												showCancelButton: false,
-  												confirmButtonText: "CONTINUA",
-  												closeOnConfirm: false,
-											},
-											function(isConfirm) {
-  												if (isConfirm) {
-    												window.location = "/exam/saveanswer/"+ajax_post_data_value;
-  												}
-											});
-  											break;
-  										}
-  										break;
-  									// Corretto:
-  									case 1:
+  							var checkResult = jQuery.parseJSON(data).result;
+  							var earnedPoints = jQuery.parseJSON(data).points;
+  							var itemAnswer = jQuery.parseJSON(data).answer;
+  							var tryagain = jQuery.parseJSON(data).tryagain;
+  							
+  							var errorTitle = "Errato, ma puoi riprovare";
+  							var errorMessage = "Puoi modificare la tua risposta";
+  							if (tryagain == 0) {
+  								errorTitle = "Errato, hai guadagnato "+earnedPoints+" punti";
+  								errorMessage = itemAnswer;
+  							}
+  							switch(checkResult) {
+  								// Sbagliato
+  								case 0:
+  									if (tryagain == 1) {
   										swal({
-  											title: "Corretto! ",
+  											title: "Errato, puoi riprovare",
+  											text: "Puoi modificare la tua risposta",
+  											type: "warning",
+  											showCancelButton: false,
+  											confirmButtonText: "OK",
+  											closeOnConfirm: true,
+  										});
+  									} else {
+  										swal({
+ 											title: "Errato, hai guadagnato "+earnedPoints+" punti",
   											text: itemAnswer,
-  											type: "success",
+  											type: "error",
   											showCancelButton: false,
   											confirmButtonText: "CONTINUA",
   											closeOnConfirm: false,
@@ -242,11 +224,31 @@
   											}
 										});
   										break;
-  								}
-  							},
-						});
-						return false;
+  									}
+  									break;
+  								// Corretto:
+  								case 1:
+  									swal({
+  										title: "Corretto! ",
+  										text: itemAnswer,
+  										type: "success",
+  										showCancelButton: false,
+  										confirmButtonText: "CONTINUA",
+  										closeOnConfirm: false,
+									},
+									function(isConfirm) {
+  										if (isConfirm) {
+    										window.location = "/exam/saveanswer/"+ajax_post_data_value;
+  										}
+									});
+  									break;
+  							}
+  						},
 					});
+					return false;
+				});
+		
+				{/literal}{if $remainingTime > -1}{literal}
 			
 					var initial = {/literal}{$remainingTime}{literal} ;
 					var delay = {/literal}{$remainingTime}{literal} ;
@@ -273,7 +275,7 @@
   								}
 							});
 						}
-						
+					
 						// Gestione cambio di colore sulla riga del tempo rimanente
 						$('#countmesg').html("<h5>Tempo rimanente: </h5>"+delay+" secondi");
 						$('#timerbar').attr('style','width: '+(100*delay)/initial+'%');
@@ -286,8 +288,8 @@
 						}
 					}
 					countdown();
+					{/literal}{/if}{literal}
 				});
-			{/literal}
-		{/if}
-</script>
+		{/literal}
+	</script>
 {/block}
