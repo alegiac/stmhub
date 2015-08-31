@@ -207,6 +207,15 @@ class ExamController extends AbstractActionController
 		return $vm;
 	}
 	
+	public function resetAction()
+	{
+		$this->init();
+		$sessionId = $this->params('id');
+		$this->getExamService()->resetDemo($sessionId);
+		$this->cleanSessionExamVars();
+		echo "Sessione resettata";die();
+		
+	}
 	/**
 	 * Visualizzazione pagina interstiziale di inizio esame. Viene visualizzata in fase di ripresa esame
 	 * 

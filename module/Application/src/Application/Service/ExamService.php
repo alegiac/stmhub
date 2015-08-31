@@ -588,6 +588,19 @@ final class ExamService implements ServiceLocatorAwareInterface
     	return $retval;
     }
     
+    public function resetDemo($sessionId)
+    {
+    	$session = $this->getStudentHasCourseHasExamRepo()->find($sessionId);
+    	$session->setCompleted(0);
+    	$session->setEndDate(null);
+    	$session->setPoints(0);
+    	$session->setProgressive(0);
+    	$this->getEntityManager()->persist($session);
+    	$this->getEntityManager()->flush();
+    	
+    	
+    	
+    }
     /**
      * Acquisizione dell'item corrente della session d'esame corrente
      * @param unknown $token

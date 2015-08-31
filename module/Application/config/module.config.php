@@ -53,6 +53,18 @@ return array(
         		),
         		'may_terminate' => true,
         	),
+        	'exam_reset_demo' => array(
+        		'type' => 'Segment',
+        		'options' => array(
+        			'route' => '/exam/reset/:id',
+        			'defaults' => array(
+        				'__NAMESPACE__' => 'Application\Controller',
+        				'controller' => 'Exam',
+        				'action' => 'reset'	
+        			), 
+        		),
+        		'may_terminate' => true,
+        	),
         	// Route per la gestione di un errore
         	'exam_error' => array(
         		'type' => 'Segment',
