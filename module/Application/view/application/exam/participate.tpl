@@ -1,7 +1,14 @@
 {extends "../../_common/base.tpl"}
 
 {block name="custom_css"}
-
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <style>
+  		.margins { margin: 10px; }
+  		#sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+  		#sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+  		#sortable li span { position: absolute; margin-left: -1.3em; }
+  </style>
+  
 {/block}
 
 
@@ -20,46 +27,6 @@
 	    		</div>
 			{/if}
 
-            <div class="col-sm-3">
-				<!-- Profile view -->
-                <div class="card profile-view">
-                	<div class="pv-header">
-                    	<img src="/static/assets/img/profile-pics/profile-pic.gif" class="pv-main" alt="">
-                   	</div>
-                            
-                    <div class="pv-body">
-                        <h2>{$firstName} {$lastName}</h2>
-                        <small>{$email}</small>
-                    
-                        <ul class="pv-contact">
-                        </ul>
-                        
-                        <ul class="pv-follow">
-                        </ul>
-                        
-                        <a href="" class="pv-follow-btn">Statistiche</a>
-                    </div>
-                </div>
-                <!-- Chart pies -->
-                <div class="mini-charts-item bgm-cyan">
-					<div class="clearfix">
-	                    <div class="chart chart-pie stats-pie"></div>
-	                    <div class="count">
-	                        <small>Completato sessione</small>
-	                        <h2>{$sessionCompleted}/{$sessionTotal} - {$sessionPercentage}</h2>
-	                    </div>
-	                </div>
-				</div>
-                <div class="mini-charts-item bgm-cyan">
-	                <div class="clearfix">
-	                    <div class="chart chart-pie stats-pie"></div>
-	                    <div class="count">
-	                        <small>Completato esame</small>
-	                        <h2>{$examCompleted}/{$examTotal} - {$examPercentage}</h2>
-	                    </div>
-	                </div>
-                </div>
-            </div>
             <div class="col-sm-9">
             	<!-- Content of questions -->
 	        	{if $enableMessage eq true}
@@ -121,23 +88,65 @@
 		        		</div>
 		        		<div class="row">
 		        			<center>
+		        			{$this->scramble}
 		        		 	{$this->form($form)}
 		        		 	</center>
 	        			</div>
 	        		</div>
 	        	</div>
 			</div>
+			<div class="col-sm-3">
+				<!-- Profile view -->
+                <div class="card profile-view">
+                	<div class="pv-header">
+                    	<img src="/static/assets/img/profile-pics/profile-pic.gif" class="pv-main" alt="">
+                   	</div>
+                            
+                    <div class="pv-body">
+                        <h2>{$firstName} {$lastName}</h2>
+                        <small>{$email}</small>
+                    
+                        <ul class="pv-contact">
+                        </ul>
+                        
+                        <ul class="pv-follow">
+                        </ul>
+                        
+                        <a href="" class="pv-follow-btn">Statistiche</a>
+                    </div>
+                </div>
+                <!-- Chart pies -->
+                <div class="mini-charts-item bgm-cyan">
+					<div class="clearfix">
+	                    <div class="chart chart-pie stats-pie"></div>
+	                    <div class="count">
+	                        <small>Completato sessione</small>
+	                        <h2>{$sessionCompleted}/{$sessionTotal} - {$sessionPercentage}</h2>
+	                    </div>
+	                </div>
+				</div>
+                <div class="mini-charts-item bgm-cyan">
+	                <div class="clearfix">
+	                    <div class="chart chart-pie stats-pie"></div>
+	                    <div class="count">
+	                        <small>Completato esame</small>
+	                        <h2>{$examCompleted}/{$examTotal} - {$examPercentage}</h2>
+	                    </div>
+	                </div>
+                </div>
+            </div>
+            
         </section>
 {/block}
 
 {block name="custom_js"}
-	    
+	<script src="/static/assets/js/jquery.sortable.min.js"></script>  
 	<script type="text/javascript">
 		
 		var selectedOption = "";
 		{literal}
 			$(document).ready(function() {
-					
+				$('.scrambled').sortable();
 				selectedOption = $('select :selected').val();
 				if (selectedOption == "") {
 					// Disabilitare il pulsante submit
@@ -166,8 +175,7 @@
 						
 					// Se la domanda è nulla, nessun check. Si va direttamente al submit
 					if (form_id == "null_question") {
-						console.log("Null-question: redirect a pagina successiva");
-						return true;
+						ajax_post_data_value = "-1";
 					// Se la domanda è di un multisubmit, si deve inviare il submit premuto
 					} else if (form_id == "multisubmit_question") {
 						ajax_post_data_value = $(this).attr("id");
@@ -229,7 +237,7 @@
   								// Corretto:
   								case 1:
   									swal({
-  										title: "Corretto! ",
+  										title: "Corretto, hai guadagnato "+earnedPoints+" punti",
   										text: itemAnswer,
   										type: "success",
   										showCancelButton: false,
@@ -242,6 +250,21 @@
   										}
 									});
   									break;
+  								// Null question:
+  								case 2:
+  									swal({
+  										title: "Lo sapevi?",
+  										text: itemAnswer,
+  										type: "info",
+  										showCancelButton: false,
+  										confirmButtonText: "CONTINUA",
+  										closeOnConfirm: false,
+  									},
+  									function(isConfirm) {
+  										if (isConfirm) {
+  											window.location = "/exam/timeout";
+  										}
+  									});
   							}
   						},
 					});

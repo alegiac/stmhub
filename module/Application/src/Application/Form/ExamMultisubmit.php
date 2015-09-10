@@ -20,7 +20,7 @@ class ExamMultisubmit extends Form
 				'attributes' => array(
 					'id' => $value,
 					'value' => strtoupper($description),
-					'class' => 'btn btn-primary btn-lg col-xs-12',
+					'class' => 'btn btn-primary btn-lg margins',
 				)
 			));
 		}

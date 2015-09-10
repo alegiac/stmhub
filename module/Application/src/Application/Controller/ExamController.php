@@ -60,6 +60,17 @@ class ExamController extends AbstractActionController
 	{
 		$this->initExam();
 		
+		// Controllo, se è null-question rispondo ok con la risposta pronta
+		if ($this->session->exam['current_item']['type'] === ItemType::TYPE_EMPTY) {
+			
+			$result = array(
+				'result' => 2,
+				'points' => 0,
+				'answer' => utf8_decode($this->session->exam['current_item']['answer']),
+			);
+			echo json_encode($result);die();
+		}
+		
 		$optionId = $this->params('optionid');
 		$this->session->currentSelectedOption = $optionId;
 		
@@ -71,7 +82,7 @@ class ExamController extends AbstractActionController
 					$result = array(
 						'result' => 1,
 						'points' => $option['points'],
-						'answer' => $this->session->exam['current_item']['context']
+						'answer' => utf8_decode($this->session->exam['current_item']['answer'])
 					);
 				} else {
 					$result = array('result' => 0);
@@ -79,7 +90,7 @@ class ExamController extends AbstractActionController
 					if ($this->session->usedTries >= $this->session->exam['current_item']['maxtries']) {
 						$result['tryagain'] = 0;
 						$result['points'] = $option['points'];
-						$result['answer'] = $this->session->exam['current_item']['context'];
+						$result['answer'] = utf8_decode($this->session->exam['current_item']['answer']);
 					} else {
 						$result['tryagain'] = 1;
 					}
@@ -87,7 +98,6 @@ class ExamController extends AbstractActionController
 				break;
 			}
 		}
-		
 		echo json_encode($result);die();
 	}
 	
@@ -318,7 +328,6 @@ class ExamController extends AbstractActionController
 		$this->initExam();
 		
 		$optionValue = $this->params('optionValue');
-		
 		$sessionId = $this->session->exam['session']['id'];
 		$examId = $this->session->exam['exam']['id'];
 		$itemId = $this->session->exam['current_item']['id'];
@@ -327,7 +336,6 @@ class ExamController extends AbstractActionController
 		$this->session->offsetUnset('currentSelectedOption');
 		$this->session->offsetUnset('startedTime');
 		$this->session->offsetUnset('usedTries');
-		
 		$retval = $this->getExamService()->responseWithAnOption($sessionId, $examId, $itemId, $optionId);
 		if ($retval === 1) {
 			// Finito esame
@@ -356,6 +364,9 @@ class ExamController extends AbstractActionController
 			
 			$view = $this->composeParticipationVM();
 			$form = $this->composeForm();
+			if ($form instanceof ExamDragDrop) {
+				$view->scramble = $form->getUlReorderOptions();
+			}
 			$view->form = $form;
 			return $view;
 		} catch (\Exception $e) {
@@ -471,7 +482,7 @@ class ExamController extends AbstractActionController
 			case ItemType::TYPE_INSERT:
 				return new ExamInput();
 				break;
-			case ItemType::TYPE_MULTIPLE:
+			case ItemType::TYPE_SELECT:
 				$arrOptions = array();
 				foreach ($item['options'] as $k=>$v) $arrOptions[$v['id']] = $v['value'];
 				return new ExamSelect($arrOptions);
@@ -482,7 +493,8 @@ class ExamController extends AbstractActionController
 				return new ExamMultisubmit($arrOptions);
 				break;
 			case ItemType::TYPE_REORDER:
-				return new ExamDragDrop();
+				$options = $item['options'][0]['value'];
+				return new ExamDragDrop($options);
 				break;
 			case ItemType::TYPE_EMPTY:
 				return new ExamEmpty();
@@ -518,7 +530,7 @@ class ExamController extends AbstractActionController
 		$item = $this->session->exam['current_item'];
 		
 		$vm->itemProgressive = $itemProg;
-		$vm->itemQuestion = $item['question'];
+		$vm->itemQuestion = utf8_encode($item['question']);
 		
 		// Calcolo di tempo rimanente e tentativi rimanenti basandosi su eventuali dati di sessione
 		if ($this->session->startedTime) {

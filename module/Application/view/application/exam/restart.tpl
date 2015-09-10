@@ -7,27 +7,7 @@
 {block name="main"}
 	<section id="content">
 	    <div class="container">
-	    	<div class="col-sm-3">
-				<!-- Profile view -->
-                <div class="card profile-view">
-                	<div class="pv-header">
-                    	<img src="/static/assets/img/profile-pics/profile-pic.gif" class="pv-main" alt="">
-                   	</div>
-                            
-                    <div class="pv-body">
-                        <h2>{$firstName} {$lastName}</h2>
-                        
-                        <ul class="pv-contact">
-                        </ul>
-                        
-                        <ul class="pv-follow">
-                        </ul>
-                        
-                        <a href="/exam/stats" class="pv-follow-btn">Statistiche</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-9">
+	    	<div class="col-sm-9">
             	<!-- Welcome area -->
             	<div class="card">
 	        		<div class="card-header">
@@ -92,5 +72,25 @@
 	        		</div>
 	        	</div>
 			</div>
+			<div class="col-sm-3">
+				<!-- Profile view -->
+                <div class="card profile-view">
+                	<div class="pv-header">
+                    	<img src="/static/assets/img/profile-pics/profile-pic.gif" class="pv-main" alt="">
+                   	</div>
+                            
+                    <div class="pv-body">
+                        <h2>{$firstName} {$lastName}</h2>
+                        
+                        <ul class="pv-contact">
+                        </ul>
+                        
+                        <ul class="pv-follow">
+                        </ul>
+                        
+                        <a href="/exam/stats" class="pv-follow-btn">Statistiche</a>
+                    </div>
+                </div>
+            </div>
         </section>
 {/block}

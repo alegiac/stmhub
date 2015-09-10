@@ -5,9 +5,9 @@ namespace Application\Constants;
 class ItemType
 {
 	/**
-     * Tipo multiplo
+     * Tipo select
      */
-	const TYPE_MULTIPLE = 1;
+	const TYPE_SELECT = 1;
 	
 	/**
 	 * Tipo multi submit (vero-falso, etc)
