@@ -9,7 +9,7 @@
         <link href="/static/assets/vendors/noUiSlider/jquery.nouislider.min.css" rel="stylesheet">
         <link href="/static/assets/vendors/farbtastic/farbtastic.css" rel="stylesheet">
         <link href="/static/assets/vendors/summernote/summernote.css" rel="stylesheet">
-        <link href="/static/assets/vendors/sweet-alert/sweet-alert.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/bootstrap-sweet-alert/sweet-alert.css" rel="stylesheet">
         <link href="/static/assets/vendors/material-icons/material-design-iconic-font.min.css" rel="stylesheet">
         <link href="/static/assets/vendors/socicon/socicon.min.css" rel="stylesheet">
             
@@ -56,7 +56,7 @@
         <script src="/static/assets/vendors/fileinput/fileinput.min.js"></script>
         <script src="/static/assets/vendors/waves/waves.min.js"></script>
         <script src="/static/assets/vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
-        <script src="/static/assets/vendors/sweet-alert/sweet-alert.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-sweet-alert/sweet-alert.js"></script>
         
         <script src="/static/assets/js/demo.js"></script>
         

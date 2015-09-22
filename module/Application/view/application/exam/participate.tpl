@@ -54,10 +54,6 @@
 	        	<div class="card">
 	        		<div class="card-header">
 	        			<div class="col-sm-6 pull-left">
-	        				Corso:&nbsp;&nbsp;<strong>{$courseName}</strong><br>
-	        				Esame:&nbsp;&nbsp;<strong>{$examName}</strong><br>
-	        				Quesito:&nbsp;&nbsp;<strong>{$itemProgressive}/{$totalItems}</strong><br>
-	        				Tentativi totali risposta:&nbsp;&nbsp;<strong>/{$maxTries}</strong>
 	        			</div>
 	        			<div class="col-sm-6 pull-right">
 	        				{if $remainingTime eq -1}
@@ -75,16 +71,19 @@
 	        				{/if}
 	        			</div>
 	        		</div>
+	        		<br>
 	        		<div class="card-body card-padding">
 	        			<div class="row">
-	        				{$media}
-		        			<hr>
-		        			<br>
-		        			<br>
-		        			<center>
-		        				<h2>{$itemQuestion}</h2>
-		        			</center>
-		        			<hr>
+	        				<div class="col-sm-12">
+	        					{$media}
+		        				<hr>
+		        				<br>
+		        				<br>
+		        				<center>
+		        					<h2>{$itemQuestion}</h2>
+		        				</center>
+		        				<hr>
+		        			</div>
 		        		</div>
 		        		<div class="row">
 		        			<center>
@@ -106,13 +105,7 @@
                         <h2>{$firstName} {$lastName}</h2>
                         <small>{$email}</small>
                     
-                        <ul class="pv-contact">
-                        </ul>
                         
-                        <ul class="pv-follow">
-                        </ul>
-                        
-                        <a href="" class="pv-follow-btn">Statistiche</a>
                     </div>
                 </div>
                 <!-- Chart pies -->
@@ -199,12 +192,6 @@
   							var itemAnswer = jQuery.parseJSON(data).answer;
   							var tryagain = jQuery.parseJSON(data).tryagain;
   							
-  							var errorTitle = "Errato, ma puoi riprovare";
-  							var errorMessage = "Puoi modificare la tua risposta";
-  							if (tryagain == 0) {
-  								errorTitle = "Errato, hai guadagnato "+earnedPoints+" punti";
-  								errorMessage = itemAnswer;
-  							}
   							switch(checkResult) {
   								// Sbagliato
   								case 0:
@@ -213,16 +200,20 @@
   											title: "Errato, puoi riprovare",
   											text: "Puoi modificare la tua risposta",
   											type: "warning",
+  											html: true,
   											showCancelButton: false,
+  											confirmButtonClass: "btn-lg btn-warning",
   											confirmButtonText: "OK",
   											closeOnConfirm: true,
   										});
   									} else {
   										swal({
- 											title: "Errato, hai guadagnato "+earnedPoints+" punti",
-  											text: itemAnswer,
+ 											title: "Errato",
+ 											text: itemAnswer,
   											type: "error",
+  											html: true,
   											showCancelButton: false,
+  											confirmButtonClass: "btn-lg btn-danger",
   											confirmButtonText: "CONTINUA",
   											closeOnConfirm: false,
 										},
@@ -236,19 +227,25 @@
   									break;
   								// Corretto:
   								case 1:
-  									swal({
-  										title: "Corretto, hai guadagnato "+earnedPoints+" punti",
-  										text: itemAnswer,
-  										type: "success",
-  										showCancelButton: false,
-  										confirmButtonText: "CONTINUA",
-  										closeOnConfirm: false,
-									},
-									function(isConfirm) {
-  										if (isConfirm) {
-    										window.location = "/exam/saveanswer/"+ajax_post_data_value;
-  										}
-									});
+  									if (itemAnswer == "") {
+  										window.location = "/exam/saveanswer/"+ajax_post_data_value;
+  									} else {
+  										swal({
+  											title: "Corretto",
+  											text: itemAnswer,
+  											type: "success",
+  											html: true,
+  											showCancelButton: false,
+  											confirmButtonClass: "btn-lg btn-success",
+  											confirmButtonText: "CONTINUA",
+  											closeOnConfirm: false,
+										},
+										function(isConfirm) {
+  											if (isConfirm) {
+    											window.location = "/exam/saveanswer/"+ajax_post_data_value;
+  											}
+										});
+									}
   									break;
   								// Null question:
   								case 2:
@@ -257,6 +254,7 @@
   										text: itemAnswer,
   										type: "info",
   										showCancelButton: false,
+  										confirmButtonClass: "btn-lg btn-info",
   										confirmButtonText: "CONTINUA",
   										closeOnConfirm: false,
   									},
@@ -285,7 +283,7 @@
 							initial = 0;
 							swal({
   								title: "Timeout!",
-  								text: "Hai esaurito il tempo a disposizione per la risposta",
+  								text: "<font size=\"5\">Hai esaurito il tempo a disposizione per la risposta</font>",
   								type: "info",
   								showCancelButton: false,
   								confirmButtonClass: "btn-lg btn-danger",
