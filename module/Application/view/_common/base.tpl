@@ -12,7 +12,8 @@
         <link href="/static/assets/vendors/bootstrap-sweet-alert/sweet-alert.css" rel="stylesheet">
         <link href="/static/assets/vendors/material-icons/material-design-iconic-font.min.css" rel="stylesheet">
         <link href="/static/assets/vendors/socicon/socicon.min.css" rel="stylesheet">
-            
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+		            
         <!-- CSS -->
         <link href="/static/assets/css/app.min.1.css" rel="stylesheet">
         <link href="/static/assets/css/app.min.2.css" rel="stylesheet">

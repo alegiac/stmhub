@@ -103,29 +103,32 @@
                     <div class="pv-body">
                         <h2>{$firstName} {$lastName}</h2>
                         <small>{$email}</small>
-                    
-                        
                     </div>
                 </div>
+                
+                <div class="card">
+                	<div class="pv-body">
+                		<center><br><h4>{$courseName}</h4><hr><br></center>
+                		{$examList}
+                	</div>
+                </div>
+                
+                <div class="card">
+                	<div class="pv-body">
+                		<center><br><small>Data termine sessione</small><br><h4>{$expectedEndDate}</h4><br></center>
+                	</div>
+                </div>
+                
                 <!-- Chart pies -->
                 <div class="mini-charts-item bgm-cyan">
 					<div class="clearfix">
 	                    <div class="chart chart-pie stats-pie"></div>
 	                    <div class="count">
-	                        <small>Completato sessione</small>
-	                        <h2>{$sessionCompleted}/{$sessionTotal} - {$sessionPercentage}</h2>
+	                        <small>Punteggio accumulato</small>
+	                        <h2>{$points}/{$maxpoints}</h2>
 	                    </div>
 	                </div>
 				</div>
-                <div class="mini-charts-item bgm-cyan">
-	                <div class="clearfix">
-	                    <div class="chart chart-pie stats-pie"></div>
-	                    <div class="count">
-	                        <small>Completato esame</small>
-	                        <h2>{$examCompleted}/{$examTotal} - {$examPercentage}</h2>
-	                    </div>
-	                </div>
-                </div>
             </div>
             
         </section>
