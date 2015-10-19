@@ -22,6 +22,52 @@ use Core\Constants\Errorcode;
 
 final class ExamService extends BaseService
 {	
+	/**
+	 * Load all exams for the course
+	 * @param Course $course
+	 * @return array
+	 */
+	private function getExamsForCourse(Course $course)
+	{
+		$retval = array();
+		
+		$exams = $this->getExamRepo()->findMandatoriesByCourse($course);
+		
+		// Got all exams. Need to cycle over the list, find all the sessions available and check if the exam is completed 
+		foreach ($exams as $exam) {
+			/* @var $exam Exam */
+			$name = $exam->getName();
+			$sessRepo = $this->getStudentHasCourseHasExamRepo();
+			$examStarted = false;
+			$examCompleted = true;
+			
+			// Got all the sessions. 
+			$sessionsExam = $sessRepo->findByExam($exam);
+			foreach ($sessionsExam as $sesEx) {
+				/* @var $sesEx StudentHasCourseHasExam */
+				if ($sesEx->getStartDate() < new \DateTime()) {
+					// At least one session has been started. The exam is started!
+					$examStarted = true;
+				}
+				if (!$sesEx->getCompleted()) {
+					$examCompleted = false;
+					break;
+				}
+			}
+			
+			$rv = array('name' => $name);
+			if ($examStarted === false) {
+				$rv['started'] = false;
+				$rv['completed'] = false;
+			} else {
+				$rv['started'] = true;
+				$rv['completed'] = $examCompleted;
+			}
+			$retval[] = $rv;
+		}
+		
+		return $retval;
+	}
     /**
      * Acquisizione di tutti gli item per un esame
      * @param Exam $exam
@@ -117,6 +163,22 @@ final class ExamService extends BaseService
     		}
     	}
     	
+    	return $totPoints;
+    }
+    
+    /**
+     * Max possible points for a session
+     * @param StudentHasCourseHasExam $session
+     * @return number
+     */
+    private function getSessionMaxPoints(StudentHasCourseHasExam $session)
+    {
+    	$items = $session->getItem();
+    	$itvalues = $items->getValues();
+    	
+    	foreach ($itvalues as $item) {
+    		$totPoints += $this->getItemMaxPoints($item);
+    	}
     	return $totPoints;
     }
     
@@ -255,7 +317,7 @@ final class ExamService extends BaseService
     			'totalpoints' => $session->getExam()->getPointsIfCompleted(),
     			'outtimereduction' => $session->getExam()->getReducePercentageOuttime(),
     		);
-    		
+    		$retval['allexams'] = $this->getExamsForCourse($session->getStudentHasCourse()->getCourse());
     		$retval['student'] = array(
     			'id' => $session->getStudentHasCourse()->getStudent()->getId(),
     			'firstname' => $session->getStudentHasCourse()->getStudent()->getFirstname(),
@@ -269,6 +331,7 @@ final class ExamService extends BaseService
     			'completed' => $session->getCompleted(),
     			'expectedenddate' => $session->getExpectedEndDate(),
     			'points' => $session->getPoints(),
+    			'maxpoints' => $this->getSessionMaxPoints($session),
     			'progressive' => $session->getProgressive(),
     			'startdate' => $session->getStartDate(),
     		);
@@ -569,7 +632,7 @@ final class ExamService extends BaseService
     		throw new MalformedRequest("The \".\" character is missing in the token [".$token."]");
     		 
     	$studentToken = substr($token,0,strpos($token, "."));
-    	$sessionToken = substr($token,strpos($token, ".")+1);
+    	$sessionToken = substr($token,strpos($token, ".") + 1);
     		 
     	if (!$studentToken || strlen($studentToken) == 0)
     		throw new MalformedRequest("The token student part is not valued [".$token."]");
