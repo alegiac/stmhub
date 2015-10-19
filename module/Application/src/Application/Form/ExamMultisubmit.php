@@ -19,7 +19,7 @@ class ExamMultisubmit extends Form
 				'name' => 'submit_'.$value,
 				'attributes' => array(
 					'id' => $value,
-					'value' => strtoupper($description),
+					'value' => strtoupper(utf8_encode($description)),
 					'class' => 'btn btn-primary btn-lg margins',
 				)
 			));

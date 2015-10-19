@@ -1,11 +1,4 @@
 <?php
-/**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- */
 
 namespace Application\Controller;
 
@@ -19,14 +12,11 @@ use Application\Form\ExamInput;
 use Application\Service\ExamService;
 use EddieJaoude\Zf2Logger\Log\Logger;
 use Core\Exception\MalformedRequest;
-use Core\Exception\ObjectNotEnabled;
-use Core\Exception\ObjectNotFound;
 use Core\Exception\InconsistentContent;
 use Application\Form\ExamEmpty;
 use Zend\Form\Form;
 use Application\Form\ExamMultisubmit;
 use Application\Form\ExamDragDrop;
-use Zend\View\Model\JsonModel;
 
 class ExamController extends AbstractActionController
 {
@@ -59,16 +49,19 @@ class ExamController extends AbstractActionController
 	public function ajcheckanswerAction()
 	{
 		$this->initExam();
+		$checkAgainstValue = false;
 		
-		// Controllo, se è null-question rispondo ok con la risposta pronta
+		// Controllo, se ï¿½ null-question rispondo ok con la risposta pronta
 		if ($this->session->exam['current_item']['type'] === ItemType::TYPE_EMPTY) {
 			
 			$result = array(
 				'result' => 2,
 				'points' => 0,
-				'answer' => utf8_decode($this->session->exam['current_item']['answer']),
+				'answer' => utf8_encode($this->session->exam['current_item']['answer']),
 			);
 			echo json_encode($result);die();
+		} else if ($this->session->exam['current_item']['type'] === ItemType::TYPE_REORDER) {
+			$checkAgainstValue = true;
 		}
 		
 		$optionId = $this->params('optionid');
@@ -77,12 +70,16 @@ class ExamController extends AbstractActionController
 		$result = -1;
 		
 		foreach ($this->session->exam['current_item']['options'] as $i => $option) {
-			if ($option['id'] == $optionId) {
-				if ($option['correct'] === 1) {
+			
+			// Check against value?
+			if ($checkAgainstValue === true) {
+				
+				if (strtolower($option['value']) == strtolower($optionId)) {
+					
 					$result = array(
 						'result' => 1,
 						'points' => $option['points'],
-						'answer' => utf8_decode($this->session->exam['current_item']['answer'])
+						'answer' => utf8_encode($this->session->exam['current_item']['answer'])
 					);
 				} else {
 					$result = array('result' => 0);
@@ -90,53 +87,69 @@ class ExamController extends AbstractActionController
 					if ($this->session->usedTries >= $this->session->exam['current_item']['maxtries']) {
 						$result['tryagain'] = 0;
 						$result['points'] = $option['points'];
-						$result['answer'] = utf8_decode($this->session->exam['current_item']['answer']);
+						$result['answer'] = utf8_encode($this->session->exam['current_item']['answer']);
 					} else {
 						$result['tryagain'] = 1;
 					}
+				}	
+			} else {
+				if ($option['id'] == $optionId) {
+					if ($option['correct'] === 1) {
+						$result = array(
+							'result' => 1,
+							'points' => $option['points'],
+							'answer' => utf8_encode($this->session->exam['current_item']['answer'])
+						);
+					} else {
+						$result = array('result' => 0);
+						$this->session->usedTries++;
+						if ($this->session->usedTries >= $this->session->exam['current_item']['maxtries']) {
+							$result['tryagain'] = 0;
+							$result['points'] = $option['points'];
+							$result['answer'] = utf8_encode($this->session->exam['current_item']['answer']);
+						} else {
+							$result['tryagain'] = 1;
+						}
+					}
+					break;
 				}
-				break;
 			}
 		}
 		echo json_encode($result);die();
 	}
 	
+	public function indexAction() 
+	{
+	}
+	
+
 	/**
 	 * Ingresso nella funzione di accesso all'esame.
 	 * Questa action verifica la presenza del token utente (inviato via email).
 	 * In caso di consistenza, verifica se un utente puo' partecipare all'esame:
 	 * - se non c'e' token o non si verificano le condizioni di partecipazione, carica una pagina di errore
 	 * - altrimenti invia la richiesta utente al quesito
-	 *  
-	 * @return void	
+	 *
+	 * @return void
 	 * @see \Zend\Mvc\Controller\AbstractActionController::indexAction()
 	 */
-	public function indexAction() 
+	public function tokenAction()
 	{
 		$this->init();
-		
-		// *** Verifica token. Se non presente, redirect a url definito in configurazione *** //
-		$stmt = $this->params('tkn');
-		
-		if (strlen($stmt) == 0) {
-			$this->logger->notice("Token is missing in /exam/token request. Redirecting to corporate url [".$this->config['corporateurl']."]");
-			$this->redirect()->toUrl($this->config['corporateurl']);
-			return;
-		}
+		$stmt = $this->params('tkn',"");
 		
 		try {
-			// ** Acquisizione dati studente/sessione e salvataggio in sessione **//
-			//$res = $this->getExamService()->getExamSessionByToken($stmt);
+			// Load session info
 		 	$res = $this->getExamService()->getCurrentExamSessionItemByToken($stmt);
-		 	// 3- Verifica risultato: inviare a pagina di stop o prosegue?
 			if ($res['result'] === 0) {
+				// No exam available
 				$this->redirect()->toRoute('exam_nothing');
 				return;
 			}
 			$this->session->token = $stmt;
 			$this->session->exam = $res;
 			
-			// Redirect ad inizio esame (se progressive è zero)
+			// Redirect ad inizio esame (se progressive ï¿½ zero)
 			if($res['session']['progressive'] === 0) {
 				
 				// Alla prima domanda visualizzo la pagina iniziale corso
@@ -153,10 +166,11 @@ class ExamController extends AbstractActionController
 			
 			if ($e instanceof MalformedRequest || $e instanceof InconsistentContent) {
 				// Richiesta volutamente errata
+				$this->getServiceLocator()->get("Logger")->notice("Received inconsistant/malfrormed request token [".$stmt."]");
 				$this->redirect()->toUrl($this->config['corporateurl']);
 			} else {
 				// Errore 500
-				$this->session->error_message = "Errore interno del Server (codice: ".$e->getMessage().")";
+				$this->session->error_message = "Errore interno del Server (codice: ".$e->getCode().")";
 				$this->redirect()->toRoute('exam_error');
 			}
 		}
@@ -328,15 +342,23 @@ class ExamController extends AbstractActionController
 		$this->initExam();
 		
 		$optionValue = $this->params('optionValue');
+		
 		$sessionId = $this->session->exam['session']['id'];
 		$examId = $this->session->exam['exam']['id'];
 		$itemId = $this->session->exam['current_item']['id'];
-		$optionId = $optionValue;
+		
+		if ($this->session->exam['current_item']['type'] === ItemType::TYPE_REORDER) {
+			$optionId = $this->session->exam['current_item']['options'][0]['id'];
+			$retval = $this->getExamService()->responseReorder($sessionId, $examId, $itemId, $optionId, $optionValue);
+		} else {
+			$optionId = $optionValue;
+			$retval = $this->getExamService()->responseWithAnOption($sessionId, $examId, $itemId, $optionId);
+		}
 		
 		$this->session->offsetUnset('currentSelectedOption');
 		$this->session->offsetUnset('startedTime');
 		$this->session->offsetUnset('usedTries');
-		$retval = $this->getExamService()->responseWithAnOption($sessionId, $examId, $itemId, $optionId);
+		
 		if ($retval === 1) {
 			// Finito esame
 			$this->redirect()->toRoute('exam_end');
@@ -348,6 +370,7 @@ class ExamController extends AbstractActionController
 			return;
 		}
 	}
+	
 	/**
 	 * Visualizzazione pagina di partecipazione al concorso: acquisisce lo step attuale, il relativo item 
 	 * e lo visualizza per ottenere la risposta dall'utente.
@@ -358,7 +381,6 @@ class ExamController extends AbstractActionController
 	public function participateAction()
 	{
 		$this->initExam();
-		
 		try {
 			// Impostazione valore corrente per la sessione d'esame
 			
@@ -366,8 +388,7 @@ class ExamController extends AbstractActionController
 			$form = $this->composeForm();
 			if ($form instanceof ExamDragDrop) {
 				$view->scramble = $form->getUlReorderOptions();
-			}
-			$view->form = $form;
+			}$view->form = $form;
 			return $view;
 		} catch (\Exception $e) {
 			$this->logger->warn($e->getMessage());
@@ -431,7 +452,7 @@ class ExamController extends AbstractActionController
 			foreach ($mediaArr as $media) {
 				switch ($media['type']) {
 					case MediaType::TYPE_IMAGE:
-						$retval .= '<div><img src="'.$media['url'].'" alt="" style="width:100%;"/></div><br>';
+						$retval .= '<div><img src="'.$media['url'].'" alt="" style="display: block;margin-left: auto;margin-right: auto;"/></div><br>';
 						break;
 					case MediaType::TYPE_VIDEO:
 						$retval .= '<div class="tv-body"><div class="embed-responsive embed-responsive-16by9 m-b-20"><iframe class="embed-responsive-item" src="'.$media['url'].'"></iframe></div></div><br>';

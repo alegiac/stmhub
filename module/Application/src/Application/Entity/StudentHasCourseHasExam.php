@@ -80,7 +80,7 @@ class StudentHasCourseHasExam
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="expected_end_date", type="datetime", nullable=false)
+     * @ORM\Column(name="expected_end_date", type="datetime", nullable=true)
      */
     private $expectedEndDate;
 
@@ -104,6 +104,28 @@ class StudentHasCourseHasExam
      */
     private $studentHasCourse;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Application\Entity\Item", inversedBy="studentHasCourseHasExam")
+     * @ORM\JoinTable(name="student_has_course_has_exam_has_item",
+     *   joinColumns={
+     *     @ORM\JoinColumn(name="student_has_course_has_exam_id", referencedColumnName="id")
+     *   },
+     *   inverseJoinColumns={
+     *     @ORM\JoinColumn(name="item_id", referencedColumnName="id")
+     *   }
+     * )
+     */
+    private $item;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->item = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
 
     /**
@@ -378,5 +400,39 @@ class StudentHasCourseHasExam
     public function getStudentHasCourse()
     {
         return $this->studentHasCourse;
+    }
+
+    /**
+     * Add item
+     *
+     * @param \Application\Entity\Item $item
+     *
+     * @return StudentHasCourseHasExam
+     */
+    public function addItem(\Application\Entity\Item $item)
+    {
+        $this->item[] = $item;
+
+        return $this;
+    }
+
+    /**
+     * Remove item
+     *
+     * @param \Application\Entity\Item $item
+     */
+    public function removeItem(\Application\Entity\Item $item)
+    {
+        $this->item->removeElement($item);
+    }
+
+    /**
+     * Get item
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getItem()
+    {
+        return $this->item;
     }
 }

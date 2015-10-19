@@ -22,7 +22,8 @@ class ExamDragDrop extends Form
 		shuffle(shuffle($array));
 		$tag = "<ul class=\"scrambled\">";
 		foreach ($array as $option) {
-			$tag .= "<li>".$option."</li>";
+			$tag .= "<li class=\"btn btn-primary btn-lg col-xs-6 col-xs-offset-3\" style=\"margin-bottom:6px;
+		\">".$option."</li><br>";
 		}
 		$tag .= "</ul>";
 		$this->ulReorderOptions = $tag;
@@ -33,6 +34,7 @@ class ExamDragDrop extends Form
 			'attributes' => array(
 				'value' => 'INVIA',
 				'class' => "btn btn-primary btn-lg col-xs-8 col-xs-offset-2",
+				'style' => 'margin-top: 5px;'
 			)
 			
 		));

@@ -14,7 +14,7 @@ return array (
 				'params' => array (
 					'host'     => '127.0.0.1',
 					'port'     => '3306',
-					'dbname'   => 'smiletomove_learning2',
+					'dbname'   => 'smiletomove_learning',
 				)
 			)
 		),
@@ -30,7 +30,7 @@ return array (
 			'standard-output-file' => array (
 				'adapter' => '\Zend\Log\Writer\Stream',
 				'options' => array (
-					'output' => 'data/development___'.date('Ymd')."___app.log",
+					'output' => 'data/logs/development___'.date('Ymd')."___app.log",
 				),
 				'filter' => \Zend\Log\Logger::DEBUG,
 				'enabled' => true,

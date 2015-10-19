@@ -1,5 +1,5 @@
 <?php
-use Zend\Mvc\Router\Http\Literal;
+
 /**
  * Zend Framework (http://framework.zend.com/)
  *
@@ -25,19 +25,43 @@ return array(
 	),
     'router' => array(
         'routes' => array(
-        		'exam_js' => array(
-        				'type' => 'Segment',
-        				'options' => array(
-        						'route' => '/exam/ajcheckanswer/:optionid',
-        						'defaults' => array(
-        								'__NAMESPACE__' => 'Application\Controller',
-        								'controller' => 'Exam',
-        								'action' => 'ajcheckanswer',
-        						),
-        				),
-        				'may_terminate' => true,
+        	'tools_students' => array(
+        			'type' => 'Segment',
+        			'options' => array(
+        					'route' => '/tools/students',
+        					'defaults' => array(
+        							'__NAMESPACE__' => 'Application\Controller',
+        							'controller' => 'Tools',
+        							'action' => 'students',
+        					),
+        			),
+        			'may_terminate' => true,
+        	),
+        	'tools_structure' => array(
+        		'type' => 'Segment',
+        		'options' => array(
+        			'route' => '/tools/structure',
+        			'defaults' => array(
+        					'__NAMESPACE__' => 'Application\Controller',
+        					'controller' => 'Tools',
+        					'action' => 'structure',
+        			),
         		),
-        	// Route per la validazione di un token
+        		'may_terminate' => true,
+        	),
+        	'exam_js' => array(
+        		'type' => 'Segment',
+        		'options' => array(
+        			'route' => '/exam/ajcheckanswer/:optionid',
+        			'defaults' => array(
+        				'__NAMESPACE__' => 'Application\Controller',
+        				'controller' => 'Exam',
+        					'action' => 'ajcheckanswer',
+        			),
+        		),
+        		'may_terminate' => true,
+        	),
+        	// Route for validating an url. parameter tkn is left intentionally optional for control purposes.
             'exam_token' => array(
         		'type' => 'Segment',
         		'options' => array(
@@ -48,7 +72,7 @@ return array(
         			'defaults' => array(
         				'__NAMESPACE__' => 'Application\Controller',
         				'controller' => 'Exam',
-        				'action' => 'index',
+        				'action' => 'token',
         			),
         		),
         		'may_terminate' => true,
@@ -179,6 +203,8 @@ return array(
         ),
     	'factories' => array(
     		'ExamService' => 'Application\\Service\\ExamServiceFactory',
+    		'StudentService' => 'Application\\Service\\StudentServiceFactory',
+    		'CourseService' => 'Application\\Service\\CourseServiceFactory',
     	),
     ),
     'translator' => array(
@@ -195,6 +221,7 @@ return array(
         'invokables' => array(
             'Application\Controller\Index' => 'Application\Controller\IndexController',
         	'Application\Controller\Exam' => 'Application\Controller\ExamController',
+        	'Application\Controller\Tools' => 'Application\Controller\ToolsController'
         ),
     ),
 	'view_manager' => array(

@@ -3,10 +3,9 @@
 {block name="custom_css"}
   <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
     <style>
-  		.margins { margin: 10px; }
-  		#sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
-  		#sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
-  		#sortable li span { position: absolute; margin-left: -1.3em; }
+  		#scrambled { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+  		#scrambled li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+  		#scrambled li span { position: absolute; margin-left: -1.3em; }
   </style>
   
 {/block}
@@ -137,9 +136,12 @@
 	<script type="text/javascript">
 		
 		var selectedOption = "";
+		
 		{literal}
 			$(document).ready(function() {
+			
 				$('.scrambled').sortable();
+				
 				selectedOption = $('select :selected').val();
 				if (selectedOption == "") {
 					// Disabilitare il pulsante submit
@@ -166,15 +168,21 @@
 					var ajax_post_data_value = "";
 					var postdata = [];
 						
-					// Se la domanda è nulla, nessun check. Si va direttamente al submit
+					// Se la domanda  nulla, nessun check. Si va direttamente al submit
 					if (form_id == "null_question") {
 						ajax_post_data_value = "-1";
-					// Se la domanda è di un multisubmit, si deve inviare il submit premuto
+					// Se la domanda  di un multisubmit, si deve inviare il submit premuto
 					} else if (form_id == "multisubmit_question") {
 						ajax_post_data_value = $(this).attr("id");
 					// D&D
 					} else if (form_id == "dnd_question") {
-						ajax_post_data_value = "";
+						var scrambledData = "";
+						$(".scrambled li").each(function(i,el) {
+							var p = $(el).text().toLowerCase();
+							scrambledData+=p+"|";
+						});
+        				scrambledData = scrambledData.substring(0, scrambledData.length - 1);
+						ajax_post_data_value = scrambledData;
 					// Inserimento manuale
 					} else if (form_id == "input_question") {
 						ajax_post_data_value = $(this).closest(":input").val();

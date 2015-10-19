@@ -29,6 +29,13 @@ class ClientHasCourse
     private $insertDate;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="start_date", type="datetime", nullable=true)
+     */
+    private $startDate;
+
+    /**
      * @var \Application\Entity\Activationstatus
      *
      * @ORM\ManyToOne(targetEntity="Application\Entity\Activationstatus")
@@ -92,6 +99,30 @@ class ClientHasCourse
     public function getInsertDate()
     {
         return $this->insertDate;
+    }
+
+    /**
+     * Set startDate
+     *
+     * @param \DateTime $startDate
+     *
+     * @return ClientHasCourse
+     */
+    public function setStartDate($startDate)
+    {
+        $this->startDate = $startDate;
+
+        return $this;
+    }
+
+    /**
+     * Get startDate
+     *
+     * @return \DateTime
+     */
+    public function getStartDate()
+    {
+        return $this->startDate;
     }
 
     /**

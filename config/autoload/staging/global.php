@@ -30,7 +30,7 @@ return array (
 			'standard-output-file' => array (
 				'adapter' => '\Zend\Log\Writer\Stream',
 				'options' => array (
-					'output' => 'data/staging___'.date('Ymd')."___app.log",
+					'output' => 'data/logs/staging___'.date('Ymd')."___app.log",
 				),
 				'filter' => \Zend\Log\Logger::DEBUG,
 				'enabled' => true,
@@ -38,7 +38,7 @@ return array (
 			'standard-error-file' => array (
 				'adapter' => '\Zend\Log\Writer\Stream',
 				'options' => array (
-					'output' => 'data/staging___'.date('Ymd')."___err.log",
+					'output' => 'data/logs/staging___'.date('Ymd')."___err.log",
 				),
 				'filter' => \Zend\Log\Logger::WARN,
 				'enabled' => true,

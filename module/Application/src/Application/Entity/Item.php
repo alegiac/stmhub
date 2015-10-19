@@ -92,11 +92,19 @@ class Item
     private $image;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Application\Entity\StudentHasCourseHasExam", mappedBy="item")
+     */
+    private $studentHasCourseHasExam;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->image = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->studentHasCourseHasExam = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
 
@@ -310,5 +318,39 @@ class Item
     public function getImage()
     {
         return $this->image;
+    }
+
+    /**
+     * Add studentHasCourseHasExam
+     *
+     * @param \Application\Entity\StudentHasCourseHasExam $studentHasCourseHasExam
+     *
+     * @return Item
+     */
+    public function addStudentHasCourseHasExam(\Application\Entity\StudentHasCourseHasExam $studentHasCourseHasExam)
+    {
+        $this->studentHasCourseHasExam[] = $studentHasCourseHasExam;
+
+        return $this;
+    }
+
+    /**
+     * Remove studentHasCourseHasExam
+     *
+     * @param \Application\Entity\StudentHasCourseHasExam $studentHasCourseHasExam
+     */
+    public function removeStudentHasCourseHasExam(\Application\Entity\StudentHasCourseHasExam $studentHasCourseHasExam)
+    {
+        $this->studentHasCourseHasExam->removeElement($studentHasCourseHasExam);
+    }
+
+    /**
+     * Get studentHasCourseHasExam
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getStudentHasCourseHasExam()
+    {
+        return $this->studentHasCourseHasExam;
     }
 }
