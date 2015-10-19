@@ -63615,3 +63615,374 @@ Stack trace:
 
 )
  {"Zf2Logger":"{\"sessionId\":\"ovp0ebdnusvm2oj4qq6218ra37\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-19T14:28:39+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Response] => Array
+                (
+                    [statusCode] => 404
+                    [content] => <!DOCTYPE html>
+<!--[if IE 9 ]><html class="ie9"><![endif]-->
+
+ --> Smarty: Unable to read template file '../../_common/base.tpl' <-- 
+</html>
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-19T14:28:42+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Request] => Zend\Uri\Http Object
+                (
+                    [validHostTypes:protected] => 27
+                    [user:protected] => 
+                    [password:protected] => 
+                    [scheme:protected] => http
+                    [userInfo:protected] => 
+                    [host:protected] => smiletomove.local
+                    [port:protected] => 
+                    [path:protected] => /exam/participate
+                    [query:protected] => 
+                    [fragment:protected] => 
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-19T14:28:42+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Response] => Array
+                (
+                    [statusCode] => 200
+                    [content] => <!DOCTYPE html>
+<!--[if IE 9 ]><html class="ie9"><![endif]-->
+
+<head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>SmileToMove - Learning platform</title>
+
+        <!-- Vendor CSS -->
+        <link href="/static/assets/vendors/animate-css/animate.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/noUiSlider/jquery.nouislider.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/farbtastic/farbtastic.css" rel="stylesheet">
+        <link href="/static/assets/vendors/summernote/summernote.css" rel="stylesheet">
+        <link href="/static/assets/vendors/bootstrap-sweet-alert/sweet-alert.css" rel="stylesheet">
+        <link href="/static/assets/vendors/material-icons/material-design-iconic-font.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/socicon/socicon.min.css" rel="stylesheet">
+            
+        <!-- CSS -->
+        <link href="/static/assets/css/app.min.1.css" rel="stylesheet">
+        <link href="/static/assets/css/app.min.2.css" rel="stylesheet">
+        
+        <style type="text/css">
+            .toggle-switch .ts-label {
+                min-width: 130px;
+            }
+            form div {
+  				padding: 50px 0 50px 0;
+  				margin: 50px 0 50px 0;
+			}
+        </style>
+
+		
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <style>
+  		#scrambled { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+  		#scrambled li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+  		#scrambled li span { position: absolute; margin-left: -1.3em; }
+  </style>
+  
+
+
+    </head>
+    
+    <body>
+    
+    	
+  			<header id="header">
+	<ul class="header-inner">
+    	<li id="menu-trigger">
+			<!-- menu se serve -->
+		</li>
+
+		<li class="logo hidden-xs">
+			<a href="."><img src="/static/assets/img/logo.png" alt="Smile to Move"/></a>
+		</li>
+	</ul>
+</header>
+      	
+      	
+      	
+	<section id="content">
+	    <div class="container">
+	    	
+            <div class="col-sm-9">
+            	<!-- Content of questions -->
+	        		        	<div class="card">
+	        		<div class="card-header">
+	        			<div class="col-sm-6 pull-left">
+	        			</div>
+	        			<div class="col-sm-6 pull-right">
+	        					        				<div class="pull-left" id="countmesg">
+	        				</div><br><br>
+	          				<div class="media">
+                             	<div class="media-body">
+                                	<div class="progress">
+                                    	<div id="timerbar" class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="" style="width: %">
+                                        </div>
+									</div>
+                                </div>
+                            </div>
+	        					        			</div>
+	        		</div>
+	        		<br>
+	        		<div class="card-body card-padding">
+	        			<div class="row">
+	        				<div class="col-sm-12">
+	        					<div><img src="/static/media/2/2/102/102.png" alt="" style="max-width: 100%;height: auto;"/></div><br>
+		        				<hr>
+		        				<br>
+		        				<br>
+		        				<center>
+		        					<h2>Quale di questi termini indica un insieme di due capi in maglia?</h2>
+		        				</center>
+		        				<hr>
+		        			</div>
+		        		</div>
+		        		<div class="row">
+		        			<center>
+		        			
+		        		 	<form method="POST" name="multisubmit_question" id="multisubmit_question"><input type="submit" name="submit_213" id="213" class="btn&#x20;btn-primary&#x20;btn-lg&#x20;margins" value="SKIRT"><input type="submit" name="submit_214" id="214" class="btn&#x20;btn-primary&#x20;btn-lg&#x20;margins" value="SHADE"><input type="submit" name="submit_215" id="215" class="btn&#x20;btn-primary&#x20;btn-lg&#x20;margins" value="TWINSET"></form>
+		        		 	</center>
+	        			</div>
+	        		</div>
+	        	</div>
+			</div>
+			<div class="col-sm-3">
+				<!-- Profile view -->
+                <div class="card profile-view">
+                	<div class="pv-header">
+                    	<img src="/static/assets/img/profile-pics/profile-pic.gif" class="pv-main" alt="">
+                   	</div>
+                            
+                    <div class="pv-body">
+                        <h2>Mario Rossi</h2>
+                        <small></small>
+                    
+                        
+                    </div>
+                </div>
+                <!-- Chart pies -->
+                <div class="mini-charts-item bgm-cyan">
+					<div class="clearfix">
+	                    <div class="chart chart-pie stats-pie"></div>
+	                    <div class="count">
+	                        <small>Completato sessione</small>
+	                        <h2>/ - </h2>
+	                    </div>
+	                </div>
+				</div>
+                <div class="mini-charts-item bgm-cyan">
+	                <div class="clearfix">
+	                    <div class="chart chart-pie stats-pie"></div>
+	                    <div class="count">
+	                        <small>Completato esame</small>
+	                        <h2>/ - </h2>
+	                    </div>
+	                </div>
+                </div>
+            </div>
+            
+        </section>
+
+      	
+        <!-- Javascript Libraries -->
+        <script src="/static/assets/js/jquery-2.1.1.min.js"></script>
+        <script src="/static/assets/js/bootstrap.min.js"></script>
+        
+        <script src="/static/assets/vendors/moment/moment.min.js"></script>
+        <script src="/static/assets/vendors/nicescroll/jquery.nicescroll.min.js"></script>
+        <script src="/static/assets/vendors/auto-size/jquery.autosize.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-select/bootstrap-select.min.js"></script>
+        <script src="/static/assets/vendors/chosen/chosen.jquery.min.js"></script>
+        <script src="/static/assets/vendors/noUiSlider/jquery.nouislider.all.min.js"></script>
+        <script src="/static/assets/vendors/input-mask/input-mask.min.js"></script>
+        <script src="/static/assets/vendors/farbtastic/farbtastic.min.js"></script>
+        <script src="/static/assets/vendors/summernote/summernote.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+        <script src="/static/assets/vendors/fileinput/fileinput.min.js"></script>
+        <script src="/static/assets/vendors/waves/waves.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-sweet-alert/sweet-alert.js"></script>
+        
+        <script src="/static/assets/js/demo.js"></script>
+        
+        
+	<script src="/static/assets/js/jquery.sortable.min.js"></script>  
+	<script type="text/javascript">
+		
+		var selectedOption = "";
+		
+		
+			$(document).ready(function() {
+			
+				$('.scrambled').sortable();
+				
+				selectedOption = $('select :selected').val();
+				if (selectedOption == "") {
+					// Disabilitare il pulsante submit
+				    $("input[type=submit]").attr("disabled", "disabled");
+    			} else {
+    			    $("input[type=submit]").removeAttr("disabled", "disabled");
+    			}
+					
+				// Gestione cambio di valore select
+				$('select').change(function() {   
+    				selectedOption = $('select :selected').val();
+					if (selectedOption == "") {
+						// Disabilitare il pulsante submit
+					    $("input[type=submit]").attr("disabled", "disabled");
+    				} else {
+    				    $("input[type=submit]").removeAttr("disabled", "disabled");
+    				}
+				});
+					
+				// Gestione submit (pre pre-check)
+				$(":submit").click(function()
+				{
+					var form_id = $(this).closest("form").attr('id');
+					var ajax_post_data_value = "";
+					var postdata = [];
+						
+					// Se la domanda  nulla, nessun check. Si va direttamente al submit
+					if (form_id == "null_question") {
+						ajax_post_data_value = "-1";
+					// Se la domanda  di un multisubmit, si deve inviare il submit premuto
+					} else if (form_id == "multisubmit_question") {
+						ajax_post_data_value = $(this).attr("id");
+					// D&D
+					} else if (form_id == "dnd_question") {
+						var scrambledData = "";
+						$(".scrambled li").each(function(i,el) {
+							var p = $(el).text().toLowerCase();
+							scrambledData+=p+"|";
+						});
+        				scrambledData = scrambledData.substring(0, scrambledData.length - 1);
+						ajax_post_data_value = scrambledData;
+					// Inserimento manuale
+					} else if (form_id == "input_question") {
+						ajax_post_data_value = $(this).closest(":input").val();
+					// Selezione tendina
+					} else {
+						ajax_post_data_value = selectedOption;
+					}
+					$.ajax({
+						type: "GET",
+  						url: "/exam/ajcheckanswer/"+ajax_post_data_value,
+  						data: ajax_post_data_value,
+  							success: function(data) {
+  							var checkResult = jQuery.parseJSON(data).result;
+  							var earnedPoints = jQuery.parseJSON(data).points;
+  							var itemAnswer = jQuery.parseJSON(data).answer;
+  							var tryagain = jQuery.parseJSON(data).tryagain;
+  							
+  							switch(checkResult) {
+  								// Sbagliato
+  								case 0:
+  									if (tryagain == 1) {
+  										swal({
+  											title: "Errato, puoi riprovare",
+  											text: "Puoi modificare la tua risposta",
+  											type: "warning",
+  											html: true,
+  											showCancelButton: false,
+  											confirmButtonClass: "btn-lg btn-warning",
+  											confirmButtonText: "OK",
+  											closeOnConfirm: true,
+  										});
+  									} else {
+  										swal({
+ 											title: "Errato",
+ 											text: itemAnswer,
+  											type: "error",
+  											html: true,
+  											showCancelButton: false,
+  											confirmButtonClass: "btn-lg btn-danger",
+  											confirmButtonText: "CONTINUA",
+  											closeOnConfirm: false,
+										},
+										function(isConfirm) {
+  											if (isConfirm) {
+    											window.location = "/exam/saveanswer/"+ajax_post_data_value;
+  											}
+										});
+  										break;
+  									}
+  									break;
+  								// Corretto:
+  								case 1:
+  									if (itemAnswer == "") {
+  										window.location = "/exam/saveanswer/"+ajax_post_data_value;
+  									} else {
+  										swal({
+  											title: "Corretto",
+  											text: itemAnswer,
+  											type: "success",
+  											html: true,
+  											showCancelButton: false,
+  											confirmButtonClass: "btn-lg btn-success",
+  											confirmButtonText: "CONTINUA",
+  											closeOnConfirm: false,
+										},
+										function(isConfirm) {
+  											if (isConfirm) {
+    											window.location = "/exam/saveanswer/"+ajax_post_data_value;
+  											}
+										});
+									}
+  									break;
+  								// Null question:
+  								case 2:
+  									swal({
+  										title: "Lo sapevi?",
+  										text: itemAnswer,
+  										type: "info",
+  										showCancelButton: false,
+  										confirmButtonClass: "btn-lg btn-info",
+  										confirmButtonText: "CONTINUA",
+  										closeOnConfirm: false,
+  									},
+  									function(isConfirm) {
+  										if (isConfirm) {
+  											window.location = "/exam/timeout";
+  										}
+  									});
+  							}
+  						},
+					});
+					return false;
+				});
+		
+								});
+		
+	</script>
+
+       
+    </body>
+</html>
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"ovp0ebdnusvm2oj4qq6218ra37\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
