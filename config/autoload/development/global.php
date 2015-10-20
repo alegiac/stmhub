@@ -32,7 +32,7 @@ return array (
 				'options' => array (
 					'output' => 'data/logs/development___'.date('Ymd')."___app.log",
 				),
-				'filter' => \Zend\Log\Logger::DEBUG,
+				'filter' => \Zend\Log\Logger::INFO,
 				'enabled' => true,
 			),
 		)

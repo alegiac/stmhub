@@ -3,9 +3,9 @@
 {block name="custom_css"}
   <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
     <style>
-  		#scrambled { list-style-type: none; margin: 0; padding: 0; width: 60%; }
-  		#scrambled li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
-  		#scrambled li span { position: absolute; margin-left: -1.3em; }
+    	.mycontent-left {
+  			border-right: 1px solid #333;
+		}
   </style>
   
 {/block}
@@ -92,8 +92,32 @@
 	        			</div>
 	        		</div>
 	        	</div>
+	        	<div class="visible-xs .visible-xs-block">
+	        		<div class="col-xs-4 card" style="height:140px;">
+	        			<div class="pv-header">&nbsp;</div>
+            			<div class="pv-body">
+            				<img src="/static/assets/img/profile-pics/profile-pic.gif" class="pv-main" style="width:30px;margin-top:5px;" alt="">
+                   			<h4>{$firstName} {$lastName}</h4>
+            				<p style="color:light-grey;">{$courseName}<br>{$examName}</p>
+            			</div>
+            		</div>
+            		<div class="col-xs-4 card" style="height:140px;">
+            			<div class="pv-header">&nbsp;</div>
+            			<div class="pv-body">
+            				<small>Data termine sessione </small><br>
+            				<strong>{$expectedEndDate}</strong>
+            				<br><br><br>
+            				<p style="color:light-grey;"><small>Punteggio accumulato</small><br><strong>{$points}/{$maxpoints}</strong></p>
+                		</div>
+                	</div>
+                	<div class="col-xs-4 card" style="height:140px;">
+            			<div class="pv-header">&nbsp;</div>
+            			<div class="pv-body">
+            			</div>
+                	</div>
+	        	</div>
 			</div>
-			<div class="col-sm-3">
+			<div class="col-sm-3 .visible-xs-block, hidden-xs">
 				<!-- Profile view -->
                 <div class="card profile-view">
                 	<div class="pv-header">
@@ -119,7 +143,6 @@
                 	</div>
                 </div>
                 
-                <!-- Chart pies -->
                 <div class="mini-charts-item bgm-cyan">
 					<div class="clearfix">
 	                    <div class="chart chart-pie stats-pie"></div>
@@ -130,8 +153,8 @@
 	                </div>
 				</div>
             </div>
-            
-        </section>
+		</div>
+	</section>
 {/block}
 
 {block name="custom_js"}

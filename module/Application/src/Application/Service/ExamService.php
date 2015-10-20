@@ -660,14 +660,14 @@ final class ExamService extends BaseService
     	if ($course->getActivationstatus()->getId() != ActivationStatus::STATUS_ENABLED) {
     		return $this->composeAnswer($session,true,"Course has been disabled");
     	}
-    		 
+    	 
     	// The mechanism is:
     	// Student accesses here because of an email link. We have no control on "when" the student click 
     	// on the link. For that reason, we need to check if the session has already completed.
     	// Furthermore, if the student clicks the link having previous left open sessions, we need to redirect
     	// him to the right open session.
     	$allSessions = $this->getStudentHasCourseHasExamRepo()->findByStudentOnCourse($session->getStudentHasCourse());
-   
+   		
     	// Current session is completed?
     	if ($session->getCompleted()) {
     			
@@ -696,6 +696,7 @@ final class ExamService extends BaseService
    			return $this->composeAnswer(null,true,"Nessuna sessione attualmente disponibile");
     			
    		} else {
+   			
    			// Other sessions to complete "before" the current one?
    			foreach ($allSessions as $sess) {
    				/* @var $sess StudentHasCourseHasExam */
@@ -707,7 +708,9 @@ final class ExamService extends BaseService
    					return $this->composeAnswer($sess,false,'Sessione corrente trovata');
    				}
    			}
-		}
+   			// No available session
+   			return $this->composeAnswer(null,true,"Nessuna sessione attualmente disponibile");
+   		}
     }
     
     /**
