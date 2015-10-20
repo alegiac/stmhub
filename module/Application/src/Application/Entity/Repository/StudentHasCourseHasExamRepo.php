@@ -23,7 +23,9 @@ class StudentHasCourseHasExamRepo extends \Doctrine\ORM\EntityRepository
 	 */
 	public function findByIdentifier($identifier)
 	{
-		$criteria = Criteria::create()->where(Criteria::expr()->eq('token', $identifier))->orderBy(array('id'=>'ASC'));
+		$criteria = Criteria::create()
+			->where(Criteria::expr()->eq('token', $identifier))
+			->orderBy(array('id'=>'ASC'));
 		$result = $this->matching($criteria);
 		if ($result->count()) return $result->last();
 		return null;
@@ -37,7 +39,24 @@ class StudentHasCourseHasExamRepo extends \Doctrine\ORM\EntityRepository
 	 */
 	public function findByExam(Exam $exam)
 	{
-		$criteria = Criteria::create()->where(Criteria::expr()->eq('exam',$exam));
+		$criteria = Criteria::create()->where(Criteria::expr()->eq('exam',$exam))->andWhere(Criteria::expr()->eq('mandatory', 1))
+	;
+		$result = $this->matching($criteria);
+		if ($result->count()) return $result->getValues();
+		return array();
+	}
+	
+	/**
+	 * Load all the challenges for a given student
+	 * 
+	 * @param StudentHasCourse $studentCourse
+	 * @return array
+	 */
+	public function findChallengesByStudentOnCourse(StudentHasCourse $studentCourse)
+	{
+		$criteria = Criteria::create()->where(Criteria::expr()->eq('studentHasCourse',$studentCourse))
+			->andWhere(Criteria::expr()->eq('mandatory', 0));
+		
 		$result = $this->matching($criteria);
 		if ($result->count()) return $result->getValues();
 		return array();
@@ -50,7 +69,8 @@ class StudentHasCourseHasExamRepo extends \Doctrine\ORM\EntityRepository
 	 */
 	public function findByStudentOnCourse(StudentHasCourse $studentCourse)
 	{
-		$criteria = Criteria::create()->where(Criteria::expr()->eq('studentHasCourse',$studentCourse));
+		$criteria = Criteria::create()->where(Criteria::expr()->eq('studentHasCourse',$studentCourse))
+			->andWhere(Criteria::expr()->eq('mandatory', 1));
 		$result = $this->matching($criteria);
 		if ($result->count()) return $result->getValues();
 		return array();

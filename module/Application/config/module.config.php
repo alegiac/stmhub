@@ -61,6 +61,22 @@ return array(
         		),
         		'may_terminate' => true,
         	),
+        		// Route for validating an url. parameter tkn is left intentionally optional for control purposes.
+        		'exam_tokenchallenge' => array(
+        				'type' => 'Segment',
+        				'options' => array(
+        						'route' => '/exam/tokenchallenge[/][:tkn][/]',
+        						'constraints' => array(
+        								'tkn' => '[a-zA-Z0-9\.]+',
+        						),
+        						'defaults' => array(
+        								'__NAMESPACE__' => 'Application\Controller',
+        								'controller' => 'Exam',
+        								'action' => 'tokenchallenge',
+        						),
+        				),
+        				'may_terminate' => true,
+        		),        		
         	// Route for validating an url. parameter tkn is left intentionally optional for control purposes.
             'exam_token' => array(
         		'type' => 'Segment',
@@ -115,6 +131,19 @@ return array(
         		),
         		'may_terminate' => true,
         	),
+        	'exam_challenges' => array(
+        		'type' => 'Segment',
+        		'options' => array(
+        			'route' => '/exam/challenges',
+        			'constraints' => array(),
+        			'defaults' => array(
+        				'__NAMESPACE__' => 'Application\Controller',
+        				'controller' => 'Exam',
+        				'action' => 'challenges',
+        			),
+        		),
+        		'may_terminate' => true,
+			),
         	'exam_start' => array(
         		'type' => 'Segment',
         		'options' => array(

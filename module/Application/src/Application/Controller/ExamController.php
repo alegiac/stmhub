@@ -122,7 +122,26 @@ class ExamController extends AbstractActionController
 	{
 	}
 	
-
+	public function challengesAction()
+	{
+		$this->init();
+		$res = $this->getExamService()->getAvailableChallenges($this->session->exam['session']['id']);
+		$vm = new ViewModel();
+		if (is_array($res) && count($res) > 0) {
+			foreach ($res as $ch) {
+				$token = $ch['token'];
+				$name = $ch['name'];
+			}
+			$btn .= '<a href="/exam/tokenchallenge/'.$token.'" class="btn btn-lg btn-primary">'.$name.'</a>';
+		} else {
+			$btn = "Nessuna sessione-sfida disponibile al momento";
+		}
+		$vm->btn = $btn;
+		return $vm;
+	}
+	
+	
+	
 	/**
 	 * Ingresso nella funzione di accesso all'esame.
 	 * Questa action verifica la presenza del token utente (inviato via email).
@@ -135,12 +154,22 @@ class ExamController extends AbstractActionController
 	 */
 	public function tokenAction()
 	{
+		return $this->tokenize(false);
+	}
+	
+	public function tokenchallengeAction()
+	{
+		return $this->tokenize(true);
+	}
+	
+	private function tokenize($challenge)
+	{
 		$this->init();
-		$stmt = $this->params('tkn',"");
 		
+		$stmt = $this->params('tkn',"");
 		try {
 			// Load session info
-		 	$res = $this->getExamService()->getCurrentExamSessionItemByToken($stmt);
+			$res = $this->getExamService()->getCurrentExamSessionItemByToken($stmt,$challenge);
 		 	
 			if ($res['result'] === 0) {
 				// No exam available
@@ -216,22 +245,7 @@ class ExamController extends AbstractActionController
 		// Inizializza variabili d'ambiente
 		$this->session->offsetUnset('startedTime');
 		$this->session->offsetUnset('usedTries');
-		
-		$vm = new ViewModel();
-		$this->session->exam['student']['sex'] == 'f' ? $vm->sexDesc = 'a' : $vm->sexDesc = 'o';
-		$vm->firstName = $this->session->exam['student']['firstname'];
-		$vm->lastName = $this->session->exam['student']['lastname'];
-		$vm->courseName = $this->session->exam['course']['name'];
-		$vm->courseDesc = $this->session->exam['course']['description'];
-		$vm->examName = $this->session->exam['exam']['name'];
-		$vm->examDesc = $this->session->exam['exam']['description'];
-		$vm->totalItems = $this->session->exam['exam']['totalitems'];
-		$vm->examNumber = $this->session->exam['exam']['progress'];
-		$vm->totExams = $this->session->exam['course']['numexams'];
-		$vm->endDate = $this->session->exam['session']['expectedenddate']->format('d/m/Y');
-		$vm->maxPoints = $this->session->exam['stats']['exam_max_possible_points'];
-		$this->session->exam['exam']['photourl'] == "" ? $vm->examImage = "" : $vm->examImage = "/static/assets/img/exam/".$this->session->exam['exam']['photourl'];
-		return $vm;
+		return $this->composeParticipationVM();
 	}
 	
 	public function resetAction()
@@ -257,21 +271,7 @@ class ExamController extends AbstractActionController
 		$this->session->offsetUnset('startedTime');
 		$this->session->offsetUnset('usedTries');
 		
-		$vm = new ViewModel();
-		$this->session->exam['student']['sex'] == 'f' ? $vm->sexDesc = 'a' : $vm->sexDesc = 'o';
-		$vm->firstName = $this->session->exam['student']['firstname'];
-		$vm->lastName = $this->session->exam['student']['lastname'];
-		$vm->courseName = $this->session->exam['course']['name'];
-		$vm->courseDesc = $this->session->exam['course']['description'];
-		$vm->examName = $this->session->exam['exam']['name'];
-		$vm->examDesc = $this->session->exam['exam']['description'];
-		$vm->totalItems = $this->session->exam['exam']['totalitems'];
-		$vm->examNumber = $this->session->exam['exam']['progress'];
-		$vm->totExams = $this->session->exam['course']['numexams'];
-		//$vm->endDate = $this->session->exam['session']['expectedenddate']->format('d/m/Y');
-		$vm->maxPoints = $this->session->exam['stats']['exam_max_possible_points'];
-		$this->session->exam['exam']['photourl'] == "" ? $vm->examImage = "" : $vm->examImage = "/static/assets/img/exam/".$this->session->exam['exam']['photourl'];
-		return $vm;
+		return $this->composeParticipationVM();
 	}
 	
 	/**
@@ -284,7 +284,7 @@ class ExamController extends AbstractActionController
 	{
 		
 		$this->initExam();
-		
+
 		// Inizializza variabili d'ambiente
 		$this->session->offsetUnset('startedTime');
 		$this->session->offsetUnset('usedTries');
@@ -301,6 +301,7 @@ class ExamController extends AbstractActionController
 		$vm->examNumber = $this->session->exam['exam']['progress'];
 		$vm->totExams = $this->session->exam['course']['numexams'];
 		$vm->endDate = $this->session->exam['session']['expectedenddate']->format('d/m/Y');
+		$vm->points = $this->session->exam['session']['points'];
 		$vm->maxPoints = $this->session->exam['stats']['exam_max_possible_points'];
 		$this->session->exam['exam']['photourl'] == "" ? $vm->examImage = "" : $vm->examImage = "/static/assets/img/exam/".$this->session->exam['exam']['photourl'];
 		return $vm;
@@ -386,7 +387,6 @@ class ExamController extends AbstractActionController
 		$this->initExam();
 		try {
 			// Impostazione valore corrente per la sessione d'esame
-			
 			$view = $this->composeParticipationVM();
 			$form = $this->composeForm();
 			if ($form instanceof ExamDragDrop) {
@@ -561,6 +561,8 @@ class ExamController extends AbstractActionController
 		$tag .= "</ul>";
 		return $tag;
 	}
+	
+	
 	/**
 	 * Composizione ViewModel di partecipazione
 	 * @return ViewModel
@@ -573,6 +575,7 @@ class ExamController extends AbstractActionController
 		// Dati studente
 		$vm->firstName = $this->session->exam['student']['firstname'];
 		$vm->lastName = $this->session->exam['student']['lastname'];
+		$this->session->exam['student']['sex'] == 'f' ? $vm->sexDesc = 'a' : $vm->sexDesc = 'o';
 		
 		// Dati corso
 		$vm->courseName = $this->session->exam['course']['name'];
