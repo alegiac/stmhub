@@ -32,99 +32,15 @@
             	<div class="card">
 	        		<div class="card-header">
 	        			<div class="row">
-	        				<h2>Car{$sexDesc}, {$firstName}</h2>
-	        				<h3>Complimenti! Hai completato l'esame!</h3>
+	        				<h2>Complimenti {$firstName}!</h2>
+	        				<h3>Hai completato questa sessione!</h3>
 	        				<hr>
 	        				<div class="col-xs-8">
-	        					<h4>Corso: {$courseName}</h4>
-	        					{$courseDesc}
-	        					<br><br>
-	        					<h4>Esame n. {$examNumber}/{$totExams}: {$examName}</h4>
-	        					{$examDesc}
-	        					<br><br><br><br><br><br>
-	                    	</div>
-	                    	<div class="col-xs-4">
-	                    		<img src="{$examImage}" style="max-width:100%;max-height:100%;"/>
-	                    	</div>
-	                    	<br><br><br><br><br><br>
-	                   	</div>
-	        		</div>
-	        		<div class="card-body card-padding">
-	        			<h5>Informazioni sull'esame</h5>
-	        			<div class="row">
-	        				<div class="col-xs-12 col-sm-4">
-	        					<div class="mini-charts-item bgm-orange">
-									<div class="clearfix">
-	                    				<div class="chart chart-pie stats-pie"></div>
-	                    				<div class="count">
-	                        				<small>Numero quesiti</small>
-	                        				<h2>{$totalItems}</h2>
-	                    				</div>
-	                				</div>
-								</div>
-	        				</div>
-	        				<div class="col-xs-12 col-sm-4">
-	        					<div class="mini-charts-item bgm-orange">
-									<div class="clearfix">
-	                    				<div class="chart chart-pie stats-pie"></div>
-	                    				<div class="count">
-	                        				<small>Numero quesiti</small>
-	                        				<h2>{$totalItems}</h2>
-	                    				</div>
-	                				</div>
-								</div>
-	        				</div>
-	        				<div class="col-xs-12 col-sm-4">
-	        					<div class="mini-charts-item bgm-orange">
-									<div class="clearfix">
-	                    				<div class="chart chart-pie stats-pie"></div>
-	                    				<div class="count">
-	                        				<small>Punti possibili</small>
-	                        				<h2>{$maxPoints}</h2>
-	                    				</div>
-	                				</div>
-								</div>
-	        				</div>
-	        			</div>
-	        			<div class="row">
-	        				<div class="col-xs-12 col-sm-4">
-	        					<div class="mini-charts-item bgm-orange">
-									<div class="clearfix">
-	                    				<div class="chart chart-pie stats-pie"></div>
-	                    				<div class="count">
-	                        				<small>Numero quesiti</small>
-	                        				<h2>{$totalItems}</h2>
-	                    				</div>
-	                				</div>
-								</div>
-	        				</div>
-	        				
-	        				<div class="col-xs-12 col-sm-4">
-	        					<div class="mini-charts-item bgm-orange">
-									<div class="clearfix">
-	                    				<div class="chart chart-pie stats-pie"></div>
-	                    				<div class="count">
-	                        				<small>Punti possibili</small>
-	                        				<h2>{$maxPoints}</h2>
-	                    				</div>
-	                				</div>
-								</div>
-	        				</div>
-	        				
-	        				<div class="col-xs-12 col-sm-4">
-	        					<div class="mini-charts-item bgm-orange">
-									<div class="clearfix">
-	                    				<div class="chart chart-pie stats-pie"></div>
-	                    				<div class="count">
-	                        				<small>Data termine</small>
-	                        				<h2>{$endDate}</h2>
-	                    				</div>
-	                				</div>
-								</div>
-	        				</div>
+	        					<h4>Hai accumulato {$points} punti, continua a seguirci!</h4>
+	                   		</div>
 	        			</div>
 	        		</div>
-	        	</div>
+				</div>
 			</div>
         </section>
 {/block}
