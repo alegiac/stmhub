@@ -141,11 +141,13 @@ class ExamController extends AbstractActionController
 		try {
 			// Load session info
 		 	$res = $this->getExamService()->getCurrentExamSessionItemByToken($stmt);
+		 	
 			if ($res['result'] === 0) {
 				// No exam available
 				$this->redirect()->toRoute('exam_nothing');
 				return;
 			}
+			
 			$this->session->token = $stmt;
 			$this->session->exam = $res;
 			
@@ -161,6 +163,7 @@ class ExamController extends AbstractActionController
 			}
 			
 		} catch (\Exception $e) {
+
 			$this->logger->warn($e->getMessage());
 			$this->logger->info($e->getTraceAsString());
 			
@@ -265,7 +268,7 @@ class ExamController extends AbstractActionController
 		$vm->totalItems = $this->session->exam['exam']['totalitems'];
 		$vm->examNumber = $this->session->exam['exam']['progress'];
 		$vm->totExams = $this->session->exam['course']['numexams'];
-		$vm->endDate = $this->session->exam['session']['expectedenddate']->format('d/m/Y');
+		//$vm->endDate = $this->session->exam['session']['expectedenddate']->format('d/m/Y');
 		$vm->maxPoints = $this->session->exam['stats']['exam_max_possible_points'];
 		$this->session->exam['exam']['photourl'] == "" ? $vm->examImage = "" : $vm->examImage = "/static/assets/img/exam/".$this->session->exam['exam']['photourl'];
 		return $vm;
