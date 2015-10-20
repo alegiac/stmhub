@@ -11046,6 +11046,12 @@ body #content {
   padding: 5px 0;
 }
 
+@media (min-width: 1024px) {
+	body #content {
+		padding: 20px 0;
+	}
+}
+
 @media (min-width: 1200px) {
   body.sw-toggled #content {
     padding: 30px 0 30px 250px;
