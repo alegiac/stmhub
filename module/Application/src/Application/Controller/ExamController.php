@@ -544,6 +544,23 @@ class ExamController extends AbstractActionController
 		return $tag;
 	}
 	
+	protected function composeExamListShort($list)
+	{
+		$tag = "<ul style=\"list-style-type: none;\">";
+		foreach ($list as $exam) {
+			if ($exam['started'] === false) {
+				$tag .='<li style="color: lightgrey; font-size:80%;"><i class="fa fa-clock-o fa-fw"></i>&nbsp;&nbsp;'.$exam['name'].'</li>';
+			} else {
+				if ($exam['completed'] === true) {
+					$tag .='<li style="color: green; font-size:80%;"><i class="fa fa-check-circle-o fa-fw"></i>&nbsp;&nbsp;<s>'.$exam['name'].'</s></li>';
+				} else {
+					$tag .='<li style="color: black; font-size:80%;"><i class="fa fa-eye fa-fw"></i>&nbsp;&nbsp;'.$exam['name'].'</li>';
+				}
+			}
+		}
+		$tag .= "</ul>";
+		return $tag;
+	}
 	/**
 	 * Composizione ViewModel di partecipazione
 	 * @return ViewModel
@@ -562,6 +579,7 @@ class ExamController extends AbstractActionController
 		
 		// Esami
 		$vm->examList = $this->composeExamList($this->session->exam['allexams']);
+		$vm->examListShort = $this->composeExamListShort($this->session->exam['allexams']);
 		
 		// Dati sessione
 		$vm->expectedEndDate = $this->session->exam['session']['expectedenddate']->format('d F Y');

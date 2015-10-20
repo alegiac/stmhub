@@ -2,14 +2,15 @@
 
 {block name="custom_css"}
   <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-    <style>
-    	.mycontent-left {
-  			border-right: 1px solid #333;
-		}
-  </style>
-  
+    <style type="text/css">
+  		.foot {
+    		position : absolute;
+    		bottom : 0;
+    		height : 40px;
+    		margin-top : 40px;
+  		}
+	</style>
 {/block}
-
 
 {block name="main"}
 	<section id="content">
@@ -93,26 +94,26 @@
 	        		</div>
 	        	</div>
 	        	<div class="visible-xs .visible-xs-block">
-	        		<div class="col-xs-4 card" style="height:140px;">
-	        			<div class="pv-header">&nbsp;</div>
-            			<div class="pv-body">
-            				<img src="/static/assets/img/profile-pics/profile-pic.gif" class="pv-main" style="width:30px;margin-top:5px;" alt="">
-                   			<h4>{$firstName} {$lastName}</h4>
+	        		<div class="col-xs-4 card" style="height:80px;">
+	        			<div class="pv-body">
+            				<h4>{$firstName} {$lastName}</h4>
             				<p style="color:light-grey;">{$courseName}<br>{$examName}</p>
             			</div>
             		</div>
-            		<div class="col-xs-4 card" style="height:140px;">
-            			<div class="pv-header">&nbsp;</div>
+            		<div class="col-xs-4 card" style="height:80px;">
             			<div class="pv-body">
-            				<small>Data termine sessione </small><br>
-            				<strong>{$expectedEndDate}</strong>
-            				<br><br><br>
-            				<p style="color:light-grey;"><small>Punteggio accumulato</small><br><strong>{$points}/{$maxpoints}</strong></p>
+            				<center>
+	            				<small>Data termine sessione </small><br>
+	            				<strong style="color:black;">{$expectedEndDate}</strong>
+	            				<br>
+	            				<p style="color:light-grey;"><small>Punteggio accumulato</small><br><strong style="color:black;">{$points}/{$maxpoints}</strong></p>
+	            			</center>
                 		</div>
                 	</div>
-                	<div class="col-xs-4 card" style="height:140px;">
+                	<div class="col-xs-4 card" style="height:80px;">
             			<div class="pv-header">&nbsp;</div>
             			<div class="pv-body">
+            				{$examListShort}
             			</div>
                 	</div>
 	        	</div>
