@@ -608,6 +608,10 @@ final class ExamService extends BaseService
     	return $retval;
     }
     
+    /**
+     * @deprecated
+     * @param unknown $sessionId
+     */
     public function resetDemo($sessionId)
     {
     	$session = $this->getStudentHasCourseHasExamRepo()->find($sessionId);
@@ -616,17 +620,14 @@ final class ExamService extends BaseService
     	$session->setPoints(0);
     	$session->setProgressive(0);
     	$this->getEntityManager()->persist($session);
-    	$this->getEntityManager()->flush();
-    	
-    	
-    	
+    	$this->getEntityManager()->flush();  	
     }
     
     /**
      * Get current session information
      * @param string $token
      */
-    public function getCurrentExamSessionItemByToken($token)
+    public function getCurrentExamSessionItemByToken($token,$isChallenge = false)
     {
     	if (strpos($token,".") === false) 
     		throw new MalformedRequest("The \".\" character is missing in the token [".$token."]");
@@ -661,6 +662,10 @@ final class ExamService extends BaseService
     		return $this->composeAnswer($session,true,"Course has been disabled");
     	}
     	 
+    	if ($isChallenge === true) {
+    		return $this->composeAnswer($session,false,"");
+    	}
+    	
     	// The mechanism is:
     	// Student accesses here because of an email link. We have no control on "when" the student click 
     	// on the link. For that reason, we need to check if the session has already completed.
@@ -713,88 +718,25 @@ final class ExamService extends BaseService
    		}
     }
     
-    /**
-     * Acquisizione dell'id reale di sessione d'esame da far eseguire
-     * allo studente che accede al link. 
-     *  
-     * La funzione verifica:
-     * 1) esistenza token utente e di sessione-esame
-     * 2) il corretto intervallo temporale di applicazione
-     * 3) eventuali sessioni precedenti non completate/iniziate
-     * 
-     * @param string $token Full request token 
-     * @return array Array dati studente e associazione esame
-     */
-    public function getExamSessionByToken($token)
-    {
-    	// Validazione campi richiesta
-    	if (strpos($token, ".") === false) 
-    		throw new MalformedRequest("The \".\" character is missing in the token [".$token."]");
-    	
-    	$studentToken = substr($token,0,strpos($token, "."));
-    	$sessionToken = substr($token,strpos($token, ".")+1);
-    	
-    	if (!$studentToken || strlen($studentToken) == 0) 
-    		throw new MalformedRequest("The token student part is not valued [".$token."]");
-    	if (!$sessionToken || strlen($sessionToken) == 0)
-    		throw new MalformedRequest("The token session part is not valued [".$token."]");
-    	
-    	// Acquisizione studente
-    	$student = $this->getStudentRepo()->findByIdentifier($studentToken);
-    	if (!$student) 
-    		throw new ObjectNotFound("No student found for the token student part [".$studentToken."]",Errorcode::ERRCODE_STUDENT_NOT_FOUND);
-    	if ($student->getActivationstatus()->getId() != ActivationStatus::STATUS_ENABLED) 
-    		throw new ObjectNotEnabled("Not enabled student found [".$student->getId()."] for the token student part [".$studentToken."]",Errorcode::ERRCODE_STUDENT_NOT_ENABLED);
-
-    	// Acquisizione sessione di esame
-    	$session = $this->getStudentHasCourseHasExamRepo()->findByIdentifier($sessionToken);
-    	if (!$session)
-    		throw new ObjectNotFound("No exam session found for the token session part [".$sessionToken."]",Errorcode::ERRCODE_SESSION_NOT_FOUND);
-
-    	// Controllo incrociato studente/sessione
-    	if ($session->getStudentHasCourse()->getStudent() != $student)
-    		throw new InconsistentContent("Both student and session token part are correct [".$studentToken."], [".$sessionToken."], but not related. Possible hacking trial");
-    	
-    	// Da qui il processo di validazione e' completato
-    	$course = $session->getStudentHasCourse()->getCourse();
-    	if ($course->getActivationstatus()->getId() != ActivationStatus::STATUS_ENABLED) {
-    		// Corso disabilitato
-    		return $this->getUserExamData(null,"Corso disabilitato");
-    	}
-   		
-    	// The mechanism is:
-    	// Student accessed here because of an email link. We have no control on "when" the student click 
-    	// on the link. For that reason, we need to check if the session has already completed.
-    	// Furthermore, if the student clicks the link having previous left open sessions, we need to redirect
-    	// him to the right open session.
-    	
-	    $allSessions = $this->getStudentHasCourseHasExamRepo()->findByStudentOnCourse($session->getStudentHasCourse());
-    	
-    	// Has the current/selected session completed?
-    	if ($session->getCompleted()) {
-
-    		foreach ($allSessions as $sess) {
-    			/* @var $sess StudentHasCourseHasExam */
-    			if ($sess->getCompleted() === 0 && $sess->getStartDate() < new \DateTime()) {
-    				// Found another new session to complete. Sending "Following session started to complete"
-    				return $this->getUserExamData($sess,'Sessione successiva iniziata da completare');
-    			} 
-    		} 
-    		// Not found: sending "All session has been terminated"
-    		return $this->getUserExamData(null,'Tutte le sessioni sono terminate');
-    	} else {
-    		foreach ($allSessions as $sess) {
-    			/* @var $sess StudentHasCourseHasExam */
-    			if ($sess->getCompleted() === 0 && $sess->getStartDate() < new \DateTime()) {
-    				// Found previous session
-    				if ($sess == $session) {
-    					// Returning the requested session
-    					return $this->getUserExamData($session);
-    				} 
-    				// Returning another previous session. Sending: "Previous session found to complete"
-    				return $this->getUserExamData($sess,'Sessione precedente iniziata da completare');
-    			}
-    		}
-    	}
-	} 
+   public function getAvailableChallenges($sessionId)
+	{
+		$retval = array();
+		
+		$session = $this->getStudentHasCourseHasExamRepo()->find($sessionId);
+		$listOfChallenges = $this->getStudentHasCourseHasExamRepo()->findChallengesByStudentOnCourse($session->getStudentHasCourse());
+		if (count($listOfChallenges) > 0) {
+			foreach ($listOfChallenges as $challenge)
+			{
+				/* @var $challenge StudentHasCourseHasExam */
+				if ($challenge->getCompleted() === 0) {
+					$arr = array(
+							'id' => $challenge->getId(),
+							'token' => $challenge->getStudentHasCourse()->getStudent()->getIdentifier().".".$challenge->getToken(),
+							'name' => $challenge->getExam()->getName());
+					$retval[] = $arr;
+				}
+			}
+		}
+		return $retval;
+	}
 }

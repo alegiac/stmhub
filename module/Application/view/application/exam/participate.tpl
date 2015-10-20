@@ -122,7 +122,6 @@
 				<!-- Profile view -->
                 <div class="card profile-view">
                 	<div class="pv-header">
-                    	<img src="/static/assets/img/profile-pics/profile-pic.gif" class="pv-main" alt="">
                    	</div>
                             
                     <div class="pv-body">
@@ -232,7 +231,7 @@
   								case 0:
   									if (tryagain == 1) {
   										swal({
-  											title: "Errato, puoi riprovare",
+  											title: "\n",
   											text: "Puoi modificare la tua risposta",
   											type: "warning",
   											html: true,
@@ -243,7 +242,7 @@
   										});
   									} else {
   										swal({
- 											title: "Errato",
+ 											title: "\n",
  											text: itemAnswer,
   											type: "error",
   											html: true,
@@ -266,7 +265,7 @@
   										window.location = "/exam/saveanswer/"+ajax_post_data_value;
   									} else {
   										swal({
-  											title: "Corretto",
+  											title: "\n",
   											text: itemAnswer,
   											type: "success",
   											html: true,
@@ -285,7 +284,7 @@
   								// Null question:
   								case 2:
   									swal({
-  										title: "Lo sapevi?",
+  										title: "\n",
   										text: itemAnswer,
   										type: "info",
   										showCancelButton: false,

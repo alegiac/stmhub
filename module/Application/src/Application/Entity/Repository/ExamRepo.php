@@ -29,6 +29,19 @@ class ExamRepo extends \Doctrine\ORM\EntityRepository
 	}
 	
 	/**
+	 * Get all non-mandatory exams (challenges)
+	 * @param Course $course
+	 * @return array
+	 */
+	public function findNotMandatoriesByCourse(Course $course)
+	{
+		$criteria = Criteria::create()->where(Criteria::expr()->eq('course',$course))->andWhere(Criteria::expr()->eq('mandatory',0))->orderBy(array('progOnCourse' => 'ASC'));
+		
+		$result = $this->matching($criteria);
+		if ($result->count()) return $result->getValues();
+		return array();
+	}
+	/**
 	 * Acquisizione di tutti gli esami obbligatori (da sessione) per un corso
 	 *
 	 * @param Course $course

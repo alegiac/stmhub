@@ -79,6 +79,72 @@ final class StudentService extends BaseService
     	$durationWeek = $course->getDurationweek();
     	$periodicityWeek = $course->getPeriodicityweek();
     	
+    	$lastDateStart = $startDate;
+    	$lastDateEnd = $lastDateStart->add(new \DateInterval('P'.$periodicityWeek.'W'));
+    	$lastDateChallangeEnd = $lastDateStart->add(new \DateInterval('P'.$durationWeek.'W'));
+    	
+    	// For challenge logic, only non-mandatory exams will be used
+    	$challenges = $this->getExamRepo()->findNotMandatoriesByCourse($course);
+    	$sessionsForChallenge = 1;
+    	
+    	foreach ($challenges as $challenge) {
+    		/* @var $challenge Exam */
+    		$itemsForChallenge = $this->getExamHasItemRepo()->findByExam($challenge);
+    		shuffle(shuffle(shuffle($itemsForChallenge)));
+    		$numItemsForChallenge = count($itemsForChallenge);
+    		
+    		// Create the universal token
+    		$token = $this->generateSessionToken($student->getId(), $challenge->getId(), 1);
+    		
+    		// Create an entry in the session table
+    		$session = new StudentHasCourseHasExam();
+    		$session->setCompleted(0);
+    		$session->setExam($challenge);
+    		$session->setMandatory(0);
+    		$session->setExpectedEndDate($lastDateChallangeEnd);
+    		$session->setInsertDate(new \DateTime());
+    		$session->setPoints(0);
+    		$session->setProgressive(0);
+    		$session->setStartDate($lastDateStart);
+    		$session->setStudentHasCourse($studentHasCourse);
+    		$session->setToken($token);
+    		
+    		$arrayItemsForSession = array();
+    		 
+    		for($j=0;$j<$numItemsForChallenge;$j++) {
+    			if (count($itemsForChallenge) == 0) break;
+    			 
+    			// Pop an item from the global-exam-items array
+    			// Check if it has a parent dependency
+    			$theItem = array_pop($itemsForChallenge);
+    			echo "count ".count($itemsForChallenge)."<br>";
+    			echo "ciclo ".$j." - tolto elemento da array ".count($itemsForChallenge)."<br>";
+    		
+    			/* @var $theItem ExamHasItem */
+    			if ($theItem->getItem()->getItem() != null) {
+    				echo "item trovato <br>";
+    				$found = false;
+    				foreach ($session->getItem() as $itemIn) {
+    					/* @var $itemIn Item */
+    					echo "in ciclo sub";
+    					if ($itemIn == $theItem->getItem()->getItem()) {
+    						$found = true; break;
+    					}
+    				}
+    				if (!$found) {
+    					// Has parent dependency but his parent is not in.
+    					array_push($itemsForExam, $theItem);
+    					shuffle($itemsForExam);
+    				}
+    			}
+    		
+    			$session->addItem($theItem->getItem());
+    		}
+    		
+    		$this->getEntityManager()->persist($session);
+    		$this->getEntityManager()->flush();
+    	}
+    	
     	// For session logic, only mandatory exams will be used 
     	$exams = $this->getExamRepo()->findMandatoriesByCourse($course);
     	$sessionsForExam = $durationWeek/count($exams);
@@ -105,6 +171,7 @@ final class StudentService extends BaseService
     			$session = new StudentHasCourseHasExam();
     			$session->setCompleted(0);
     			$session->setExam($exam);
+    			$session->setMandatory(1);
 	    		$session->setExpectedEndDate($lastDateEnd);
 	    		$session->setInsertDate(new \DateTime());
 	    		$session->setPoints(0);
@@ -112,6 +179,8 @@ final class StudentService extends BaseService
 	    		$session->setStartDate($lastDateStart);
 	    		$session->setStudentHasCourse($studentHasCourse);
 	    		$session->setToken($token);
+	    		
+	    		
 	    		
 	    		// Extend dates
 	    		$next = new \DateInterval('P'.$periodicityWeek.'W');

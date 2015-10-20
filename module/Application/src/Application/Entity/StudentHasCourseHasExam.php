@@ -85,6 +85,13 @@ class StudentHasCourseHasExam
     private $expectedEndDate;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="mandatory", type="integer", nullable=true)
+     */
+    private $mandatory;
+
+    /**
      * @var \Application\Entity\Exam
      *
      * @ORM\ManyToOne(targetEntity="Application\Entity\Exam")
@@ -352,6 +359,30 @@ class StudentHasCourseHasExam
     public function getExpectedEndDate()
     {
         return $this->expectedEndDate;
+    }
+
+    /**
+     * Set mandatory
+     *
+     * @param integer $mandatory
+     *
+     * @return StudentHasCourseHasExam
+     */
+    public function setMandatory($mandatory)
+    {
+        $this->mandatory = $mandatory;
+
+        return $this;
+    }
+
+    /**
+     * Get mandatory
+     *
+     * @return integer
+     */
+    public function getMandatory()
+    {
+        return $this->mandatory;
     }
 
     /**

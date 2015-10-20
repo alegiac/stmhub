@@ -64,6 +64,13 @@ class ClientHasCourse
     private $emailtemplateurl;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="durationweek", type="integer", nullable=true)
+     */
+    private $durationweek;
+
+    /**
      * @var \Application\Entity\Activationstatus
      *
      * @ORM\ManyToOne(targetEntity="Application\Entity\Activationstatus")
@@ -257,6 +264,30 @@ class ClientHasCourse
     public function getEmailtemplateurl()
     {
         return $this->emailtemplateurl;
+    }
+
+    /**
+     * Set durationweek
+     *
+     * @param integer $durationweek
+     *
+     * @return ClientHasCourse
+     */
+    public function setDurationweek($durationweek)
+    {
+        $this->durationweek = $durationweek;
+
+        return $this;
+    }
+
+    /**
+     * Get durationweek
+     *
+     * @return integer
+     */
+    public function getDurationweek()
+    {
+        return $this->durationweek;
     }
 
     /**
