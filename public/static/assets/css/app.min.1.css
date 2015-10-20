@@ -1995,8 +1995,8 @@ pre code {
 .container {
   margin-right: auto;
   margin-left: auto;
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-left: 2px;
+  padding-right: 2px;
 }
 
 @media (min-width: 768px) {
@@ -11043,7 +11043,7 @@ h6 small,
 }
 
 body #content {
-  padding: 10px 0;
+  padding: 5px 0;
 }
 
 @media (min-width: 1200px) {

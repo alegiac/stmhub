@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ClientHasCourse
  *
- * @ORM\Table(name="client_has_course", indexes={@ORM\Index(name="fk_client_has_course_course1_idx", columns={"course_id"}), @ORM\Index(name="fk_client_has_course_client1_idx", columns={"client_id"}), @ORM\Index(name="fk_client_has_course_activationstatus1_idx", columns={"activationstatus_id"})})
+ * @ORM\Table(name="client_has_course", indexes={@ORM\Index(name="fk_client_has_course_course1_idx", columns={"course_id"}), @ORM\Index(name="fk_client_has_course_client1_idx", columns={"client_id"}), @ORM\Index(name="fk_client_has_course_activationstatus1_idx", columns={"activationstatus_id"}), @ORM\Index(name="fk_client_has_course_weekday1_idx", columns={"weekday_id"})})
  * @ORM\Entity(repositoryClass="Application\Entity\Repository\ClientHasCourseRepo")
  */
 class ClientHasCourse
@@ -34,6 +34,34 @@ class ClientHasCourse
      * @ORM\Column(name="start_date", type="datetime", nullable=true)
      */
     private $startDate;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="periodicityweek", type="integer", nullable=true)
+     */
+    private $periodicityweek;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=45, nullable=true)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="text", length=65535, nullable=true)
+     */
+    private $description;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="emailtemplateurl", type="string", length=255, nullable=true)
+     */
+    private $emailtemplateurl;
 
     /**
      * @var \Application\Entity\Activationstatus
@@ -64,6 +92,16 @@ class ClientHasCourse
      * })
      */
     private $course;
+
+    /**
+     * @var \Application\Entity\Weekday
+     *
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Weekday")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="weekday_id", referencedColumnName="id")
+     * })
+     */
+    private $weekday;
 
 
 
@@ -123,6 +161,102 @@ class ClientHasCourse
     public function getStartDate()
     {
         return $this->startDate;
+    }
+
+    /**
+     * Set periodicityweek
+     *
+     * @param integer $periodicityweek
+     *
+     * @return ClientHasCourse
+     */
+    public function setPeriodicityweek($periodicityweek)
+    {
+        $this->periodicityweek = $periodicityweek;
+
+        return $this;
+    }
+
+    /**
+     * Get periodicityweek
+     *
+     * @return integer
+     */
+    public function getPeriodicityweek()
+    {
+        return $this->periodicityweek;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return ClientHasCourse
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     *
+     * @return ClientHasCourse
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set emailtemplateurl
+     *
+     * @param string $emailtemplateurl
+     *
+     * @return ClientHasCourse
+     */
+    public function setEmailtemplateurl($emailtemplateurl)
+    {
+        $this->emailtemplateurl = $emailtemplateurl;
+
+        return $this;
+    }
+
+    /**
+     * Get emailtemplateurl
+     *
+     * @return string
+     */
+    public function getEmailtemplateurl()
+    {
+        return $this->emailtemplateurl;
     }
 
     /**
@@ -195,5 +329,29 @@ class ClientHasCourse
     public function getCourse()
     {
         return $this->course;
+    }
+
+    /**
+     * Set weekday
+     *
+     * @param \Application\Entity\Weekday $weekday
+     *
+     * @return ClientHasCourse
+     */
+    public function setWeekday(\Application\Entity\Weekday $weekday = null)
+    {
+        $this->weekday = $weekday;
+
+        return $this;
+    }
+
+    /**
+     * Get weekday
+     *
+     * @return \Application\Entity\Weekday
+     */
+    public function getWeekday()
+    {
+        return $this->weekday;
     }
 }
