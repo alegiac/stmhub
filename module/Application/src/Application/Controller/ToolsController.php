@@ -61,6 +61,19 @@ class ToolsController extends AbstractActionController
 		$course = $this->getCourseService()->findById(2);
 	
 		echo $this->getStudentService()->associateStudentToCourse($student, $course, new \DateTimeImmutable());
+		
+		$student = $this->getStudentService()->findById(3);
+		
+		echo $this->getStudentService()->associateStudentToCourse($student, $course, new \DateTimeImmutable());
+		
+		$student = $this->getStudentService()->findById(4);
+		
+		echo $this->getStudentService()->associateStudentToCourse($student, $course, new \DateTimeImmutable());
+		
+		$student = $this->getStudentService()->findById(5);
+		
+		echo $this->getStudentService()->associateStudentToCourse($student, $course, new \DateTimeImmutable());
+		
 		die();
 	}
 	
