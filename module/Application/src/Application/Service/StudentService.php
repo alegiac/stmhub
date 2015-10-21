@@ -287,6 +287,8 @@ final class StudentService extends BaseService
 				$template = str_replace('%%PROG%%', $examProg, $template);
 				$template = str_replace('%%TOT%%', $coursetotexams, $template);
 				$template = str_replace('%%LINK%%', $link, $template);
+				$template = str_replace('%%POINTS%%', $points, $template);
+				$template = str_replace('%%DUEDATE%%', $sessionEnd, $template);
 				
 				$html = new MimePart($template);
 				$html->type = "text/html";

@@ -1640,6 +1640,7 @@ p {
 }
 
 .lead {
+  margin-top: 26px;
   margin-bottom: 18px;
   font-size: 14px;
   font-weight: 300;

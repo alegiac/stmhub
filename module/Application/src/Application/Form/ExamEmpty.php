@@ -16,7 +16,7 @@ class ExamEmpty extends Form
 			'type' => 'Zend\Form\Element\Submit',
 			'name' => 'subbb',
 			'attributes' => array(
-				'value' => 'INVIA',
+				'value' => 'AVANTI',
 				'class' => "btn btn-primary btn-lg col-xs-8 col-xs-offset-2",
 			)
 			

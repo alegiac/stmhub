@@ -298,7 +298,7 @@ class ExamController extends AbstractActionController
 		$vm = $this->composeParticipationVM();
 		
 		// Resetta i dati di sessione
-		$this->cleanSessionExamVars();
+		//$this->cleanSessionExamVars();
 		return $vm;
 	}
 	
@@ -565,7 +565,7 @@ class ExamController extends AbstractActionController
 	{
 		$tmpMedia = "";
 		$vm = new ViewModel();
-		
+
 		// Dati studente
 		$vm->firstName = $this->session->exam['student']['firstname'];
 		$vm->lastName = $this->session->exam['student']['lastname'];
@@ -629,7 +629,6 @@ class ExamController extends AbstractActionController
 			$vm->enableMessage 	= false;
 			$vm->message 		= "";
 		}
-		
 		return $vm;
 	}
 	
