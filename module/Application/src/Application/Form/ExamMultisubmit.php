@@ -3,7 +3,6 @@
 namespace Application\Form;
 
 use Zend\Form\Form;
-use Zend\Form\Element\Select;
 use Zend\Form\Element\Submit;
 
 class ExamMultisubmit extends Form

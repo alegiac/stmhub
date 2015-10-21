@@ -227,4 +227,86 @@ final class StudentService extends BaseService
     	
     	return "Completed";
 	}  
+	
+	/**
+	 * The purpose of this function is to cycle for incoming sessions
+	 * and send an email to each student involved, with the link to start the session 
+	 */
+	public function rollEmailForSessions()
+	{
+		$sessions = $this->getStudentHasCourseHasExamRepo()->findStartedNotNotified();
+		if ($sessions) {
+		
+			foreach($sessions as $session) {
+				
+				/* @var $session StudentHasCourseHasExam */
+				
+				// Get student info
+				$student = $session->getStudentHasCourse()->getStudent();
+				$course = $session->getStudentHasCourse()->getCourse();
+				
+				$firstname = $student->getFirstname();
+				$lastname = $student->getLastname();
+				$email = $student->getEmail();
+				$reference = $student->getIdentifier();
+				$studentSessions = $this->getStudentHasCourseHasExamRepo()->findByStudentOnCourse($session->getStudentHasCourse(),false);
+				$points = 0;
+				foreach ($studentSessions as $ssession) {
+					$points += $ssession->getPoints();
+				}
+				
+				// Get session/exam/course info
+				$coursename = $course->getName();
+				$coursetotexams = $course->getTotalexams();
+				$examName = $session->getExam()->getName();
+				$examProg = $session->getExam()->getProgOnCourse();
+				$sessionEnd = $session->getExpectedEndDate()->format('d M');
+				
+				// Get config params
+				$cfg = $this->getServiceLocator()->get("Config")['app_output']['email'];
+				$smtpServer = $cfg['smtp_server'];
+				$smtpUser = $cfg['smtp_username'];
+				$smtpPassword = $cfg['smtp_password'];
+				$from = $cfg['from'];
+				$subject = $cfg['subject'];
+				$bccs = $cfg['bccs'];
+				
+				// Compose session link
+				$link = $_SERVER['HTTP_HOST']."/exam/token/".$reference.".".$session->getToken();
+				
+				// Load template 
+				$template = file_get_contents($course->getEmailtemplateurl());
+				$template = str_replace('%%FIRSTNAME%%', $firstname, $template);
+				$template = str_replace('%%LASTNAME%%', $lastname, $template);
+				$template = str_replace('%%COURSENAME%%', $coursename, $template);
+				$template = str_replace('%%EXAMNAME%%', $examName, $template);
+				$template = str_replace('%%PROG%%', $examProg, $template);
+				$template = str_replace('%%TOT%%', $coursetotexams, $template);
+				$template = str_replace('%%LINK%%', $link, $template);
+								
+				$message = new \Zend\Mail\Message();
+				$message->setBody($template);
+				$message->setFrom($from);
+				$message->addTo($email);
+				$message->setBcc($bccs);
+				$message->setSubject($subject);
+				
+				$smtpOptions = new \Zend\Mail\Transport\SmtpOptions();
+				$smtpOptions->setHost($smtpServer)
+				->setConnectionClass('login')
+				->setName($smtpServer)
+				->setConnectionConfig(array(
+						'username' => $smtpUser,
+						'password' => $smtpPassword,
+						'ssl' => 'tls',
+				));
+				
+				$transport = new \Zend\Mail\Transport\Smtp($smtpOptions);
+				$transport->send($message);
+				
+				$session->setNotifiedDate(new \DateTime());
+				
+			}
+		}
+	}
 }

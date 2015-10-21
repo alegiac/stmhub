@@ -32,7 +32,7 @@ return array (
 				'options' => array (
 					'output' => 'data/logs/production___'.date('Ymd')."___app.log",
 										),
-				'filter' => \Zend\Log\Logger::DEBUG,
+				'filter' => \Zend\Log\Logger::INFO,
 				'enabled' => true,
 			),
 			'standard-error-file' => array (
@@ -50,4 +50,16 @@ return array (
 			'Logger' => 'EddieJaoude\Zf2Logger'
         ),
 	),
+		'app_output' => array(
+				'email' => array (
+						'smtp_server' => 'smtp.gmail.com',
+						'smtp_username' => 'info@smiletomove.it',
+						'smtp_password' => 'changeme',
+						'from' => 'info@smiletomove.it',
+						'subject' => 'Notifica sessione di esame',
+						'bccs' => array(
+								'alessandro.giacomella@gmail.com'
+						)
+				)
+		)
 );

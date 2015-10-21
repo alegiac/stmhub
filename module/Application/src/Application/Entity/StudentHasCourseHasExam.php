@@ -92,6 +92,13 @@ class StudentHasCourseHasExam
     private $mandatory;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="notified_date", type="datetime", nullable=true)
+     */
+    private $notifiedDate;
+
+    /**
      * @var \Application\Entity\Exam
      *
      * @ORM\ManyToOne(targetEntity="Application\Entity\Exam")
@@ -383,6 +390,30 @@ class StudentHasCourseHasExam
     public function getMandatory()
     {
         return $this->mandatory;
+    }
+
+    /**
+     * Set notifiedDate
+     *
+     * @param \DateTime $notifiedDate
+     *
+     * @return StudentHasCourseHasExam
+     */
+    public function setNotifiedDate($notifiedDate)
+    {
+        $this->notifiedDate = $notifiedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get notifiedDate
+     *
+     * @return \DateTime
+     */
+    public function getNotifiedDate()
+    {
+        return $this->notifiedDate;
     }
 
     /**

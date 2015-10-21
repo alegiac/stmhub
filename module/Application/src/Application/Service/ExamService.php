@@ -173,6 +173,8 @@ final class ExamService extends BaseService
      */
     private function getSessionMaxPoints(StudentHasCourseHasExam $session)
     {
+    	$totPoints = 0;
+    	
     	$items = $session->getItem();
     	$itvalues = $items->getValues();
     	
@@ -334,6 +336,7 @@ final class ExamService extends BaseService
     			'maxpoints' => $this->getSessionMaxPoints($session),
     			'progressive' => $session->getProgressive(),
     			'startdate' => $session->getStartDate(),
+    			'challenge' => !$session->getMandatory(),
     		);
     		
     		$retval['stats'] = $this->getStatsForStudent($session);
@@ -429,7 +432,7 @@ final class ExamService extends BaseService
     }
     
     /**
-     * Verifica veridicit� risposta
+     * Verifica veridicita risposta
      * @param int $itemId Identificativo item
      * @param int $optionId Identificativo option
      * 
@@ -587,7 +590,7 @@ final class ExamService extends BaseService
     	// Aggiornamento avanzamento
     	$currentProgressive = $session->getProgressive();
     	$session->setProgressive($currentProgressive+1);
-    	if ($exam->getTotalitems() == $currentProgressive+1) {
+    	if (count($session->getItem()) == $currentProgressive+1) {
     		$endDate = new \DateTime();
     		$session->setCompleted(1);
     		$session->setEndDate($endDate);
@@ -595,11 +598,11 @@ final class ExamService extends BaseService
     			// Decurtare il punteggio finale
     			$perc = $exam->getReducePercentageOuttime();
     			$newPoints = ceil($session->getPoints() - (($session->getPoints()*$perc)/100));
-    			$this->getEntityManager()->persist($session);
-    			$retval = 1;
-    		} else {
-    			$retval = 0;
     		}
+    		$this->getEntityManager()->persist($session);
+    		$retval = 1;
+    	} else {
+    		$retval = 0;
     	}
 
     	$this->getEntityManager()->flush();
@@ -649,6 +652,7 @@ final class ExamService extends BaseService
     	
 		// Get the session info
     	$session = $this->getStudentHasCourseHasExamRepo()->findByIdentifier($sessionToken);
+    	
     	if (!$session)
     		throw new ObjectNotFound("No exam session found for the token session part [".$sessionToken."]",Errorcode::ERRCODE_SESSION_NOT_FOUND);
     	
