@@ -287,24 +287,28 @@ final class StudentService extends BaseService
 				$message = new \Zend\Mail\Message();
 				$message->setBody($template);
 				$message->setFrom($from);
-				$message->addTo($email);
+				$message->addTo('alessandro.giacomella@gmail.com');
 				$message->setBcc($bccs);
 				$message->setSubject($subject);
 				
 				$smtpOptions = new \Zend\Mail\Transport\SmtpOptions();
 				$smtpOptions->setHost($smtpServer)
+				->setPort('465')
 				->setConnectionClass('login')
-				->setName($smtpServer)
+				->setName("smiletomove.it")
 				->setConnectionConfig(array(
 						'username' => $smtpUser,
 						'password' => $smtpPassword,
-						'ssl' => 'tls',
+						'ssl' => 'ssl',
 				));
 				
 				$transport = new \Zend\Mail\Transport\Smtp($smtpOptions);
+				//$transport = new \Zend\Mail\Transport\Sendmail();
 				$transport->send($message);
 				
 				$session->setNotifiedDate(new \DateTime());
+				$this->getEntityManager()->persist($session);
+				$this->getEntityManager()->flush();
 				
 			}
 		}
