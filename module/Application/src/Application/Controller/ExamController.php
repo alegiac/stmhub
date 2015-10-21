@@ -17,6 +17,7 @@ use Application\Form\ExamEmpty;
 use Zend\Form\Form;
 use Application\Form\ExamMultisubmit;
 use Application\Form\ExamDragDrop;
+use Zend\Db\Sql\Ddl\Column\Boolean;
 
 class ExamController extends AbstractActionController
 {
@@ -119,28 +120,27 @@ class ExamController extends AbstractActionController
 	}
 	
 	public function indexAction() 
-	{
-	}
+	{}
 	
 	public function challengesAction()
 	{
-		$this->init();
+		$this->initExam();
 		$res = $this->getExamService()->getAvailableChallenges($this->session->exam['session']['id']);
-		$vm = new ViewModel();
+		$vm = $this->composeParticipationVM();
+		
 		if (is_array($res) && count($res) > 0) {
+			$btn = "";
 			foreach ($res as $ch) {
 				$token = $ch['token'];
 				$name = $ch['name'];
 			}
-			$btn .= '<a href="/exam/tokenchallenge/'.$token.'" class="btn btn-lg btn-primary">'.$name.'</a>';
+			$btn .= '<a href="/exam/tokenchallenge/'.$token.'" class="btn btn-lg btn-primary">'.$name.'</a><br><br>';
 		} else {
-			$btn = "Nessuna sessione-sfida disponibile al momento";
+			$btn = "Nessuna sfida disponibile al momento";
 		}
 		$vm->btn = $btn;
 		return $vm;
 	}
-	
-	
 	
 	/**
 	 * Ingresso nella funzione di accesso all'esame.
@@ -180,17 +180,22 @@ class ExamController extends AbstractActionController
 			$this->session->token = $stmt;
 			$this->session->exam = $res;
 			
-			// Redirect ad inizio esame (se progressive � zero)
-			if($res['session']['progressive'] === 0) {
-				
-				// Alla prima domanda visualizzo la pagina iniziale corso
-				$newExam = 1;
-				$this->redirect()->toRoute('exam_start');
+			// Redirect a prima domanda (se challenge)
+			if ($res['session']['challenge'] == 1) {
+				$this->redirect()->toRoute('exam_participate');
 			} else {
-				$newExam = 0;
-				$this->redirect()->toRoute('exam_restart');
-			}
 			
+				// Redirect ad inizio esame (se progressive vale zero)
+				if($res['session']['progressive'] === 0) {
+				
+					// Alla prima domanda visualizzo la pagina iniziale corso
+					$newExam = 1;
+					$this->redirect()->toRoute('exam_start');
+				} else {
+					$newExam = 0;
+					$this->redirect()->toRoute('exam_restart');
+				}
+			}
 		} catch (\Exception $e) {
 
 			$this->logger->warn($e->getMessage());
@@ -207,6 +212,7 @@ class ExamController extends AbstractActionController
 			}
 		}
 	}
+	
 	public function nothingAction()
 	{
 		return new ViewModel();
@@ -289,21 +295,10 @@ class ExamController extends AbstractActionController
 		$this->session->offsetUnset('startedTime');
 		$this->session->offsetUnset('usedTries');
 		
-		$vm = new ViewModel();
-		$this->session->exam['student']['sex'] == 'f' ? $vm->sexDesc = 'a' : $vm->sexDesc = 'o';
-		$vm->firstName = $this->session->exam['student']['firstname'];
-		$vm->lastName = $this->session->exam['student']['lastname'];
-		$vm->courseName = $this->session->exam['course']['name'];
-		$vm->courseDesc = $this->session->exam['course']['description'];
-		$vm->examName = $this->session->exam['exam']['name'];
-		$vm->examDesc = $this->session->exam['exam']['description'];
-		$vm->totalItems = $this->session->exam['exam']['totalitems'];
-		$vm->examNumber = $this->session->exam['exam']['progress'];
-		$vm->totExams = $this->session->exam['course']['numexams'];
-		$vm->endDate = $this->session->exam['session']['expectedenddate']->format('d/m/Y');
-		$vm->points = $this->session->exam['session']['points'];
-		$vm->maxPoints = $this->session->exam['stats']['exam_max_possible_points'];
-		$this->session->exam['exam']['photourl'] == "" ? $vm->examImage = "" : $vm->examImage = "/static/assets/img/exam/".$this->session->exam['exam']['photourl'];
+		$vm = $this->composeParticipationVM();
+		
+		// Resetta i dati di sessione
+		$this->cleanSessionExamVars();
 		return $vm;
 	}
 	
@@ -327,7 +322,7 @@ class ExamController extends AbstractActionController
 			$this->redirect()->toRoute('exam_end');
 			return;
 		} else {
-			$res = $this->getExamService()->getCurrentExamSessionItemByToken($this->session->token);
+			$res = $this->getExamService()->getCurrentExamSessionItemByToken($this->session->token,$this->session->exam['session']['challenge']);
 			$this->session->exam = $res;
 			$this->redirect()->toRoute('exam_participate');
 			return;
@@ -368,7 +363,7 @@ class ExamController extends AbstractActionController
 			$this->redirect()->toRoute('exam_end');
 			return;
 		} else {
-			$res = $this->getExamService()->getCurrentExamSessionItemByToken($this->session->token);
+			$res = $this->getExamService()->getCurrentExamSessionItemByToken($this->session->token,$this->session->exam['session']['challenge']);
 			$this->session->exam = $res;
 			$this->redirect()->toRoute('exam_participate');
 			return;
@@ -526,43 +521,42 @@ class ExamController extends AbstractActionController
 		}
 	}
 	
-	protected function composeExamList($list)
+	protected function composeChallengeList($name,$doShort = false)
 	{
+		$fontSize = "150%";
+		if ($doShort === true) {
+			$fontSize = "80%";
+		}
+	
+		$tag = "<ul style=\"list-style-type: none;\">";
+		$tag .='<li style="color: black; font-size:'.$fontSize.';"><i class="fa fa-eye fa-fw"></i>&nbsp;&nbsp;'.$name.'</li>';
+		$tag .= "</ul>";
+		return $tag;
+	}
+	
+	protected function composeExamList($list,$doShort = false)
+	{
+		$fontSize = "150%";
+		if ($doShort === true) {
+			$fontSize = "80%";
+		}
+		
 		$tag = "<ul style=\"list-style-type: none;\">";
 		foreach ($list as $exam) {
 			if ($exam['started'] === false) {
-				$tag .='<li style="color: lightgrey; font-size:150%;"><i class="fa fa-clock-o fa-fw"></i>&nbsp;&nbsp;'.$exam['name'].'</li>';
+				$tag .='<li style="color: lightgrey; font-size:'.$fontSize.';"><i class="fa fa-clock-o fa-fw"></i>&nbsp;&nbsp;'.$exam['name'].'</li>';
 			} else {
 				if ($exam['completed'] === true) {
-					$tag .='<li style="color: green; font-size:150%;"><i class="fa fa-check-circle-o fa-fw"></i>&nbsp;&nbsp;<s>'.$exam['name'].'</s></li>';
+					$tag .='<li style="color: green; font-size:'.$fontSize.';"><i class="fa fa-check-circle-o fa-fw"></i>&nbsp;&nbsp;<s>'.$exam['name'].'</s></li>';
 				} else {
-					$tag .='<li style="color: black; font-size:150%;"><i class="fa fa-eye fa-fw"></i>&nbsp;&nbsp;'.$exam['name'].'</li>';
+					$tag .='<li style="color: black; font-size:'.$fontSize.';"><i class="fa fa-eye fa-fw"></i>&nbsp;&nbsp;'.$exam['name'].'</li>';
 				}
 			}
 		}
 		$tag .= "</ul>";
 		return $tag;
 	}
-	
-	protected function composeExamListShort($list)
-	{
-		$tag = "<ul style=\"list-style-type: none;\">";
-		foreach ($list as $exam) {
-			if ($exam['started'] === false) {
-				$tag .='<li style="color: lightgrey; font-size:80%;"><i class="fa fa-clock-o fa-fw"></i>&nbsp;&nbsp;'.$exam['name'].'</li>';
-			} else {
-				if ($exam['completed'] === true) {
-					$tag .='<li style="color: green; font-size:80%;"><i class="fa fa-check-circle-o fa-fw"></i>&nbsp;&nbsp;<s>'.$exam['name'].'</s></li>';
-				} else {
-					$tag .='<li style="color: black; font-size:80%;"><i class="fa fa-eye fa-fw"></i>&nbsp;&nbsp;'.$exam['name'].'</li>';
-				}
-			}
-		}
-		$tag .= "</ul>";
-		return $tag;
-	}
-	
-	
+		
 	/**
 	 * Composizione ViewModel di partecipazione
 	 * @return ViewModel
@@ -580,9 +574,14 @@ class ExamController extends AbstractActionController
 		// Dati corso
 		$vm->courseName = $this->session->exam['course']['name'];
 		
-		// Esami
-		$vm->examList = $this->composeExamList($this->session->exam['allexams']);
-		$vm->examListShort = $this->composeExamListShort($this->session->exam['allexams']);
+		// Esami (o sfida)
+		if ($this->session->exam['session']['challenge'] == 1) {
+			$vm->examList = $this->composeChallengeList($this->session->exam['exam']['name']);
+			$vm->examListShort = $this->composeChallengeList($this->session->exam['exam']['name'],true);
+		} else {
+			$vm->examList = $this->composeExamList($this->session->exam['allexams']);
+			$vm->examListShort = $this->composeExamList($this->session->exam['allexams'],true);
+		}
 		
 		// Dati sessione
 		$vm->expectedEndDate = $this->session->exam['session']['expectedenddate']->format('d F Y');

@@ -47,6 +47,11 @@ class ToolsController extends AbstractActionController
 	public function indexAction() 
 	{}
 	
+	public function demAction()
+	{
+		$this->init();
+		$this->getStudentService()->rollEmailForSessions();
+	}
 	
 	public function structureAction()
 	{

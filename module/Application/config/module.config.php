@@ -37,6 +37,18 @@ return array(
         			),
         			'may_terminate' => true,
         	),
+        	'tools_dem' => array(
+        		'type' => 'Segment',
+        		'options' => array(
+        			'route' => '/tools/dem',
+        			'defaults' => array(
+        				'__NAMESPACE__' => 'Application\Controller',
+        				'controller' => 'Tools',
+        				'action' => 'dem',
+        			),
+        		),
+       			'may_terminate' => true,
+       		),        		
         	'tools_structure' => array(
         		'type' => 'Segment',
         		'options' => array(
@@ -219,7 +231,20 @@ return array(
         			),
         		),
         		'may_terminate' => true,
-        	),        		
+        	),
+        	'exam_root' => array(
+        		'type' => 'Segment',
+        		'options' => array(
+        			'route' => '/exam[/]',
+        			'constraints' => array(),
+        			'defaults' => array(
+        				'__NAMESPACE__' => 'Application\Controller',
+        				'controller' => 'Exam',
+        				'action' => 'index',
+        			),
+        		),
+        		'may_terminate' => true,
+        	),
         ),
     ),
     'service_manager' => array(

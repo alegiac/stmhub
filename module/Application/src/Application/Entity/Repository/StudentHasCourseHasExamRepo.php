@@ -6,6 +6,7 @@ use Application\Entity\StudentHasCourse;
 use Application\Entity\StudentHasCourseHasExam;
 use Doctrine\Common\Collections\Criteria;
 use Application\Entity\Exam;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * StudentHasCourseHasExamRepo
@@ -29,6 +30,22 @@ class StudentHasCourseHasExamRepo extends \Doctrine\ORM\EntityRepository
 		$result = $this->matching($criteria);
 		if ($result->count()) return $result->last();
 		return null;
+	}
+	
+	/**
+	 * Get all started sessions for notification
+	 * 
+	 * @return array
+	 */
+	public function findStartedNotNotified()
+	{
+		$crit = Criteria::create()->where(Criteria::expr()->isNull('notifiedDate'))
+		->andWhere(Criteria::expr()->eq('mandatory', 1))
+		->andWhere(Criteria::expr()->eq('completed',0))
+		->andWhere(Criteria::expr()->lte('startDate',new \DateTime()));
+		$result = $this->matching($crit);
+		if ($result->count()) return $result->getValues();
+		return array();
 	}
 	
 	/**
@@ -67,10 +84,14 @@ class StudentHasCourseHasExamRepo extends \Doctrine\ORM\EntityRepository
 	 * @param StudentHasCourse $studentCourse
 	 * @return array
 	 */
-	public function findByStudentOnCourse(StudentHasCourse $studentCourse)
+	public function findByStudentOnCourse(StudentHasCourse $studentCourse,$onlyMandatory=true)
 	{
-		$criteria = Criteria::create()->where(Criteria::expr()->eq('studentHasCourse',$studentCourse))
-			->andWhere(Criteria::expr()->eq('mandatory', 1));
+		$criteria = Criteria::create()->where(Criteria::expr()->eq('studentHasCourse',$studentCourse));
+		
+		if ($onlyMandatory === true) {
+			$criteria->andWhere(Criteria::expr()->eq('mandatory', 1));
+		}
+		
 		$result = $this->matching($criteria);
 		if ($result->count()) return $result->getValues();
 		return array();
