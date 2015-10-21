@@ -11,6 +11,10 @@ use Application\Entity\StudentHasCourseHasExam;
 use Application\Entity\Item;
 use Application\Entity\ExamHasItem;
 
+use Zend\Mail\Message;
+use Zend\Mime\Message as MimeMessage;
+use Zend\Mime\Part as MimePart;
+
 final class StudentService extends BaseService
 {
 	/**
@@ -283,10 +287,16 @@ final class StudentService extends BaseService
 				$template = str_replace('%%PROG%%', $examProg, $template);
 				$template = str_replace('%%TOT%%', $coursetotexams, $template);
 				$template = str_replace('%%LINK%%', $link, $template);
-								
-				$message = new \Zend\Mail\Message();
-				$message->setBody($template);
-				$message->setFrom($from);
+				
+				$html = new MimePart($template);
+				$html->type = "text/html";
+				
+				$body = new MimeMessage();
+				$body->setParts(array($html));
+				
+				$message = new Message();
+				$message->setBody($body);
+				$message->setSender($from,"SmileToMove");
 				$message->addTo('alessandro.giacomella@gmail.com');
 				$message->setBcc($bccs);
 				$message->setSubject($subject);

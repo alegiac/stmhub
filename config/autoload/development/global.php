@@ -45,8 +45,8 @@ return array (
 	'app_output' => array(
 		'email' => array (
 			'smtp_server' => 'smtp.gmail.com',
-			'smtp_username' => 'smile2move',
-			'smtp_password' => 'changeme',
+			'smtp_username' => 'info@smiletomove.it',
+			'smtp_password' => 'smile2move',
 			'from' => 'info@smiletomove.it',
 			'subject' => 'Notifica sessione di esame',
 			'bccs' => array(

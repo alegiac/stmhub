@@ -22,7 +22,8 @@ class ExamDragDrop extends Form
 		shuffle(shuffle($array));
 		$tag = "<ul class=\"scrambled\">";
 		foreach ($array as $option) {
-			$tag .= "<li class=\"btn btn-primary btn-lg col-xs-6 col-xs-offset-3\" style=\"margin-bottom:6px;
+			$tag .= "<li class=\"btn btn-primary btn-lg col-xs-6 col-xs-offset-3\" style=\"white-space:normal !important;
+    max-width:200px;margin-bottom:6px;
 		\">".$option."</li><br>";
 		}
 		$tag .= "</ul>";

@@ -20,7 +20,7 @@ class ExamMultisubmit extends Form
 					'id' => $value,
 					'value' => strtoupper(utf8_encode($description)),
 					'class' => 'btn btn-primary btn-lg',
-					'style' => "margin-right: 10px;margin-left: 10px;margin-top: 10px;",
+					'style' => "white-space:normal !important; max-width:200px; margin-right: 10px;margin-left: 10px;margin-top: 10px;",
 				)
 			));
 		}
