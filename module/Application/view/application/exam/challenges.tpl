@@ -32,15 +32,14 @@
             		<div class="col-xs-4 card" style="height:80px;">
             			<div class="pv-body">
             				<center>
-	            				<small>Data termine sessione </small><br>
+	            				<small>Scadenza</small><br>
 	            				<strong style="color:black;">{$expectedEndDate}</strong>
 	            				<br>
-	            				<p style="color:light-grey;"><small>Punteggio accumulato</small><br><strong style="color:black;">{$points}/{$maxpoints}</strong></p>
+	            				<p style="color:light-grey;"><small>Punti</small><br><strong style="color:black;">{$points}/{$maxpoints}</strong></p>
 	            			</center>
                 		</div>
                 	</div>
                 	<div class="col-xs-4 card" style="height:80px;">
-            			<div class="pv-header">&nbsp;</div>
             			<div class="pv-body">
             				{$examListShort}
             			</div>

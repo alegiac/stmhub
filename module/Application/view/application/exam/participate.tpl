@@ -52,33 +52,31 @@
 					</div>
 	        	{/if}
 	        	<div class="card">
-	        		<div class="card-header">
-	        			<div class="col-sm-6 pull-left">
+	        		{if $remainingTime lte -1}
+	        		{else}
+	        			<div class="card-header">
+	        				<div class="col-sm-6 pull-left">
+	        				</div>
+	        				<div class="col-sm-6 pull-right">
+	        					<div class="pull-left" id="countmesg">
+	        					</div><br><br>
+	          					<div class="media">
+                             		<div class="media-body">
+	                                	<div class="progress">
+    	                                	<div id="timerbar" class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="{$remainingTime}" style="width: {$remainingTime}%">
+        	                                </div>
+										</div>
+                	                </div>
+                    	        </div>
+	        				</div>	        			
 	        			</div>
-	        			<div class="col-sm-6 pull-right">
-	        				{if $remainingTime eq -1}
-	        				{else}
-	        				<div class="pull-left" id="countmesg">
-	        				</div><br><br>
-	          				<div class="media">
-                             	<div class="media-body">
-                                	<div class="progress">
-                                    	<div id="timerbar" class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="{$remainingTime}" style="width: {$remainingTime}%">
-                                        </div>
-									</div>
-                                </div>
-                            </div>
-	        				{/if}
-	        			</div>
-	        		</div>
+	        		{/if}
 	        		<br>
 	        		<div class="card-body card-padding">
 	        			<div class="row">
 	        				<div class="col-sm-12">
 	        					{$media}
 		        				<hr>
-		        				<br>
-		        				<br>
 		        				<center>
 		        					<h2>{$itemQuestion}</h2>
 		        				</center>
@@ -93,29 +91,31 @@
 	        			</div>
 	        		</div>
 	        	</div>
-	        	<div class="visible-xs .visible-xs-block">
-	        		<div class="col-xs-4 card" style="height:80px;">
-	        			<div class="pv-body">
-            				<h4>{$firstName} {$lastName}</h4>
-            				<p style="color:light-grey;">{$courseName}<br>{$examName}</p>
-            			</div>
-            		</div>
-            		<div class="col-xs-4 card" style="height:80px;">
-            			<div class="pv-body">
-            				<center>
-	            				<small>Data termine sessione </small><br>
-	            				<strong style="color:black;">{$expectedEndDate}</strong>
-	            				<br>
-	            				<p style="color:light-grey;"><small>Punteggio accumulato</small><br><strong style="color:black;">{$points}/{$maxpoints}</strong></p>
-	            			</center>
-                		</div>
-                	</div>
-                	<div class="col-xs-4 card" style="height:80px;">
-            			<div class="pv-header">&nbsp;</div>
-            			<div class="pv-body">
-            				{$examListShort}
-            			</div>
-                	</div>
+	        	<div class="visible-xs .visible-xs-block card" style="height:auto;">
+	        		<div class="pv-card">
+		        		<div class="col-xs-4">
+		        			<div class="pv-body">
+	            				<h4>{$firstName} {$lastName}</h4>
+	            				<p style="color:light-grey;">{$courseName}<br>{$examName}</p>
+	            			</div>
+	            		</div>
+	            		<div class="col-xs-4">
+	            			<div class="pv-body">
+	            				<center>
+		            				<small>Scadenza</small><br>
+		            				<strong style="color:black;">{$expectedEndDate}</strong>
+		            				<br>
+		            				<p style="color:light-grey;"><small>Punti</small><br><strong style="color:black;">{$points}/{$maxpoints}</strong></p>
+		            			</center>
+	                		</div>
+	                	</div>
+	                	<div class="col-xs-4">
+	                		<div class="pv-header"></div>
+	            			<div class="pv-body">
+	            				{$examListShort}
+	            			</div>
+	                	</div>
+	                </div>
 	        	</div>
 			</div>
 			<div class="col-sm-3 .visible-xs-block, hidden-xs">
@@ -231,7 +231,7 @@
   								case 0:
   									if (tryagain == 1) {
   										swal({
-  											title: "\n",
+  											title: "",
   											text: "Puoi modificare la tua risposta",
   											type: "warning",
   											html: true,
@@ -239,10 +239,11 @@
   											confirmButtonClass: "btn-lg btn-warning",
   											confirmButtonText: "OK",
   											closeOnConfirm: true,
+  											showLoaderOnConfirm: true,
   										});
   									} else {
   										swal({
- 											title: "\n",
+ 											title: "",
  											text: itemAnswer,
   											type: "error",
   											html: true,
@@ -250,6 +251,7 @@
   											confirmButtonClass: "btn-lg btn-danger",
   											confirmButtonText: "CONTINUA",
   											closeOnConfirm: false,
+  											showLoaderOnConfirm: true,
 										},
 										function(isConfirm) {
   											if (isConfirm) {
@@ -265,7 +267,7 @@
   										window.location = "/exam/saveanswer/"+ajax_post_data_value;
   									} else {
   										swal({
-  											title: "\n",
+  											title: "",
   											text: itemAnswer,
   											type: "success",
   											html: true,
@@ -273,6 +275,7 @@
   											confirmButtonClass: "btn-lg btn-success",
   											confirmButtonText: "CONTINUA",
   											closeOnConfirm: false,
+  											showLoaderOnConfirm: true,
 										},
 										function(isConfirm) {
   											if (isConfirm) {
@@ -284,13 +287,14 @@
   								// Null question:
   								case 2:
   									swal({
-  										title: "\n",
+  										title: "",
   										text: itemAnswer,
   										type: "info",
   										showCancelButton: false,
   										confirmButtonClass: "btn-lg btn-info",
   										confirmButtonText: "CONTINUA",
   										closeOnConfirm: false,
+  										showLoaderOnConfirm: true,
   									},
   									function(isConfirm) {
   										if (isConfirm) {
