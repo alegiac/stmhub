@@ -91,8 +91,8 @@
 	        			</div>
 	        		</div>
 	        	</div>
-	        	<div class="visible-xs .visible-xs-block card" style="height:auto;">
-	        		<div class="pv-card">
+	        	<div id="base_mobile" style="position:fixed;bottom:0;left:10px;width:100%;" class="row visible-xs .visible-xs-block card">
+	        		<div class="pv-card clearfix">
 		        		<div class="col-xs-4">
 		        			<div class="pv-body">
 	            				<h4>{$firstName} {$lastName}</h4>
@@ -263,7 +263,7 @@
   									break;
   								// Corretto:
   								case 1:
-  									if (itemAnswer == "") {
+  									if (itemAnswer.length == 0) {
   										window.location = "/exam/saveanswer/"+ajax_post_data_value;
   									} else {
   										swal({
