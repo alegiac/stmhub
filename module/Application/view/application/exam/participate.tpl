@@ -91,21 +91,23 @@
 	        			</div>
 	        		</div>
 	        	</div>
-	        	<div id="base_mobile" style="position:fixed;bottom:0;left:10px;width:100%;" class="row visible-xs .visible-xs-block card">
+	        	<div id="base_mobile"  class="row visible-xs .visible-xs-block card">
 	        		<div class="pv-card clearfix">
 		        		<div class="col-xs-4">
 		        			<div class="pv-body">
-	            				<h4>{$firstName} {$lastName}</h4>
-	            				<p style="color:light-grey;">{$courseName}<br>{$examName}</p>
+	            				<strong>{$firstName} {$lastName}</strong>
+	            				<p style="color:light-grey;">{$courseName}</p>
 	            			</div>
 	            		</div>
 	            		<div class="col-xs-4">
 	            			<div class="pv-body">
 	            				<center>
-		            				<small>Scadenza</small><br>
-		            				<strong style="color:black;">{$expectedEndDate}</strong>
-		            				<br>
-		            				<p style="color:light-grey;"><small>Punti</small><br><strong style="color:black;">{$points}/{$maxpoints}</strong></p>
+							<small>Punti</small><br>
+							<strong style="color:black;">{$points}/{$maxpoints}</strong>
+							<br>
+							<p style="color:light-grey;"><small>Scadenza</small><br>
+								<strong style="color:black;">{$expectedEndDateShort}</strong>		
+							</p>
 		            			</center>
 	                		</div>
 	                	</div>
