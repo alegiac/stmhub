@@ -50,7 +50,8 @@ return array (
 			'Logger' => 'EddieJaoude\Zf2Logger'
         ),
 	),
-		'app_output' => array(
+	'app_output' => array(
+
 		'email' => array (
 			'smtp_server' => 'smtp.gmail.com',
 			'smtp_username' => 'info@smiletomove.it',

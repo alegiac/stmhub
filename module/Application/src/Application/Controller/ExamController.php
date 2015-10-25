@@ -572,6 +572,8 @@ class ExamController extends AbstractActionController
 		
 		// Dati sessione
 		$vm->expectedEndDate = $this->session->exam['session']['expectedenddate']->format('d F Y');
+		$vm->expectedEndDateShort = $this->session->exam['session']['expectedenddate']->format('d/m');
+
 		$vm->points = $this->session->exam['session']['points'];
 		$vm->maxpoints = $this->session->exam['session']['maxpoints'];
 		
