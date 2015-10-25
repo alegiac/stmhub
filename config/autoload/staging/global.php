@@ -51,15 +51,15 @@ return array (
         ),
 	),
 		'app_output' => array(
-				'email' => array (
-						'smtp_server' => 'smtp.gmail.com',
-						'smtp_username' => 'info@smiletomove.it',
-						'smtp_password' => 'changeme',
-						'from' => 'info@smiletomove.it',
-						'subject' => 'Notifica sessione di esame',
-						'bccs' => array(
-								'alessandro.giacomella@gmail.com'
-						)
-				)
+		'email' => array (
+			'smtp_server' => 'smtp.gmail.com',
+			'smtp_username' => 'info@smiletomove.it',
+			'smtp_password' => 'smile2move',
+			'from' => 'info@smiletomove.it',
+			'subject' => 'Notifica sessione di esame',
+			'bccs' => array(
+				'alessandro.giacomella@gmail.com'
+			)
 		)
+	)
 );

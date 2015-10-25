@@ -133,11 +133,12 @@ class ExamController extends AbstractActionController
 			foreach ($res as $ch) {
 				$token = $ch['token'];
 				$name = $ch['name'];
+				$btn .= '<a href="/exam/tokenchallenge/'.$token.'" class="btn btn-lg btn-primary">'.$name.'</a><br><br>';
 			}
-			$btn .= '<a href="/exam/tokenchallenge/'.$token.'" class="btn btn-lg btn-primary">'.$name.'</a><br><br>';
 		} else {
-			$btn = "Nessuna sfida disponibile al momento";
+			$btn .= "Nessuna sfida disponibile al momento";
 		}
+		
 		$vm->btn = $btn;
 		return $vm;
 	}
@@ -180,22 +181,9 @@ class ExamController extends AbstractActionController
 			$this->session->token = $stmt;
 			$this->session->exam = $res;
 			
-			// Redirect a prima domanda (se challenge)
-			if ($res['session']['challenge'] == 1) {
-				$this->redirect()->toRoute('exam_participate');
-			} else {
-			
-				// Redirect ad inizio esame (se progressive vale zero)
-				if($res['session']['progressive'] === 0) {
+			$this->redirect()->toRoute('exam_participate');
+			return;
 				
-					// Alla prima domanda visualizzo la pagina iniziale corso
-					$newExam = 1;
-					$this->redirect()->toRoute('exam_start');
-				} else {
-					$newExam = 0;
-					$this->redirect()->toRoute('exam_restart');
-				}
-			}
 		} catch (\Exception $e) {
 
 			$this->logger->warn($e->getMessage());
@@ -429,7 +417,6 @@ class ExamController extends AbstractActionController
 		$this->init();
 		
 		$this->session->error_message = "";
-		
 		if (!$this->session->offsetExists('exam')) {
 			// Accesso utente a pagina senza sessione
 			$this->logger->notice("Utente ha eseguito l'accesso diretto alla pagina di partecipazione (o affini) senza esame in sessione");

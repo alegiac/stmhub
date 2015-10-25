@@ -286,21 +286,27 @@
   									break;
   								// Null question:
   								case 2:
-  									swal({
-  										title: "",
-  										text: itemAnswer,
-  										type: "info",
-  										showCancelButton: false,
-  										confirmButtonClass: "btn-lg btn-info",
-  										confirmButtonText: "CONTINUA",
-  										closeOnConfirm: false,
-  										showLoaderOnConfirm: true,
-  									},
-  									function(isConfirm) {
-  										if (isConfirm) {
-  											window.location = "/exam/timeout";
-  										}
-  									});
+  									if (itemAnswer.length == 0) {
+  										window.location = "/exam/timeout";
+  									} else {
+  									
+	  									swal({
+	  										title: "",
+	  										text: itemAnswer,
+	  										type: "info",
+	  										showCancelButton: false,
+	  										confirmButtonClass: "btn-lg btn-info",
+	  										confirmButtonText: "CONTINUA",
+	  										closeOnConfirm: false,
+	  										showLoaderOnConfirm: true,
+	  									},
+	  									function(isConfirm) {
+	  										if (isConfirm) {
+	  											window.location = "/exam/timeout";
+	  										}
+	  									});
+  									}
+  									break;
   							}
   						},
 					});

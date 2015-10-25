@@ -729,10 +729,12 @@ final class ExamService extends BaseService
 		$session = $this->getStudentHasCourseHasExamRepo()->find($sessionId);
 		$listOfChallenges = $this->getStudentHasCourseHasExamRepo()->findChallengesByStudentOnCourse($session->getStudentHasCourse());
 		if (count($listOfChallenges) > 0) {
+			
 			foreach ($listOfChallenges as $challenge)
 			{
 				/* @var $challenge StudentHasCourseHasExam */
 				if ($challenge->getCompleted() === 0) {
+					
 					$arr = array(
 							'id' => $challenge->getId(),
 							'token' => $challenge->getStudentHasCourse()->getStudent()->getIdentifier().".".$challenge->getToken(),
