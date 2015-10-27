@@ -452,7 +452,6 @@ final class ExamService extends BaseService
     public function responseReorder($sessionId,$examId,$itemId,$optionId,$value)
     {
     	$this->getEntityManager()->beginTransaction();
-    	
     	$session = $this->getStudentHasCourseHasExamRepo()->find($sessionId);
     	$exam = $this->getExamRepo()->find($examId);
     	$item = $this->getItemRepo()->find($itemId);
@@ -485,7 +484,8 @@ final class ExamService extends BaseService
     	// Aggiornamento avanzamento
     	$currentProgressive = $session->getProgressive();
     	$session->setProgressive($currentProgressive+1);
-    	if ($session->getExam() == $currentProgressive+1) {
+    	
+    	if (count($session->getItem()) == $currentProgressive+1) {
     		$endDate = new \DateTime();
     		$session->setCompleted(1);
     		$session->setEndDate($endDate);
@@ -499,7 +499,7 @@ final class ExamService extends BaseService
     	} else {
     		$retval = 0;
     	}
-    	 
+    	
     	$this->getEntityManager()->flush();
     	$this->getEntityManager()->commit();
     	 
