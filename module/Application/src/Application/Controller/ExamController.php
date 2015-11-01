@@ -173,9 +173,17 @@ class ExamController extends AbstractActionController
 			$res = $this->getExamService()->getCurrentExamSessionItemByToken($stmt,$challenge);
 		 	
 			if ($res['result'] === 0) {
-				// No exam available
-				$this->redirect()->toRoute('exam_nothing');
-				return;
+				// No exam available:
+				if ($challenge === false) {
+					// No mandatory exams, try to load challenges
+					$this->redirect()->toRoute('exam_tokenchallenge',array(
+						'tkn' => $stmt	
+					));
+					return;
+				} else {
+					$this->redirect()->toRoute('exam_nothing');
+					return;
+				}
 			}
 			
 			$this->session->token = $stmt;
@@ -203,7 +211,8 @@ class ExamController extends AbstractActionController
 	
 	public function nothingAction()
 	{
-		return new ViewModel();
+		$this->initExam();
+		return $this->composeParticipationVM();
 	}
 	
 	/**
@@ -556,7 +565,7 @@ class ExamController extends AbstractActionController
 		// Dati studente
 		$vm->firstName = $this->session->exam['student']['firstname'];
 		$vm->lastName = $this->session->exam['student']['lastname'];
-		$this->session->exam['student']['sex'] == 'f' ? $vm->sexDesc = 'a' : $vm->sexDesc = 'o';
+		$this->session->exam['student']['sex'] == 'F' ? $vm->sexDesc = 'a' : $vm->sexDesc = 'o';
 		
 		// Dati corso
 		$vm->courseName = $this->session->exam['course']['name'];
