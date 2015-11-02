@@ -9,6 +9,18 @@
     		height : 40px;
     		margin-top : 40px;
   		}
+  		ul {
+    		display: table;
+		}
+
+		ul > li {
+    		display: table-row;
+		}
+
+		ul > li::before {
+    		display: table-cell; /* aha! */
+    		text-align: right;
+		}
 	</style>
 {/block}
 
@@ -52,6 +64,8 @@
 					</div>
 	        	{/if}
 	        	<div class="card">
+	        		<img src="/static/assets/img/TRAINtoACTION.png" style="margin-top: 5px; margin-left: 5px;"/>
+	        	
 	        		{if $remainingTime lte -1}
 	        		{else}
 	        			<div class="card-header">

@@ -10,6 +10,7 @@
 	    	<div class="col-sm-9">
             	<!-- Welcome area -->
             	<div class="card">
+            		<img src="/static/assets/img/TRAINtoACTION.png" style="margin-top: 5px; margin-left: 5px;"/>
 	        		<div class="card-header">
 	        			<div class="row">
 	        				<center>

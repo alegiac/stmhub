@@ -171,14 +171,12 @@ class ExamController extends AbstractActionController
 		try {
 			// Load session info
 			$res = $this->getExamService()->getCurrentExamSessionItemByToken($stmt,$challenge);
-		 	
+		
 			if ($res['result'] === 0) {
 				// No exam available:
 				if ($challenge === false) {
 					// No mandatory exams, try to load challenges
-					$this->redirect()->toRoute('exam_tokenchallenge',array(
-						'tkn' => $stmt	
-					));
+					$this->redirect()->toRoute('exam_challenges');
 					return;
 				} else {
 					$this->redirect()->toRoute('exam_nothing');
