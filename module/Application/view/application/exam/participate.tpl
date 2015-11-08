@@ -9,19 +9,22 @@
     		height : 40px;
     		margin-top : 40px;
   		}
-  		ul {
-    		display: table;
-		}
-
-		ul > li {
-    		display: table-row;
-		}
-
-		ul > li::before {
-    		display: table-cell; /* aha! */
-    		text-align: right;
-		}
-	</style>
+  		.scrambled { 
+  			list-style-type: none; 
+  			margin: 0; 
+  			padding: 0; 
+  			width: 60%; 
+  		}
+  		.scrambled li { 
+  			margin: 0 5px 5px 5px; 
+  			padding: 5px; 
+  			font-size: 2em;
+  			text-transform: uppercase; 
+  			height: 1.5em; 
+  		}
+  		html>body .scrambled li { height: 1.5em; line-height: 1.2em; }
+  			.ui-state-highlight { height: 1.5em; line-height: 1.2em; }
+  	</style>
 {/block}
 
 {block name="main"}
@@ -117,7 +120,7 @@
 	            			<div class="pv-body">
 	            				<center>
 							<small>Punti</small><br>
-							<strong style="color:black;">{$points}/{$maxpoints}</strong>
+							<strong style="color:black;">{$points}</strong>
 							<br>
 							<p style="color:light-grey;"><small>Scadenza</small><br>
 								<strong style="color:black;">{$expectedEndDateShort}</strong>		
@@ -140,34 +143,25 @@
                 	<div class="pv-header">
                    	</div>
                             
-                    <div class="pv-body">
+                    <div class="pv-body" style="margin-top: 30px;">
                         <h2>{$firstName} {$lastName}</h2>
-                        <small>{$email}</small>
+                        <center><br><small>Scadenza</small><br><h4>{$expectedEndDate}</h4><br></center>
+                        <div class="mini-charts-item bgm-cyan">
+							<div class="clearfix">
+	                    		<div class="count">
+	                        		<small>Punti</small>
+	                        		<h2>{$points}</h2>
+	                    		</div>
+	                		</div>
+						</div>
                     </div>
                 </div>
-                
-                <div class="card">
+                <div class="card" style="margin-top:-25px;">
                 	<div class="pv-body">
                 		<center><br><h4>{$courseName}</h4><hr><br></center>
                 		{$examList}
                 	</div>
                 </div>
-                
-                <div class="card">
-                	<div class="pv-body">
-                		<center><br><small>Data termine sessione</small><br><h4>{$expectedEndDate}</h4><br></center>
-                	</div>
-                </div>
-                
-                <div class="mini-charts-item bgm-cyan">
-					<div class="clearfix">
-	                    <div class="chart chart-pie stats-pie"></div>
-	                    <div class="count">
-	                        <small>Punteggio accumulato</small>
-	                        <h2>{$points}/{$maxpoints}</h2>
-	                    </div>
-	                </div>
-				</div>
             </div>
 		</div>
 	</section>
@@ -181,8 +175,12 @@
 		
 		{literal}
 			$(document).ready(function() {
-			
-				$('.scrambled').sortable();
+	
+				$('.scrambled').sortable(
+					{
+						placeholder: "ui-state-highlight",
+					}
+				);
 				
 				selectedOption = $('select :selected').val();
 				if (selectedOption == "") {

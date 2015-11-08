@@ -121,16 +121,12 @@ final class StudentService extends BaseService
     			// Pop an item from the global-exam-items array
     			// Check if it has a parent dependency
     			$theItem = array_pop($itemsForChallenge);
-    			echo "count ".count($itemsForChallenge)."<br>";
-    			echo "ciclo ".$j." - tolto elemento da array ".count($itemsForChallenge)."<br>";
-    		
+    			
     			/* @var $theItem ExamHasItem */
     			if ($theItem->getItem()->getItem() != null) {
-    				echo "item trovato <br>";
     				$found = false;
     				foreach ($session->getItem() as $itemIn) {
     					/* @var $itemIn Item */
-    					echo "in ciclo sub";
     					if ($itemIn == $theItem->getItem()->getItem()) {
     						$found = true; break;
     					}
@@ -199,16 +195,12 @@ final class StudentService extends BaseService
 	    			// Pop an item from the global-exam-items array
 	    			// Check if it has a parent dependency
 	    			$theItem = array_pop($itemsForExam);
-	    			echo "count ".count($itemsForExam)."<br>";
-	    			echo "ciclo ".$j." - tolto elemento da array ".count($itemsForExam)."<br>";
 	    			
 	    			/* @var $theItem ExamHasItem */
 	    			if ($theItem->getItem()->getItem() != null) {
-	    				echo "item trovato <br>";
 	    				$found = false;
 	    				foreach ($session->getItem() as $itemIn) {
 	    					/* @var $itemIn Item */
-	    					echo "in ciclo sub";
 	    					if ($itemIn == $theItem->getItem()->getItem()) {
 	    						$found = true; break;
 	    					}
@@ -229,7 +221,7 @@ final class StudentService extends BaseService
     	}
     	$this->getEntityManager()->commit();
     	
-    	return "Completed";
+    	return "Completato: studente ".$student->getFirstname()." ".$student->getLastname()." assegnato a corso ".$course->getName();
 	}  
 	
 	/**

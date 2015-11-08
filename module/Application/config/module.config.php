@@ -52,7 +52,7 @@ return array(
         	'tools_structure' => array(
         		'type' => 'Segment',
         		'options' => array(
-        			'route' => '/tools/structure',
+        			'route' => '/tools/structure/:user/:course',
         			'defaults' => array(
         					'__NAMESPACE__' => 'Application\Controller',
         					'controller' => 'Tools',

@@ -207,6 +207,7 @@ class ExamController extends AbstractActionController
 		}
 	}
 	
+	
 	public function nothingAction()
 	{
 		$this->initExam();
@@ -236,6 +237,7 @@ class ExamController extends AbstractActionController
 	/**
 	 * Visualizzazione pagina interstiziale di inizio esame. Viene visualizzata in fase di inizio esame
 	 * 
+	 * @deprecated
 	 * @return void
 	 * @see \Zend\Mvc\Controller\AbstractActionController 
 	 */
@@ -249,18 +251,10 @@ class ExamController extends AbstractActionController
 		return $this->composeParticipationVM();
 	}
 	
-	public function resetAction()
-	{
-		$this->init();
-		$sessionId = $this->params('id');
-		$this->getExamService()->resetDemo($sessionId);
-		$this->cleanSessionExamVars();
-		echo "Sessione resettata";die();
-		
-	}
 	/**
 	 * Visualizzazione pagina interstiziale di inizio esame. Viene visualizzata in fase di ripresa esame
-	 * 
+	 *
+	 * @deprecated
 	 * @return void
 	 * @see \Zend\Mvc\Controller\AbstractActionController 
 	 */
@@ -535,7 +529,12 @@ class ExamController extends AbstractActionController
 			$fontSize = "80%";
 		}
 		
-		$tag = "<ul style=\"list-style-type: none;\">";
+		if ($doShort === true) {
+			$tag = "<ul style=\"list-style-type: none;margin-top:5px;\">";
+		} else {
+			$tag = "<ul style=\"list-style-type: none;margin-top:-20px;\">";
+		}
+
 		foreach ($list as $exam) {
 			if ($exam['started'] === false) {
 				$tag .='<li style="color: lightgrey; font-size:'.$fontSize.';"><i class="fa fa-clock-o fa-fw"></i>&nbsp;&nbsp;'.$exam['name'].'</li>';
@@ -578,11 +577,11 @@ class ExamController extends AbstractActionController
 		}
 		
 		// Dati sessione
-		$vm->expectedEndDate = $this->session->exam['session']['expectedenddate']->format('d F Y');
+		$vm->expectedEndDate = $this->session->exam['session']['expectedenddate']->format('m/Y');
 		$vm->expectedEndDateShort = $this->session->exam['session']['expectedenddate']->format('d/m');
 
 		$vm->points = $this->session->exam['session']['points'];
-		$vm->maxpoints = $this->session->exam['session']['maxpoints'];
+		//$vm->maxpoints = $this->session->exam['session']['maxpoints'];
 		
 		// Dati esame
 		$vm->examName = $this->session->exam['exam']['name'];

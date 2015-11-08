@@ -19,6 +19,7 @@ use Core\Exception\InconsistentContent;
 use Application\Entity\Exam;
 use Application\Entity\Course;
 use Core\Constants\Errorcode;
+use Application\Entity\StudentHasCourse;
 
 final class ExamService extends BaseService
 {	
@@ -229,6 +230,11 @@ final class ExamService extends BaseService
     	return $totPoints;
     }
     
+    private function getTotalPointsForStudentInCourse(StudentHasCourse $studentCourse)
+    {
+    	return $this->getStudentHasCourseHasExamRepo()->sumStudentPoints($studentCourse);
+    }
+    
     /**
      * Acquisizione delle statistiche per studente, a partire da una sessione di esame
      * 
@@ -300,13 +306,7 @@ final class ExamService extends BaseService
     	
     	if ($session) {
     		$retval['course'] = array(
-    			'id' => $session->getStudentHasCourse()->getCourse()->getId(),
     			'name' => $session->getStudentHasCourse()->getCourse()->getName(),
-    			'description' => $session->getStudentHasCourse()->getCourse()->getDescription(),
-    			'durationweek' => $session->getStudentHasCourse()->getCourse()->getDurationweek(),
-    			'periodicity' => $session->getStudentHasCourse()->getCourse()->getPeriodicityweek(),
-    			'numexams' => $session->getStudentHasCourse()->getCourse()->getTotalexams(),
-    			'weekday' => $session->getStudentHasCourse()->getCourse()->getWeekday()->getId()	
     		);
     		
     		$retval['exam'] = array(
@@ -314,10 +314,6 @@ final class ExamService extends BaseService
     			'name' => $session->getExam()->getName(),
     			'description' => $session->getExam()->getDescription(),
     			'totalitems' => $session->getExam()->getTotalitems(),
-    			'photourl' => $session->getExam()->getImageurl(),
-    			'progress' => $session->getExam()->getProgOnCourse(),
-    			'totalpoints' => $session->getExam()->getPointsIfCompleted(),
-    			'outtimereduction' => $session->getExam()->getReducePercentageOuttime(),
     		);
     		$retval['allexams'] = $this->getExamsForCourse($session->getStudentHasCourse()->getCourse());
     		$retval['student'] = array(
@@ -332,14 +328,15 @@ final class ExamService extends BaseService
     			'answer' => $session->getAnswer(),
     			'completed' => $session->getCompleted(),
     			'expectedenddate' => $session->getExpectedEndDate(),
-    			'points' => $session->getPoints(),
-    			'maxpoints' => $this->getSessionMaxPoints($session),
+    			//'points' => $session->getPoints(),
+    			'points' => $this->getTotalPointsForStudentInCourse($session->getStudentHasCourse()),
+    			//'maxpoints' => $this->getSessionMaxPoints($session),
     			'progressive' => $session->getProgressive(),
     			'startdate' => $session->getStartDate(),
     			'challenge' => !$session->getMandatory(),
     		);
     		
-    		$retval['stats'] = $this->getStatsForStudent($session);
+    		//$retval['stats'] = $this->getStatsForStudent($session);
     		$arr = $session->getItem()->toArray();
     		foreach ($arr as $index => $ei) {
     			if ($index == $session->getProgressive()) {
@@ -359,7 +356,6 @@ final class ExamService extends BaseService
     			}
     		}
     	}
-    	
     	return $retval;
     }
     

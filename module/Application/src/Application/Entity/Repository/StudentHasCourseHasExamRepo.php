@@ -16,6 +16,17 @@ use Doctrine\ORM\QueryBuilder;
  */
 class StudentHasCourseHasExamRepo extends \Doctrine\ORM\EntityRepository
 {
+	
+	public function sumStudentPoints(StudentHasCourse $studentInCourse)
+	{
+		$qb = $this->createQueryBuilder("sum");
+		$qb->add('select',"SUM(r.points)")
+		->add('from', 'Application\Entity\StudentHasCourseHasExam r')
+		->add('where', 'r.studentHasCourse = :shc');
+		$query = $qb->getQuery()->setParameter('shc', $studentInCourse);
+		return $query->getResult()[0][1];
+	}
+	
 	/**
 	 * Acquisizione unico record sessione per identificativo
 	 *
