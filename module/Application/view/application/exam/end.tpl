@@ -14,8 +14,7 @@
 	        		<div class="card-header">
 	        			<div class="row">
 	        				<center>
-	        					<h2>Complimenti {$firstName}!</h2>
-	        					<h3>Hai completato questa sessione!</h3>
+	        					{$message}
 	        					<hr>
 	        					<h4>Hai accumulato {$points} punti, continua a seguirci!</h4>
 	                   		</center>

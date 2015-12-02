@@ -14,7 +14,7 @@
 	        		<div class="card-header">
 	        			<div class="row">
 	        				<center>
-	        					<h3>Raccogli la sfida</h3>
+	        					<h3>RACCOGLI LE SFIDE E MIGLIORA LA TUA POSIZIONE IN CLASSIFICA</h3>
 	        				</center>
 	                    </div>
 	                    <br><br><br><br><br><br>

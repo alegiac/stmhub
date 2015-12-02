@@ -133,7 +133,12 @@ class ExamController extends AbstractActionController
 			foreach ($res as $ch) {
 				$token = $ch['token'];
 				$name = $ch['name'];
-				$btn .= '<a href="/exam/tokenchallenge/'.$token.'" class="btn btn-lg btn-primary">'.$name.'</a><br><br>';
+				$totQuestions = $ch['questions'];
+				$totPoints = $ch['maxpoints'];
+				
+				$text = $name."   [".$totQuestions." quiz - ".$totPoints." punti]";
+				
+				$btn .= '<a href="/exam/tokenchallenge/'.$token.'" class="btn btn-lg btn-primary">'.$text.'</a><br><br>';
 			}
 		} else {
 			$btn .= "Nessuna sfida disponibile al momento";
@@ -166,29 +171,33 @@ class ExamController extends AbstractActionController
 	private function tokenize($challenge)
 	{
 		$this->init();
-		
 		$stmt = $this->params('tkn',"");
+		
 		try {
 			// Load session info
 			$res = $this->getExamService()->getCurrentExamSessionItemByToken($stmt,$challenge);
-		
+			
 			if ($res['result'] === 0) {
+				
 				// No exam available:
 				if ($challenge === false) {
+				
 					// No mandatory exams, try to load challenges
 					$this->redirect()->toRoute('exam_challenges');
 					return;
 				} else {
+					
 					$this->redirect()->toRoute('exam_nothing');
 					return;
 				}
+			} else {
+			
+				$this->session->token = $stmt;
+				$this->session->exam = $res;
+			
+				$this->redirect()->toRoute('exam_participate');
+				return;
 			}
-			
-			$this->session->token = $stmt;
-			$this->session->exam = $res;
-			
-			$this->redirect()->toRoute('exam_participate');
-			return;
 				
 		} catch (\Exception $e) {
 
@@ -284,7 +293,12 @@ class ExamController extends AbstractActionController
 		$this->session->offsetUnset('startedTime');
 		$this->session->offsetUnset('usedTries');
 		
-		$vm = $this->composeParticipationVM();
+		$vm = new ViewModel();
+		// Dati studente
+		$vm->firstName = $this->session->exam['student']['firstname'];
+		$vm->lastName = $this->session->exam['student']['lastname'];
+		
+		print_r($this->session->exam);die();
 		
 		// Resetta i dati di sessione
 		//$this->cleanSessionExamVars();
@@ -559,63 +573,69 @@ class ExamController extends AbstractActionController
 		$tmpMedia = "";
 		$vm = new ViewModel();
 
-		// Dati studente
-		$vm->firstName = $this->session->exam['student']['firstname'];
-		$vm->lastName = $this->session->exam['student']['lastname'];
-		$this->session->exam['student']['sex'] == 'F' ? $vm->sexDesc = 'a' : $vm->sexDesc = 'o';
+		if (isset($this->session->exam)) {
 		
-		// Dati corso
-		$vm->courseName = $this->session->exam['course']['name'];
-		
-		// Esami (o sfida)
-		if ($this->session->exam['session']['challenge'] == 1) {
-			$vm->examList = $this->composeChallengeList($this->session->exam['exam']['name']);
-			$vm->examListShort = $this->composeChallengeList($this->session->exam['exam']['name'],true);
-		} else {
-			$vm->examList = $this->composeExamList($this->session->exam['allexams']);
-			$vm->examListShort = $this->composeExamList($this->session->exam['allexams'],true);
+			// Dati studente
+			$vm->firstName = $this->session->exam['student']['firstname'];
+			$vm->lastName = $this->session->exam['student']['lastname'];
+			$this->session->exam['student']['sex'] == 'F' ? $vm->sexDesc = 'a' : $vm->sexDesc = 'o';
+			
+			// Dati corso
+			$vm->courseName = $this->session->exam['course']['name'];
+			
+			// Esami (o sfida)
+			if ($this->session->exam['session']['challenge'] == 1) {
+				$vm->examList = $this->composeChallengeList($this->session->exam['exam']['name']);
+				$vm->examListShort = $this->composeChallengeList($this->session->exam['exam']['name'],true);
+			} else {
+				$vm->examList = $this->composeExamList($this->session->exam['allexams']);
+				$vm->examListShort = $this->composeExamList($this->session->exam['allexams'],true);
+			}
+			
+			// Dati sessione
+			$vm->expectedEndDate = $this->session->exam['session']['expectedenddate']->format('m/Y');
+			$vm->expectedEndDateShort = $this->session->exam['session']['expectedenddate']->format('d/m');
+	
+			$vm->points = $this->session->exam['session']['points'];
+			
+			$vm->sessionIndex = $this->session->exam['session']['index'];
+			$vm->actualQuestion = $this->session->exam['current_item']['question_number'];
+			$vm->totalQuestion = $this->session->exam['current_item']['question_total'];
+			
+			// Dati esame
+			$vm->examName = $this->session->exam['exam']['name'];
+			$vm->examDesc = $this->session->exam['exam']['description'];
+			$vm->totalItems = $this->session->exam['exam']['totalitems'];
+			
+			// Domanda corrente (in base a progressivo)
+			$itemProg = (int)$this->session->exam['session']['progressive'];
+			$item = $this->session->exam['current_item'];
+			
+			$vm->itemProgressive = $itemProg;
+			$vm->itemQuestion = utf8_encode($item['question']);
+			
+			// Calcolo di tempo rimanente e tentativi rimanenti basandosi su eventuali dati di sessione
+			if ($this->session->startedTime) {
+				$now = new \DateTime();
+				$diffInSeconds = $now->getTimestamp() - $this->session->startedTime->getTimestamp();
+				$vm->remainingTime = $item['maxsecs']-$diffInSeconds;
+			} else {
+				$vm->remainingTime = $item['maxsecs'];
+				$this->session->startedTime = new \DateTime();
+			}
+			
+			if ($this->session->usedTries) {
+				$vm->maxTries = $item['maxtries']-$this->session->usedTries;
+				$vm->usedTries = $this->session->usedTries;
+			} else {
+				$vm->maxTries = $item['maxtries'];
+				$this->session->usedTries = 0;
+				$vm->usedTries = $this->session->usedTries;
+			}
+			
+			// Gestione elementi multimediali
+			$vm->media = $this->composeMedia($item['media']);
 		}
-		
-		// Dati sessione
-		$vm->expectedEndDate = $this->session->exam['session']['expectedenddate']->format('m/Y');
-		$vm->expectedEndDateShort = $this->session->exam['session']['expectedenddate']->format('d/m');
-
-		$vm->points = $this->session->exam['session']['points'];
-		//$vm->maxpoints = $this->session->exam['session']['maxpoints'];
-		
-		// Dati esame
-		$vm->examName = $this->session->exam['exam']['name'];
-		$vm->examDesc = $this->session->exam['exam']['description'];
-		$vm->totalItems = $this->session->exam['exam']['totalitems'];
-		
-		// Domanda corrente (in base a progressivo)
-		$itemProg = (int)$this->session->exam['session']['progressive'];
-		$item = $this->session->exam['current_item'];
-		
-		$vm->itemProgressive = $itemProg;
-		$vm->itemQuestion = utf8_encode($item['question']);
-		
-		// Calcolo di tempo rimanente e tentativi rimanenti basandosi su eventuali dati di sessione
-		if ($this->session->startedTime) {
-			$now = new \DateTime();
-			$diffInSeconds = $now->getTimestamp() - $this->session->startedTime->getTimestamp();
-			$vm->remainingTime = $item['maxsecs']-$diffInSeconds;
-		} else {
-			$vm->remainingTime = $item['maxsecs'];
-			$this->session->startedTime = new \DateTime();
-		}
-		
-		if ($this->session->usedTries) {
-			$vm->maxTries = $item['maxtries']-$this->session->usedTries;
-			$vm->usedTries = $this->session->usedTries;
-		} else {
-			$vm->maxTries = $item['maxtries'];
-			$this->session->usedTries = 0;
-			$vm->usedTries = $this->session->usedTries;
-		}
-		
-		// Gestione elementi multimediali
-		$vm->media = $this->composeMedia($item['media']);
 		
 		if (strlen($this->session->message) > 0) {
 			$vm->enableMessage 	= true;

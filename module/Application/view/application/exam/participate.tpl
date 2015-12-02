@@ -119,12 +119,16 @@
 	            		<div class="col-xs-4">
 	            			<div class="pv-body">
 	            				<center>
-							<small>Punti</small><br>
-							<strong style="color:black;">{$points}</strong>
-							<br>
-							<p style="color:light-grey;"><small>Scadenza</small><br>
-								<strong style="color:black;">{$expectedEndDateShort}</strong>		
-							</p>
+									<small>Punti</small><br>
+									<strong style="color:black;">{$points}</strong><br>
+									<p>
+										<small style="color:light-grey;">Scadenza</small>:  <strong style="color:black;">{$expectedEndDateShort}</strong><br>
+										&nbsp;
+										<small style="color:light-grey;">Sessione</small>:  <strong style="color:black;">{$sessionIndex}</strong><br>
+										&nbsp;
+										<small style="color:light-grey;">Domanda</small>:  <strong style="color:black;">{$actualQuestion}/{$totalQuestion}</strong><br>
+										&nbsp;		
+									</p>
 		            			</center>
 	                		</div>
 	                	</div>
@@ -145,7 +149,11 @@
                             
                     <div class="pv-body" style="margin-top: 30px;">
                         <h2>{$firstName} {$lastName}</h2>
-                        <center><br><small>Scadenza</small><br><h4>{$expectedEndDate}</h4><br></center>
+                        <div class="row">
+                        <div class="col-sm-4"><center><br><small>Scadenza</small><br><h4>{$expectedEndDate}</h4><br></center></div>
+                        <div class="col-sm-4"><center><br><small>Sessione</small><br><h4>{$sessionIndex}</h4><br></center></div>
+                        <div class="col-sm-4"><center><br><small>Domanda</small><br><h4>{$actualQuestion}/{$totalQuestion}</h4><br></center></div>
+                        </div>
                         <div class="mini-charts-item bgm-cyan">
 							<div class="clearfix">
 	                    		<div class="count">

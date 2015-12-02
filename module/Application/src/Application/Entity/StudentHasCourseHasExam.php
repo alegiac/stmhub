@@ -99,6 +99,20 @@ class StudentHasCourseHasExam
     private $notifiedDate;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="real_start_date", type="datetime", nullable=true)
+     */
+    private $realStartDate;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="session_index", type="string", length=45, nullable=true)
+     */
+    private $sessionIndex;
+
+    /**
      * @var \Application\Entity\Exam
      *
      * @ORM\ManyToOne(targetEntity="Application\Entity\Exam")
@@ -414,6 +428,54 @@ class StudentHasCourseHasExam
     public function getNotifiedDate()
     {
         return $this->notifiedDate;
+    }
+
+    /**
+     * Set realStartDate
+     *
+     * @param \DateTime $realStartDate
+     *
+     * @return StudentHasCourseHasExam
+     */
+    public function setRealStartDate($realStartDate)
+    {
+        $this->realStartDate = $realStartDate;
+
+        return $this;
+    }
+
+    /**
+     * Get realStartDate
+     *
+     * @return \DateTime
+     */
+    public function getRealStartDate()
+    {
+        return $this->realStartDate;
+    }
+
+    /**
+     * Set sessionIndex
+     *
+     * @param string $sessionIndex
+     *
+     * @return StudentHasCourseHasExam
+     */
+    public function setSessionIndex($sessionIndex)
+    {
+        $this->sessionIndex = $sessionIndex;
+
+        return $this;
+    }
+
+    /**
+     * Get sessionIndex
+     *
+     * @return string
+     */
+    public function getSessionIndex()
+    {
+        return $this->sessionIndex;
     }
 
     /**

@@ -1,0 +1,479 @@
+2015-12-02T09:52:48+01:00 NOTICE (5): Utente ha eseguito l'accesso diretto alla pagina di partecipazione (o affini) senza esame in sessione {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:09:43+01:00 ERR (3): Argument 1 passed to Application\Service\ExamService::composeAnswer() must be an instance of Application\Entity\StudentHasCourseHasExam, null given, called in /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php on line 721 and defined {"errno":4096,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":301,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:09:43+01:00 NOTICE (5): Utente ha eseguito l'accesso diretto alla pagina di partecipazione (o affini) senza esame in sessione {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:10:33+01:00 NOTICE (5): Utente ha eseguito l'accesso diretto alla pagina di partecipazione (o affini) senza esame in sessione {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:10:33+01:00 WARN (4): Invalid argument supplied for foreach() {"errno":2,"file":"/private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php","line":542,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:10:33+01:00 WARN (4): Invalid argument supplied for foreach() {"errno":2,"file":"/private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php","line":542,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:10:35+01:00 WARN (4): No exam session found for the token session part [ff33a8f10515011cba0d191ae58f7f9a4dd7a3e1] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:10:35+01:00 INFO (6): #0 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(178): Application\Service\ExamService->getCurrentExamSessionItemByToken('39311445254797....', true)
+#1 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(168): Application\Controller\ExamController->tokenize(true)
+#2 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractActionController.php(82): Application\Controller\ExamController->tokenchallengeAction()
+#3 [internal function]: Zend\Mvc\Controller\AbstractActionController->onDispatch(Object(Zend\Mvc\MvcEvent))
+#4 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractController.php(118): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/DispatchListener.php(93): Zend\Mvc\Controller\AbstractController->dispatch(Object(ZF\ContentNegotiation\Request), Object(Zend\Http\PhpEnvironment\Response))
+#8 [internal function]: Zend\Mvc\DispatchListener->onDispatch(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#10 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#11 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(314): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#12 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#13 {main} {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:10:36+01:00 WARN (4): The "." character is missing in the token [] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:10:36+01:00 INFO (6): #0 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(178): Application\Service\ExamService->getCurrentExamSessionItemByToken('', false)
+#1 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(163): Application\Controller\ExamController->tokenize(false)
+#2 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractActionController.php(82): Application\Controller\ExamController->tokenAction()
+#3 [internal function]: Zend\Mvc\Controller\AbstractActionController->onDispatch(Object(Zend\Mvc\MvcEvent))
+#4 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractController.php(118): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/DispatchListener.php(93): Zend\Mvc\Controller\AbstractController->dispatch(Object(ZF\ContentNegotiation\Request), Object(Zend\Http\PhpEnvironment\Response))
+#8 [internal function]: Zend\Mvc\DispatchListener->onDispatch(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#10 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#11 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(314): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#12 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#13 {main} {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:10:36+01:00 NOTICE (5): Received inconsistant/malfrormed request token [] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:10:36+01:00 WARN (4): No student found for the token student part [76601445254797] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:10:36+01:00 INFO (6): #0 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(178): Application\Service\ExamService->getCurrentExamSessionItemByToken('76601445254797....', false)
+#1 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(163): Application\Controller\ExamController->tokenize(false)
+#2 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractActionController.php(82): Application\Controller\ExamController->tokenAction()
+#3 [internal function]: Zend\Mvc\Controller\AbstractActionController->onDispatch(Object(Zend\Mvc\MvcEvent))
+#4 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractController.php(118): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/DispatchListener.php(93): Zend\Mvc\Controller\AbstractController->dispatch(Object(ZF\ContentNegotiation\Request), Object(Zend\Http\PhpEnvironment\Response))
+#8 [internal function]: Zend\Mvc\DispatchListener->onDispatch(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#10 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#11 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(314): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#12 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#13 {main} {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:10:43+01:00 ERR (3): Argument 1 passed to Application\Service\ExamService::composeAnswer() must be an instance of Application\Entity\StudentHasCourseHasExam, null given, called in /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php on line 721 and defined {"errno":4096,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":301,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:10:43+01:00 NOTICE (5): Utente ha eseguito l'accesso diretto alla pagina di partecipazione (o affini) senza esame in sessione {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:10:50+01:00 ERR (3): Argument 1 passed to Application\Service\ExamService::composeAnswer() must be an instance of Application\Entity\StudentHasCourseHasExam, null given, called in /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php on line 705 and defined {"errno":4096,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":301,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:10:50+01:00 NOTICE (5): Utente ha eseguito l'accesso diretto alla pagina di partecipazione (o affini) senza esame in sessione {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:12:18+01:00 NOTICE (5): Utente ha eseguito l'accesso diretto alla pagina di partecipazione (o affini) senza esame in sessione {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:12:18+01:00 WARN (4): Invalid argument supplied for foreach() {"errno":2,"file":"/private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php","line":542,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:12:18+01:00 WARN (4): Invalid argument supplied for foreach() {"errno":2,"file":"/private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php","line":542,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:12:20+01:00 WARN (4): No exam session found for the token session part [ff33a8f10515011cba0d191ae58f7f9a4dd7a3e1] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:12:20+01:00 INFO (6): #0 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(178): Application\Service\ExamService->getCurrentExamSessionItemByToken('39311445254797....', true)
+#1 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(168): Application\Controller\ExamController->tokenize(true)
+#2 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractActionController.php(82): Application\Controller\ExamController->tokenchallengeAction()
+#3 [internal function]: Zend\Mvc\Controller\AbstractActionController->onDispatch(Object(Zend\Mvc\MvcEvent))
+#4 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractController.php(118): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/DispatchListener.php(93): Zend\Mvc\Controller\AbstractController->dispatch(Object(ZF\ContentNegotiation\Request), Object(Zend\Http\PhpEnvironment\Response))
+#8 [internal function]: Zend\Mvc\DispatchListener->onDispatch(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#10 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#11 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(314): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#12 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#13 {main} {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:12:21+01:00 WARN (4): The "." character is missing in the token [] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:12:21+01:00 INFO (6): #0 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(178): Application\Service\ExamService->getCurrentExamSessionItemByToken('', false)
+#1 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(163): Application\Controller\ExamController->tokenize(false)
+#2 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractActionController.php(82): Application\Controller\ExamController->tokenAction()
+#3 [internal function]: Zend\Mvc\Controller\AbstractActionController->onDispatch(Object(Zend\Mvc\MvcEvent))
+#4 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractController.php(118): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/DispatchListener.php(93): Zend\Mvc\Controller\AbstractController->dispatch(Object(ZF\ContentNegotiation\Request), Object(Zend\Http\PhpEnvironment\Response))
+#8 [internal function]: Zend\Mvc\DispatchListener->onDispatch(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#10 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#11 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(314): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#12 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#13 {main} {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:12:21+01:00 NOTICE (5): Received inconsistant/malfrormed request token [] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:13:02+01:00 WARN (4): No student found for the token student part [76601445254797] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:13:02+01:00 INFO (6): #0 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(178): Application\Service\ExamService->getCurrentExamSessionItemByToken('76601445254797....', false)
+#1 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(163): Application\Controller\ExamController->tokenize(false)
+#2 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractActionController.php(82): Application\Controller\ExamController->tokenAction()
+#3 [internal function]: Zend\Mvc\Controller\AbstractActionController->onDispatch(Object(Zend\Mvc\MvcEvent))
+#4 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractController.php(118): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/DispatchListener.php(93): Zend\Mvc\Controller\AbstractController->dispatch(Object(ZF\ContentNegotiation\Request), Object(Zend\Http\PhpEnvironment\Response))
+#8 [internal function]: Zend\Mvc\DispatchListener->onDispatch(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#10 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#11 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(314): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#12 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#13 {main} {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:13:08+01:00 ERR (3): Argument 1 passed to Application\Service\ExamService::composeAnswer() must be an instance of Application\Entity\StudentHasCourseHasExam, null given, called in /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php on line 721 and defined {"errno":4096,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":301,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:13:09+01:00 ERR (3): Argument 1 passed to Application\Service\ExamService::composeAnswer() must be an instance of Application\Entity\StudentHasCourseHasExam, null given, called in /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php on line 721 and defined {"errno":4096,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":301,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:13:09+01:00 NOTICE (5): Utente ha eseguito l'accesso diretto alla pagina di partecipazione (o affini) senza esame in sessione {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:13:10+01:00 ERR (3): Argument 1 passed to Application\Service\ExamService::composeAnswer() must be an instance of Application\Entity\StudentHasCourseHasExam, null given, called in /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php on line 721 and defined {"errno":4096,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":301,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:13:10+01:00 ERR (3): Argument 1 passed to Application\Service\ExamService::composeAnswer() must be an instance of Application\Entity\StudentHasCourseHasExam, null given, called in /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php on line 721 and defined {"errno":4096,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":301,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T10:13:10+01:00 NOTICE (5): Utente ha eseguito l'accesso diretto alla pagina di partecipazione (o affini) senza esame in sessione {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:03:36+01:00 ERR (3): Argument 1 passed to Application\Service\ExamService::composeAnswer() must be an instance of Application\Entity\StudentHasCourseHasExam, null given, called in /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php on line 721 and defined {"errno":4096,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":301,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:06:43+01:00 ERR (3): Argument 1 passed to Application\Service\ExamService::composeAnswer() must be an instance of Application\Entity\StudentHasCourseHasExam, null given, called in /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php on line 705 and defined {"errno":4096,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":301,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:06:44+01:00 ERR (3): Argument 1 passed to Application\Service\ExamService::composeAnswer() must be an instance of Application\Entity\StudentHasCourseHasExam, null given, called in /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php on line 705 and defined {"errno":4096,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":301,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:06:59+01:00 ERR (3): Argument 1 passed to Application\Service\ExamService::composeAnswer() must be an instance of Application\Entity\StudentHasCourseHasExam, null given, called in /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php on line 705 and defined {"errno":4096,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":301,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:07:24+01:00 ERR (3): Argument 1 passed to Application\Service\ExamService::composeAnswer() must be an instance of Application\Entity\StudentHasCourseHasExam, null given, called in /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php on line 706 and defined {"errno":4096,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":301,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:08:23+01:00 ERR (3): Argument 1 passed to Application\Service\ExamService::composeAnswer() must be an instance of Application\Entity\StudentHasCourseHasExam, null given, called in /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php on line 705 and defined {"errno":4096,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":301,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:08:38+01:00 ERR (3): Argument 1 passed to Application\Service\ExamService::composeAnswer() must be an instance of Application\Entity\StudentHasCourseHasExam, null given, called in /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php on line 705 and defined {"errno":4096,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":301,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:08:52+01:00 ERR (3): Object of class DateTime could not be converted to string {"errno":4096,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":698,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:09:07+01:00 ERR (3): Argument 1 passed to Application\Service\ExamService::composeAnswer() must be an instance of Application\Entity\StudentHasCourseHasExam, null given, called in /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php on line 705 and defined {"errno":4096,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":301,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:09:15+01:00 ERR (3): Argument 1 passed to Application\Service\ExamService::composeAnswer() must be an instance of Application\Entity\StudentHasCourseHasExam, null given, called in /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php on line 705 and defined {"errno":4096,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":301,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:25:38+01:00 ERR (3): Argument 1 passed to Application\Service\ExamService::composeAnswer() must be an instance of Application\Entity\StudentHasCourseHasExam, null given, called in /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php on line 704 and defined {"errno":4096,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":301,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:46:31+01:00 ERR (3): Argument 1 passed to Application\Service\ExamService::composeAnswer() must be an instance of Application\Entity\StudentHasCourseHasExam, null given, called in /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php on line 704 and defined {"errno":4096,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":301,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:46:32+01:00 NOTICE (5): Utente ha eseguito l'accesso diretto alla pagina di partecipazione (o affini) senza esame in sessione {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:54:02+01:00 ERR (3): Argument 1 passed to Application\Service\ExamService::composeAnswer() must be an instance of Application\Entity\StudentHasCourseHasExam, null given, called in /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php on line 719 and defined {"errno":4096,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":301,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:54:02+01:00 NOTICE (5): Utente ha eseguito l'accesso diretto alla pagina di partecipazione (o affini) senza esame in sessione {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:54:12+01:00 NOTICE (5): Utente ha eseguito l'accesso diretto alla pagina di partecipazione (o affini) senza esame in sessione {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:54:14+01:00 WARN (4): No exam session found for the token session part [ff33a8f10515011cba0d191ae58f7f9a4dd7a3e1] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:54:14+01:00 INFO (6): #0 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(178): Application\Service\ExamService->getCurrentExamSessionItemByToken('39311445254797....', true)
+#1 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(168): Application\Controller\ExamController->tokenize(true)
+#2 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractActionController.php(82): Application\Controller\ExamController->tokenchallengeAction()
+#3 [internal function]: Zend\Mvc\Controller\AbstractActionController->onDispatch(Object(Zend\Mvc\MvcEvent))
+#4 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractController.php(118): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/DispatchListener.php(93): Zend\Mvc\Controller\AbstractController->dispatch(Object(ZF\ContentNegotiation\Request), Object(Zend\Http\PhpEnvironment\Response))
+#8 [internal function]: Zend\Mvc\DispatchListener->onDispatch(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#10 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#11 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(314): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#12 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#13 {main} {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:54:15+01:00 WARN (4): The "." character is missing in the token [] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:54:15+01:00 INFO (6): #0 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(178): Application\Service\ExamService->getCurrentExamSessionItemByToken('', false)
+#1 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(163): Application\Controller\ExamController->tokenize(false)
+#2 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractActionController.php(82): Application\Controller\ExamController->tokenAction()
+#3 [internal function]: Zend\Mvc\Controller\AbstractActionController->onDispatch(Object(Zend\Mvc\MvcEvent))
+#4 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractController.php(118): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/DispatchListener.php(93): Zend\Mvc\Controller\AbstractController->dispatch(Object(ZF\ContentNegotiation\Request), Object(Zend\Http\PhpEnvironment\Response))
+#8 [internal function]: Zend\Mvc\DispatchListener->onDispatch(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#10 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#11 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(314): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#12 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#13 {main} {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:54:15+01:00 NOTICE (5): Received inconsistant/malfrormed request token [] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:54:15+01:00 WARN (4): No student found for the token student part [76601445254797] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:54:15+01:00 INFO (6): #0 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(178): Application\Service\ExamService->getCurrentExamSessionItemByToken('76601445254797....', false)
+#1 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(163): Application\Controller\ExamController->tokenize(false)
+#2 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractActionController.php(82): Application\Controller\ExamController->tokenAction()
+#3 [internal function]: Zend\Mvc\Controller\AbstractActionController->onDispatch(Object(Zend\Mvc\MvcEvent))
+#4 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractController.php(118): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/DispatchListener.php(93): Zend\Mvc\Controller\AbstractController->dispatch(Object(ZF\ContentNegotiation\Request), Object(Zend\Http\PhpEnvironment\Response))
+#8 [internal function]: Zend\Mvc\DispatchListener->onDispatch(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#10 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#11 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(314): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#12 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#13 {main} {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:54:17+01:00 ERR (3): Argument 1 passed to Application\Service\ExamService::composeAnswer() must be an instance of Application\Entity\StudentHasCourseHasExam, null given, called in /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php on line 704 and defined {"errno":4096,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":301,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:54:17+01:00 NOTICE (5): Utente ha eseguito l'accesso diretto alla pagina di partecipazione (o affini) senza esame in sessione {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:54:49+01:00 ERR (3): Argument 1 passed to Application\Service\ExamService::composeAnswer() must be an instance of Application\Entity\StudentHasCourseHasExam, null given, called in /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php on line 719 and defined {"errno":4096,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":301,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:54:49+01:00 NOTICE (5): Utente ha eseguito l'accesso diretto alla pagina di partecipazione (o affini) senza esame in sessione {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:55:16+01:00 NOTICE (5): Utente ha eseguito l'accesso diretto alla pagina di partecipazione (o affini) senza esame in sessione {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:55:18+01:00 WARN (4): No exam session found for the token session part [ff33a8f10515011cba0d191ae58f7f9a4dd7a3e1] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:55:18+01:00 INFO (6): #0 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(178): Application\Service\ExamService->getCurrentExamSessionItemByToken('39311445254797....', true)
+#1 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(168): Application\Controller\ExamController->tokenize(true)
+#2 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractActionController.php(82): Application\Controller\ExamController->tokenchallengeAction()
+#3 [internal function]: Zend\Mvc\Controller\AbstractActionController->onDispatch(Object(Zend\Mvc\MvcEvent))
+#4 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractController.php(118): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/DispatchListener.php(93): Zend\Mvc\Controller\AbstractController->dispatch(Object(ZF\ContentNegotiation\Request), Object(Zend\Http\PhpEnvironment\Response))
+#8 [internal function]: Zend\Mvc\DispatchListener->onDispatch(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#10 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#11 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(314): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#12 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#13 {main} {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:55:19+01:00 WARN (4): The "." character is missing in the token [] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:55:19+01:00 INFO (6): #0 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(178): Application\Service\ExamService->getCurrentExamSessionItemByToken('', false)
+#1 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(163): Application\Controller\ExamController->tokenize(false)
+#2 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractActionController.php(82): Application\Controller\ExamController->tokenAction()
+#3 [internal function]: Zend\Mvc\Controller\AbstractActionController->onDispatch(Object(Zend\Mvc\MvcEvent))
+#4 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractController.php(118): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/DispatchListener.php(93): Zend\Mvc\Controller\AbstractController->dispatch(Object(ZF\ContentNegotiation\Request), Object(Zend\Http\PhpEnvironment\Response))
+#8 [internal function]: Zend\Mvc\DispatchListener->onDispatch(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#10 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#11 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(314): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#12 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#13 {main} {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:55:19+01:00 NOTICE (5): Received inconsistant/malfrormed request token [] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:55:19+01:00 WARN (4): No student found for the token student part [76601445254797] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:55:19+01:00 INFO (6): #0 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(178): Application\Service\ExamService->getCurrentExamSessionItemByToken('76601445254797....', false)
+#1 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(163): Application\Controller\ExamController->tokenize(false)
+#2 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractActionController.php(82): Application\Controller\ExamController->tokenAction()
+#3 [internal function]: Zend\Mvc\Controller\AbstractActionController->onDispatch(Object(Zend\Mvc\MvcEvent))
+#4 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractController.php(118): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/DispatchListener.php(93): Zend\Mvc\Controller\AbstractController->dispatch(Object(ZF\ContentNegotiation\Request), Object(Zend\Http\PhpEnvironment\Response))
+#8 [internal function]: Zend\Mvc\DispatchListener->onDispatch(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#10 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#11 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(314): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#12 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#13 {main} {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:55:20+01:00 ERR (3): Argument 1 passed to Application\Service\ExamService::composeAnswer() must be an instance of Application\Entity\StudentHasCourseHasExam, null given, called in /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php on line 704 and defined {"errno":4096,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":301,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:55:20+01:00 NOTICE (5): Utente ha eseguito l'accesso diretto alla pagina di partecipazione (o affini) senza esame in sessione {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:56:03+01:00 ERR (3): Argument 1 passed to Application\Service\ExamService::composeAnswer() must be an instance of Application\Entity\StudentHasCourseHasExam, null given, called in /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php on line 704 and defined {"errno":4096,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":301,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:56:23+01:00 ERR (3): Argument 1 passed to Application\Service\ExamService::composeAnswer() must be an instance of Application\Entity\StudentHasCourseHasExam, null given, called in /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php on line 704 and defined {"errno":4096,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":301,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:56:33+01:00 ERR (3): Argument 1 passed to Application\Service\ExamService::composeAnswer() must be an instance of Application\Entity\StudentHasCourseHasExam, null given, called in /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php on line 704 and defined {"errno":4096,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":301,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:56:35+01:00 ERR (3): Argument 1 passed to Application\Service\ExamService::composeAnswer() must be an instance of Application\Entity\StudentHasCourseHasExam, null given, called in /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php on line 704 and defined {"errno":4096,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":301,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T11:56:42+01:00 ERR (3): Argument 1 passed to Application\Service\ExamService::composeAnswer() must be an instance of Application\Entity\StudentHasCourseHasExam, null given, called in /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php on line 704 and defined {"errno":4096,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":301,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T14:18:35+01:00 ERR (3): Argument 1 passed to Application\Service\ExamService::composeAnswer() must be an instance of Application\Entity\StudentHasCourseHasExam, null given, called in /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php on line 704 and defined {"errno":4096,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":301,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T14:20:10+01:00 ERR (3): Argument 1 passed to Application\Service\ExamService::composeAnswer() must be an instance of Application\Entity\StudentHasCourseHasExam, null given, called in /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php on line 704 and defined {"errno":4096,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":301,"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T14:20:10+01:00 NOTICE (5): Trying to get property of non-object {"errno":8,"file":"/private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php","line":128,"Zf2Logger":"{\"sessionId\":\"\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:15:31+01:00 WARN (4): No exam session found for the token session part [ff33a8f10515011cba0d191ae58f7f9a4dd7a3e1] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:15:31+01:00 INFO (6): #0 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(178): Application\Service\ExamService->getCurrentExamSessionItemByToken('39311445254797....', true)
+#1 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(168): Application\Controller\ExamController->tokenize(true)
+#2 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractActionController.php(82): Application\Controller\ExamController->tokenchallengeAction()
+#3 [internal function]: Zend\Mvc\Controller\AbstractActionController->onDispatch(Object(Zend\Mvc\MvcEvent))
+#4 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractController.php(118): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/DispatchListener.php(93): Zend\Mvc\Controller\AbstractController->dispatch(Object(ZF\ContentNegotiation\Request), Object(Zend\Http\PhpEnvironment\Response))
+#8 [internal function]: Zend\Mvc\DispatchListener->onDispatch(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#10 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#11 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(314): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#12 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#13 {main} {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:15:32+01:00 WARN (4): The "." character is missing in the token [] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:15:32+01:00 INFO (6): #0 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(178): Application\Service\ExamService->getCurrentExamSessionItemByToken('', false)
+#1 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(163): Application\Controller\ExamController->tokenize(false)
+#2 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractActionController.php(82): Application\Controller\ExamController->tokenAction()
+#3 [internal function]: Zend\Mvc\Controller\AbstractActionController->onDispatch(Object(Zend\Mvc\MvcEvent))
+#4 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractController.php(118): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/DispatchListener.php(93): Zend\Mvc\Controller\AbstractController->dispatch(Object(ZF\ContentNegotiation\Request), Object(Zend\Http\PhpEnvironment\Response))
+#8 [internal function]: Zend\Mvc\DispatchListener->onDispatch(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#10 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#11 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(314): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#12 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#13 {main} {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:15:32+01:00 NOTICE (5): Received inconsistant/malfrormed request token [] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:15:33+01:00 WARN (4): No student found for the token student part [76601445254797] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:15:33+01:00 INFO (6): #0 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(178): Application\Service\ExamService->getCurrentExamSessionItemByToken('76601445254797....', false)
+#1 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(163): Application\Controller\ExamController->tokenize(false)
+#2 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractActionController.php(82): Application\Controller\ExamController->tokenAction()
+#3 [internal function]: Zend\Mvc\Controller\AbstractActionController->onDispatch(Object(Zend\Mvc\MvcEvent))
+#4 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractController.php(118): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/DispatchListener.php(93): Zend\Mvc\Controller\AbstractController->dispatch(Object(ZF\ContentNegotiation\Request), Object(Zend\Http\PhpEnvironment\Response))
+#8 [internal function]: Zend\Mvc\DispatchListener->onDispatch(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#10 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#11 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(314): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#12 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#13 {main} {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:17:17+01:00 WARN (4): No exam session found for the token session part [ff33a8f10515011cba0d191ae58f7f9a4dd7a3e1] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:17:17+01:00 INFO (6): #0 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(178): Application\Service\ExamService->getCurrentExamSessionItemByToken('39311445254797....', true)
+#1 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(168): Application\Controller\ExamController->tokenize(true)
+#2 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractActionController.php(82): Application\Controller\ExamController->tokenchallengeAction()
+#3 [internal function]: Zend\Mvc\Controller\AbstractActionController->onDispatch(Object(Zend\Mvc\MvcEvent))
+#4 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractController.php(118): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/DispatchListener.php(93): Zend\Mvc\Controller\AbstractController->dispatch(Object(ZF\ContentNegotiation\Request), Object(Zend\Http\PhpEnvironment\Response))
+#8 [internal function]: Zend\Mvc\DispatchListener->onDispatch(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#10 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#11 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(314): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#12 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#13 {main} {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:17:38+01:00 WARN (4): No exam session found for the token session part [ff33a8f10515011cba0d191ae58f7f9a4dd7a3e1] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:17:38+01:00 INFO (6): #0 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(178): Application\Service\ExamService->getCurrentExamSessionItemByToken('39311445254797....', true)
+#1 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(168): Application\Controller\ExamController->tokenize(true)
+#2 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractActionController.php(82): Application\Controller\ExamController->tokenchallengeAction()
+#3 [internal function]: Zend\Mvc\Controller\AbstractActionController->onDispatch(Object(Zend\Mvc\MvcEvent))
+#4 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractController.php(118): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/DispatchListener.php(93): Zend\Mvc\Controller\AbstractController->dispatch(Object(ZF\ContentNegotiation\Request), Object(Zend\Http\PhpEnvironment\Response))
+#8 [internal function]: Zend\Mvc\DispatchListener->onDispatch(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#10 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#11 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(314): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#12 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#13 {main} {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:17:39+01:00 WARN (4): The "." character is missing in the token [] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:17:39+01:00 INFO (6): #0 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(178): Application\Service\ExamService->getCurrentExamSessionItemByToken('', false)
+#1 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(163): Application\Controller\ExamController->tokenize(false)
+#2 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractActionController.php(82): Application\Controller\ExamController->tokenAction()
+#3 [internal function]: Zend\Mvc\Controller\AbstractActionController->onDispatch(Object(Zend\Mvc\MvcEvent))
+#4 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractController.php(118): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/DispatchListener.php(93): Zend\Mvc\Controller\AbstractController->dispatch(Object(ZF\ContentNegotiation\Request), Object(Zend\Http\PhpEnvironment\Response))
+#8 [internal function]: Zend\Mvc\DispatchListener->onDispatch(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#10 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#11 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(314): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#12 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#13 {main} {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:17:39+01:00 NOTICE (5): Received inconsistant/malfrormed request token [] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:17:40+01:00 WARN (4): No student found for the token student part [76601445254797] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:17:40+01:00 INFO (6): #0 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(178): Application\Service\ExamService->getCurrentExamSessionItemByToken('76601445254797....', false)
+#1 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(163): Application\Controller\ExamController->tokenize(false)
+#2 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractActionController.php(82): Application\Controller\ExamController->tokenAction()
+#3 [internal function]: Zend\Mvc\Controller\AbstractActionController->onDispatch(Object(Zend\Mvc\MvcEvent))
+#4 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractController.php(118): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/DispatchListener.php(93): Zend\Mvc\Controller\AbstractController->dispatch(Object(ZF\ContentNegotiation\Request), Object(Zend\Http\PhpEnvironment\Response))
+#8 [internal function]: Zend\Mvc\DispatchListener->onDispatch(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#10 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#11 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(314): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#12 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#13 {main} {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:18:02+01:00 WARN (4): No exam session found for the token session part [ff33a8f10515011cba0d191ae58f7f9a4dd7a3e1] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:18:02+01:00 INFO (6): #0 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(178): Application\Service\ExamService->getCurrentExamSessionItemByToken('39311445254797....', true)
+#1 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(168): Application\Controller\ExamController->tokenize(true)
+#2 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractActionController.php(82): Application\Controller\ExamController->tokenchallengeAction()
+#3 [internal function]: Zend\Mvc\Controller\AbstractActionController->onDispatch(Object(Zend\Mvc\MvcEvent))
+#4 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractController.php(118): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/DispatchListener.php(93): Zend\Mvc\Controller\AbstractController->dispatch(Object(ZF\ContentNegotiation\Request), Object(Zend\Http\PhpEnvironment\Response))
+#8 [internal function]: Zend\Mvc\DispatchListener->onDispatch(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#10 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#11 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(314): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#12 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#13 {main} {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:18:03+01:00 WARN (4): The "." character is missing in the token [] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:18:03+01:00 INFO (6): #0 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(178): Application\Service\ExamService->getCurrentExamSessionItemByToken('', false)
+#1 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(163): Application\Controller\ExamController->tokenize(false)
+#2 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractActionController.php(82): Application\Controller\ExamController->tokenAction()
+#3 [internal function]: Zend\Mvc\Controller\AbstractActionController->onDispatch(Object(Zend\Mvc\MvcEvent))
+#4 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractController.php(118): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/DispatchListener.php(93): Zend\Mvc\Controller\AbstractController->dispatch(Object(ZF\ContentNegotiation\Request), Object(Zend\Http\PhpEnvironment\Response))
+#8 [internal function]: Zend\Mvc\DispatchListener->onDispatch(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#10 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#11 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(314): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#12 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#13 {main} {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:18:03+01:00 NOTICE (5): Received inconsistant/malfrormed request token [] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:18:04+01:00 WARN (4): No student found for the token student part [76601445254797] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:18:04+01:00 INFO (6): #0 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(178): Application\Service\ExamService->getCurrentExamSessionItemByToken('76601445254797....', false)
+#1 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(163): Application\Controller\ExamController->tokenize(false)
+#2 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractActionController.php(82): Application\Controller\ExamController->tokenAction()
+#3 [internal function]: Zend\Mvc\Controller\AbstractActionController->onDispatch(Object(Zend\Mvc\MvcEvent))
+#4 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractController.php(118): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/DispatchListener.php(93): Zend\Mvc\Controller\AbstractController->dispatch(Object(ZF\ContentNegotiation\Request), Object(Zend\Http\PhpEnvironment\Response))
+#8 [internal function]: Zend\Mvc\DispatchListener->onDispatch(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#10 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#11 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(314): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#12 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#13 {main} {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:19:54+01:00 WARN (4): No exam session found for the token session part [ff33a8f10515011cba0d191ae58f7f9a4dd7a3e1] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:19:54+01:00 INFO (6): #0 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(178): Application\Service\ExamService->getCurrentExamSessionItemByToken('39311445254797....', true)
+#1 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(168): Application\Controller\ExamController->tokenize(true)
+#2 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractActionController.php(82): Application\Controller\ExamController->tokenchallengeAction()
+#3 [internal function]: Zend\Mvc\Controller\AbstractActionController->onDispatch(Object(Zend\Mvc\MvcEvent))
+#4 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractController.php(118): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/DispatchListener.php(93): Zend\Mvc\Controller\AbstractController->dispatch(Object(ZF\ContentNegotiation\Request), Object(Zend\Http\PhpEnvironment\Response))
+#8 [internal function]: Zend\Mvc\DispatchListener->onDispatch(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#10 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#11 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(314): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#12 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#13 {main} {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:19:55+01:00 WARN (4): The "." character is missing in the token [] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:19:55+01:00 INFO (6): #0 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(178): Application\Service\ExamService->getCurrentExamSessionItemByToken('', false)
+#1 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(163): Application\Controller\ExamController->tokenize(false)
+#2 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractActionController.php(82): Application\Controller\ExamController->tokenAction()
+#3 [internal function]: Zend\Mvc\Controller\AbstractActionController->onDispatch(Object(Zend\Mvc\MvcEvent))
+#4 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractController.php(118): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/DispatchListener.php(93): Zend\Mvc\Controller\AbstractController->dispatch(Object(ZF\ContentNegotiation\Request), Object(Zend\Http\PhpEnvironment\Response))
+#8 [internal function]: Zend\Mvc\DispatchListener->onDispatch(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#10 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#11 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(314): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#12 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#13 {main} {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:19:55+01:00 NOTICE (5): Received inconsistant/malfrormed request token [] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:19:56+01:00 WARN (4): No student found for the token student part [76601445254797] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:19:56+01:00 INFO (6): #0 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(178): Application\Service\ExamService->getCurrentExamSessionItemByToken('76601445254797....', false)
+#1 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(163): Application\Controller\ExamController->tokenize(false)
+#2 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractActionController.php(82): Application\Controller\ExamController->tokenAction()
+#3 [internal function]: Zend\Mvc\Controller\AbstractActionController->onDispatch(Object(Zend\Mvc\MvcEvent))
+#4 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractController.php(118): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/DispatchListener.php(93): Zend\Mvc\Controller\AbstractController->dispatch(Object(ZF\ContentNegotiation\Request), Object(Zend\Http\PhpEnvironment\Response))
+#8 [internal function]: Zend\Mvc\DispatchListener->onDispatch(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#10 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#11 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(314): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#12 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#13 {main} {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:21:42+01:00 WARN (4): No exam session found for the token session part [ff33a8f10515011cba0d191ae58f7f9a4dd7a3e1] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:21:42+01:00 INFO (6): #0 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(178): Application\Service\ExamService->getCurrentExamSessionItemByToken('39311445254797....', true)
+#1 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(168): Application\Controller\ExamController->tokenize(true)
+#2 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractActionController.php(82): Application\Controller\ExamController->tokenchallengeAction()
+#3 [internal function]: Zend\Mvc\Controller\AbstractActionController->onDispatch(Object(Zend\Mvc\MvcEvent))
+#4 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractController.php(118): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/DispatchListener.php(93): Zend\Mvc\Controller\AbstractController->dispatch(Object(ZF\ContentNegotiation\Request), Object(Zend\Http\PhpEnvironment\Response))
+#8 [internal function]: Zend\Mvc\DispatchListener->onDispatch(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#10 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#11 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(314): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#12 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#13 {main} {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:21:43+01:00 WARN (4): The "." character is missing in the token [] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:21:43+01:00 INFO (6): #0 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(178): Application\Service\ExamService->getCurrentExamSessionItemByToken('', false)
+#1 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(163): Application\Controller\ExamController->tokenize(false)
+#2 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractActionController.php(82): Application\Controller\ExamController->tokenAction()
+#3 [internal function]: Zend\Mvc\Controller\AbstractActionController->onDispatch(Object(Zend\Mvc\MvcEvent))
+#4 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractController.php(118): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/DispatchListener.php(93): Zend\Mvc\Controller\AbstractController->dispatch(Object(ZF\ContentNegotiation\Request), Object(Zend\Http\PhpEnvironment\Response))
+#8 [internal function]: Zend\Mvc\DispatchListener->onDispatch(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#10 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#11 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(314): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#12 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#13 {main} {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:21:43+01:00 NOTICE (5): Received inconsistant/malfrormed request token [] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:21:44+01:00 WARN (4): No student found for the token student part [76601445254797] {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-02T22:21:44+01:00 INFO (6): #0 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(178): Application\Service\ExamService->getCurrentExamSessionItemByToken('76601445254797....', false)
+#1 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(163): Application\Controller\ExamController->tokenize(false)
+#2 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractActionController.php(82): Application\Controller\ExamController->tokenAction()
+#3 [internal function]: Zend\Mvc\Controller\AbstractActionController->onDispatch(Object(Zend\Mvc\MvcEvent))
+#4 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractController.php(118): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/DispatchListener.php(93): Zend\Mvc\Controller\AbstractController->dispatch(Object(ZF\ContentNegotiation\Request), Object(Zend\Http\PhpEnvironment\Response))
+#8 [internal function]: Zend\Mvc\DispatchListener->onDispatch(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#10 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#11 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(314): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#12 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#13 {main} {"Zf2Logger":"{\"sessionId\":\"ahh25i1nch3d9g79cht0tn4no1\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}

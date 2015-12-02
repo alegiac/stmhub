@@ -112,6 +112,7 @@ final class StudentService extends BaseService
     		$session->setStartDate($lastDateStart);
     		$session->setStudentHasCourse($studentHasCourse);
     		$session->setToken($token);
+    		$session->setSessionIndex("1/1");
     		
     		$arrayItemsForSession = array();
     		 
@@ -179,6 +180,7 @@ final class StudentService extends BaseService
 	    		$session->setStartDate($lastDateStart);
 	    		$session->setStudentHasCourse($studentHasCourse);
 	    		$session->setToken($token);
+	    		$session->setSessionIndex(($i+1)."/".$sessionsForExam);
 	    		
 	    		
 	    		

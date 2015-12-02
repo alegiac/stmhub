@@ -46,7 +46,7 @@ final class ExamService extends BaseService
 			$sessionsExam = $sessRepo->findByExam($exam);
 			foreach ($sessionsExam as $sesEx) {
 				/* @var $sesEx StudentHasCourseHasExam */
-				if ($sesEx->getStartDate() < new \DateTime()) {
+				if ($sesEx->getProgressive() > 0) {
 					// At least one session has been started. The exam is started!
 					$examStarted = true;
 				}
@@ -304,7 +304,7 @@ final class ExamService extends BaseService
     	$retval['result'] = (int)!$isError;
     	$retval['message'] = $message;
     	
-    	if ($session) {
+    	if (!is_null($session)) {
     		$retval['course'] = array(
     			'name' => $session->getStudentHasCourse()->getCourse()->getName(),
     		);
@@ -333,7 +333,9 @@ final class ExamService extends BaseService
     			//'maxpoints' => $this->getSessionMaxPoints($session),
     			'progressive' => $session->getProgressive(),
     			'startdate' => $session->getStartDate(),
+    			'realstartdate' => $session->getRealStartDate(),
     			'challenge' => !$session->getMandatory(),
+    			'index' => $session->getSessionIndex(),
     		);
     		
     		//$retval['stats'] = $this->getStatsForStudent($session);
@@ -351,6 +353,8 @@ final class ExamService extends BaseService
     						'type' => $ei->getItemtype()->getId(),
     						'maxsecs' => $ei->getMaxsecs(),
     						'maxtries' => $ei->getMaxtries(),
+    						'question_number' => ($index+1),
+    						'question_total' => count($session->getItem()),
     				);
     				break;
     			}
@@ -692,34 +696,32 @@ final class ExamService extends BaseService
     			
     		foreach ($allSessions as $sess) {
     			if ($sess->getCompleted() === 0 && $sess->getStartDate() < new \DateTime()) {
-
    					// Segue session found to complete
    					return $this->composeAnswer($sess,false,"Questa sessione risulta completata. Trovata una sessione successiva da completare");
    				}
    			}
    			// No available session
-   			return $this->composeAnswer(null,true,"Nessuna sessione attualmente disponibile");
+   			return $this->composeAnswer($sess,true,"Nessuna sessione attualmente disponibile");
     			
    		} else {
-   			
    			// Other sessions to complete "before" the current one?
    			foreach ($allSessions as $sess) {
    				/* @var $sess StudentHasCourseHasExam */
    				if ($sess->getCompleted() === 0 && $sess->getStartDate() < new \DateTime()) {
    					// Found previous session
-   					if ($sess == $session) {
+   					if ($sess != $session) {
    						return $this->composeAnswer($sess,false,"Sessione precedente trovata da completare");
    					}
    					return $this->composeAnswer($sess,false,'Sessione corrente trovata');
    				}
    			}
    			// No available session
-   			return $this->composeAnswer(null,true,"Nessuna sessione attualmente disponibile");
+   			return $this->composeAnswer($sess,true,"Nessuna sessione attualmente disponibile");
    		}
     }
     
-   public function getAvailableChallenges($sessionId)
-	{
+   	public function getAvailableChallenges($sessionId)
+   	{
 		$retval = array();
 		
 		$session = $this->getStudentHasCourseHasExamRepo()->find($sessionId);
@@ -729,12 +731,17 @@ final class ExamService extends BaseService
 			foreach ($listOfChallenges as $challenge)
 			{
 				/* @var $challenge StudentHasCourseHasExam */
-				if ($challenge->getCompleted() === 0) {
+				if ($challenge->getCompleted() === 0 && $challenge->getStartDate() < new \DateTime()) {
+					
+					// Load max possible points
 					
 					$arr = array(
 							'id' => $challenge->getId(),
 							'token' => $challenge->getStudentHasCourse()->getStudent()->getIdentifier().".".$challenge->getToken(),
-							'name' => $challenge->getExam()->getName());
+							'name' => $challenge->getExam()->getName(),
+							'questions' => count($challenge->getItem()),
+							'maxpoints' => $this->getSessionMaxPoints($challenge)
+					);
 					$retval[] = $arr;
 				}
 			}
