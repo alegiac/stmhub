@@ -328,7 +328,6 @@ final class ExamService extends BaseService
     			'answer' => $session->getAnswer(),
     			'completed' => $session->getCompleted(),
     			'expectedenddate' => $session->getExpectedEndDate(),
-    			//'points' => $session->getPoints(),
     			'points' => $this->getTotalPointsForStudentInCourse($session->getStudentHasCourse()),
     			//'maxpoints' => $this->getSessionMaxPoints($session),
     			'progressive' => $session->getProgressive(),
@@ -364,52 +363,45 @@ final class ExamService extends BaseService
     }
     
     /**
-     * Acquisizione di tutto l'esame corrente per lo studente
-     * 
-     * @param StudentHasCourseHasExam $session Sessione corrente
-     * @return array Array dati sessione d'esame
+     * Get the student information part (for presenting values)
+     * @param Student $student
+     * @return array
      */
-    private function getUserExamData(StudentHasCourseHasExam $session,$message = "")
+    public function loadStudentInfoFromStudent(Student $student)
     {
-    	if (is_null($session)) {
-    		return array (
-    			'id' => null,
-    			'message' => $message
-    		);
-    	}
-    	
-    	$examData = array(
-    			'exam' => array(
-    				'id' => $session->getExam()->getId(),
-    				'name' => $session->getExam()->getName(),
-    				'description' => $session->getExam()->getDescription(),
-    				'totalitems' => $session->getExam()->getTotalitems(),
-    				'photourl' => $session->getExam()->getImageurl(),
-    				'progress' => $session->getExam()->getProgOnCourse(),
-    			),
-    			'course' => array(
-    				'id' => $session->getExam()->getCourse()->getId(),
-    				'name' => $session->getExam()->getCourse()->getName(),
-    				'description' => $session->getExam()->getCourse()->getDescription(),
-    				'numexams' => $session->getExam()->getCourse()->getTotalexams(),
-    			),
-    			'progress' => $session->getProgressive(),
-    			'enddate' => $session->getEndDate()->format('d/m/Y'),
-    			'items' => $this->getExamItems($session),
-    	);
-    	
     	$retval = array(
-    		'id' => $session->getId(),
-    		'session' => $examData,
-    		'student' => array(
-    			'id' => $session->getStudentHasCourse()->getStudent()->getId(),
-    			'firstname' => $session->getStudentHasCourse()->getStudent()->getFirstname(),
-    			'lastname' => $session->getStudentHasCourse()->getStudent()->getLastname(),
-    			'sex' => $session->getStudentHasCourse()->getStudent()->getSex()
-    		),
-    		'stats' => $this->getStatsForStudent($session),
-    		'message' => $message
+    			'id' => $student->getId(),
+    			'firstname' => $student->getFirstname(),
+    			'lastname' => $student->getLastname(),
+    			'sex' => $student->getSex(),
+    			'status' => $student->getActivationstatus()->getId(),
     	);
+    	 
+    	return $retval;
+    }
+    
+    /**
+     * Get the course information part (for presenting values)
+     * @param StudentHasCourseHasExam $session
+     * @return array
+     */
+    public function loadCourseInfoFromSession(StudentHasCourseHasExam $session)
+    {
+    	$retval = array();
+    	
+    	$retval['course'] = array(
+    			'id' => $session->getStudentHasCourse()->getCourse()->getId(),
+    			'name' => $session->getStudentHasCourse()->getCourse()->getName(),
+    	);
+    	
+    	$retval['exam'] = array(
+    			'id' => $session->getExam()->getId(),
+    			'name' => $session->getExam()->getName(),
+    			'description' => $session->getExam()->getDescription(),
+    			'totalitems' => $session->getExam()->getTotalitems(),
+    	);
+    	
+    	$retval['allexams'] = $this->getExamsForCourse($session->getStudentHasCourse()->getCourse());
     	
     	
     	return $retval;
@@ -612,26 +604,13 @@ final class ExamService extends BaseService
     }
     
     /**
-     * @deprecated
-     * @param unknown $sessionId
-     */
-    public function resetDemo($sessionId)
-    {
-    	$session = $this->getStudentHasCourseHasExamRepo()->find($sessionId);
-    	$session->setCompleted(0);
-    	$session->setEndDate(null);
-    	$session->setPoints(0);
-    	$session->setProgressive(0);
-    	$this->getEntityManager()->persist($session);
-    	$this->getEntityManager()->flush();  	
-    }
-    
-    /**
      * Get current session information
      * @param string $token
      */
     public function getCurrentExamSessionItemByToken($token,$isChallenge = false)
     {
+    	// Start validation process
+    	
     	if (strpos($token,".") === false) 
     		throw new MalformedRequest("The \".\" character is missing in the token [".$token."]");
     		 
@@ -659,13 +638,17 @@ final class ExamService extends BaseService
     	// Does the session belong to the student?
     	if ($session->getStudentHasCourse()->getStudent() != $student)
     		throw new InconsistentContent("Both student and session token part are correct [".$studentToken."], [".$sessionToken."], but not related. Possible hacking trial");
-    		 
+    		
+    	// End validation process
+    		
+    		
     	// Get course information
     	$course = $session->getStudentHasCourse()->getCourse();
     	if ($course->getActivationstatus()->getId() != ActivationStatus::STATUS_ENABLED) {
     		return $this->composeAnswer($session,true,"Course has been disabled");
     	}
-    	 
+    	
+    	// No propedeutical challenge mechanism. Is it a challenge? Then compose the resulting session data
     	if ($isChallenge === true) {
     		return $this->composeAnswer($session,false,"");
     	}
@@ -691,7 +674,7 @@ final class ExamService extends BaseService
     		}
     		if (!$remainingSessions) {
     			// All sessions are completed
-    			return $this->composeAnswer(null,true,"Tutte le sessioni sono state completate");
+    			return $this->composeAnswer($session,true,"Tutte le sessioni sono state completate");
     		}
     			
     		foreach ($allSessions as $sess) {
@@ -701,7 +684,7 @@ final class ExamService extends BaseService
    				}
    			}
    			// No available session
-   			return $this->composeAnswer($sess,true,"Nessuna sessione attualmente disponibile");
+   			return $this->composeAnswer($session,true,"Nessuna sessione attualmente disponibile");
     			
    		} else {
    			// Other sessions to complete "before" the current one?
@@ -712,11 +695,11 @@ final class ExamService extends BaseService
    					if ($sess != $session) {
    						return $this->composeAnswer($sess,false,"Sessione precedente trovata da completare");
    					}
-   					return $this->composeAnswer($sess,false,'Sessione corrente trovata');
+   					return $this->composeAnswer($session,false,'Sessione corrente trovata');
    				}
    			}
    			// No available session
-   			return $this->composeAnswer($sess,true,"Nessuna sessione attualmente disponibile");
+   			return $this->composeAnswer($session,true,"Nessuna sessione attualmente disponibile");
    		}
     }
     
