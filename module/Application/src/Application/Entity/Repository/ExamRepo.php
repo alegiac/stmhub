@@ -41,6 +41,7 @@ class ExamRepo extends \Doctrine\ORM\EntityRepository
 		if ($result->count()) return $result->getValues();
 		return array();
 	}
+	
 	/**
 	 * Acquisizione di tutti gli esami obbligatori (da sessione) per un corso
 	 *

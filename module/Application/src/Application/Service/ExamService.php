@@ -297,46 +297,45 @@ final class ExamService extends BaseService
     	}
     	return $retval;
     }
-    
     private function composeAnswer(StudentHasCourseHasExam $session,$isError = false,$message = "")
     {
     	$retval = array();
     	$retval['result'] = (int)!$isError;
     	$retval['message'] = $message;
-    	
+    	 
     	if (!is_null($session)) {
     		$retval['course'] = array(
-    			'name' => $session->getStudentHasCourse()->getCourse()->getName(),
+    				'name' => $session->getStudentHasCourse()->getCourse()->getName(),
     		);
-    		
+    
     		$retval['exam'] = array(
-    			'id' => $session->getExam()->getId(),
-    			'name' => $session->getExam()->getName(),
-    			'description' => $session->getExam()->getDescription(),
-    			'totalitems' => $session->getExam()->getTotalitems(),
+    				'id' => $session->getExam()->getId(),
+    				'name' => $session->getExam()->getName(),
+    				'description' => $session->getExam()->getDescription(),
+    				'totalitems' => $session->getExam()->getTotalitems(),
     		);
     		$retval['allexams'] = $this->getExamsForCourse($session->getStudentHasCourse()->getCourse());
     		$retval['student'] = array(
-    			'id' => $session->getStudentHasCourse()->getStudent()->getId(),
-    			'firstname' => $session->getStudentHasCourse()->getStudent()->getFirstname(),
-    			'lastname' => $session->getStudentHasCourse()->getStudent()->getLastname(),
-    			'sex' => $session->getStudentHasCourse()->getStudent()->getSex()
+    				'id' => $session->getStudentHasCourse()->getStudent()->getId(),
+    				'firstname' => $session->getStudentHasCourse()->getStudent()->getFirstname(),
+    				'lastname' => $session->getStudentHasCourse()->getStudent()->getLastname(),
+    				'sex' => $session->getStudentHasCourse()->getStudent()->getSex()
     		);
-    		
+    
     		$retval['session'] = array(
-    			'id' => $session->getId(),
-    			'answer' => $session->getAnswer(),
-    			'completed' => $session->getCompleted(),
-    			'expectedenddate' => $session->getExpectedEndDate(),
-    			'points' => $this->getTotalPointsForStudentInCourse($session->getStudentHasCourse()),
-    			//'maxpoints' => $this->getSessionMaxPoints($session),
-    			'progressive' => $session->getProgressive(),
-    			'startdate' => $session->getStartDate(),
-    			'realstartdate' => $session->getRealStartDate(),
-    			'challenge' => !$session->getMandatory(),
-    			'index' => $session->getSessionIndex(),
+    				'id' => $session->getId(),
+    				'answer' => $session->getAnswer(),
+    				'completed' => $session->getCompleted(),
+    				'expectedenddate' => $session->getExpectedEndDate(),
+    				'points' => $this->getTotalPointsForStudentInCourse($session->getStudentHasCourse()),
+    				//'maxpoints' => $this->getSessionMaxPoints($session),
+    				'progressive' => $session->getProgressive(),
+    				'startdate' => $session->getStartDate(),
+    				'realstartdate' => $session->getRealStartDate(),
+    				'challenge' => !$session->getMandatory(),
+    				'index' => $session->getSessionIndex(),
     		);
-    		
+    
     		//$retval['stats'] = $this->getStatsForStudent($session);
     		$arr = $session->getItem()->toArray();
     		foreach ($arr as $index => $ei) {
@@ -359,51 +358,6 @@ final class ExamService extends BaseService
     			}
     		}
     	}
-    	return $retval;
-    }
-    
-    /**
-     * Get the student information part (for presenting values)
-     * @param Student $student
-     * @return array
-     */
-    public function loadStudentInfoFromStudent(Student $student)
-    {
-    	$retval = array(
-    			'id' => $student->getId(),
-    			'firstname' => $student->getFirstname(),
-    			'lastname' => $student->getLastname(),
-    			'sex' => $student->getSex(),
-    			'status' => $student->getActivationstatus()->getId(),
-    	);
-    	 
-    	return $retval;
-    }
-    
-    /**
-     * Get the course information part (for presenting values)
-     * @param StudentHasCourseHasExam $session
-     * @return array
-     */
-    public function loadCourseInfoFromSession(StudentHasCourseHasExam $session)
-    {
-    	$retval = array();
-    	
-    	$retval['course'] = array(
-    			'id' => $session->getStudentHasCourse()->getCourse()->getId(),
-    			'name' => $session->getStudentHasCourse()->getCourse()->getName(),
-    	);
-    	
-    	$retval['exam'] = array(
-    			'id' => $session->getExam()->getId(),
-    			'name' => $session->getExam()->getName(),
-    			'description' => $session->getExam()->getDescription(),
-    			'totalitems' => $session->getExam()->getTotalitems(),
-    	);
-    	
-    	$retval['allexams'] = $this->getExamsForCourse($session->getStudentHasCourse()->getCourse());
-    	
-    	
     	return $retval;
     }
     
@@ -498,7 +452,8 @@ final class ExamService extends BaseService
     	return $retval;
     }
     /**
-     * Memorizzazione di una risposta fornita dall'utente
+     * The answer choosen by the user is being stored in the db table
+     * and user's points is updated
      * 
      * @param int $sessionId
      * @param int $examId
@@ -509,14 +464,17 @@ final class ExamService extends BaseService
      */
     public function responseWithAnOption($sessionId, $examId, $itemId, $optionId)
     {
+    	// Transaction
     	$this->getEntityManager()->beginTransaction();
     	
+    	// Get session, exam, item and option
     	$session = $this->getStudentHasCourseHasExamRepo()->find($sessionId);
-    	$exam = $this->getExamRepo()->find($examId);
+    	$exam = $session->getExam();
+    	//$exam = $this->getExamRepo()->find($examId);
     	$item = $this->getItemRepo()->find($itemId);
     	$option = $this->getItemoptionRepo()->find($optionId);
     	
-    	// Creazione risposta
+    	// Generate answer
     	$answer = new StudentHasAnsweredToItem();
     	$answer->setInsertDate(new \DateTime());
     	$answer->setStudentHasCourseHasExam($session);
@@ -527,11 +485,11 @@ final class ExamService extends BaseService
     	$answer->setCorrect($option->getCorrect());
     	$this->getEntityManager()->persist($answer);
     	
-    	// Aggiornamento punti
+    	// Adding points
     	$session->setPoints($session->getPoints()+$option->getPoints());
     	$this->getEntityManager()->persist($session);
     	
-    	// Aggiornamento avanzamento
+    	// Session progress
     	$currentProgressive = $session->getProgressive();
     	$session->setProgressive($currentProgressive+1);
     	if (count($session->getItem()) == $currentProgressive+1) {
@@ -544,7 +502,19 @@ final class ExamService extends BaseService
     			$newPoints = ceil($session->getPoints() - (($session->getPoints()*$perc)/100));
     		}
     		$this->getEntityManager()->persist($session);
-    		$retval = 1;
+    		
+    		$index = split("/",$session->getSessionIndex());
+    		if ($index[0] == $index[1]) {
+    			// Session has terminated, and exam has terminated too:
+    			// let's check for the course
+    			$exam = $session->getExam();
+    			$course = $exam->getCourse();
+    			if ($exam->getMandatory() === 1 && $exam->getProgOnCourse() == $course->getTotalexams()	 {
+    				$retval = 2;
+    			}
+    		} else {
+    			$retval = 1;
+    		}
     	} else {
     		$retval = 0;
     	}
@@ -604,13 +574,60 @@ final class ExamService extends BaseService
     }
     
     /**
+     * Token validation 
+     * The function destructurate the token received, grabs the "student part" and separate it from the
+     * "session part". If everything is consistent, the function returns void. Otherwise, it raises an 
+     * exception that should be used to determine the error received.
+     *  
+     * @param string $token
+     * @return void
+     * @throws \Exception 
+     */
+    public function validateToken($token)
+    {
+    	// Start validation process
+    	if (strpos($token,".") === false)
+    		throw new MalformedRequest("The \".\" character is missing in the token [".$token."]");
+    		 
+    		$studentToken = substr($token,0,strpos($token, "."));
+    		$sessionToken = substr($token,strpos($token, ".") + 1);
+    		 
+    		if (!$studentToken || strlen($studentToken) == 0)
+    			throw new MalformedRequest("The token student part is not valued [".$token."]");
+    			
+    		if (!$sessionToken || strlen($sessionToken) == 0)
+    			throw new MalformedRequest("The token session part is not valued [".$token."]");
+    				 
+    		// Get the student info
+    		$student = $this->getStudentRepo()->findByIdentifier($studentToken);
+    		if (!$student)
+    			throw new ObjectNotFound("No student found for the token student part [".$studentToken."]",Errorcode::ERRCODE_STUDENT_NOT_FOUND);
+    		
+    		if ($student->getActivationstatus()->getId() != ActivationStatus::STATUS_ENABLED)
+    			throw new ObjectNotEnabled("Not enabled student found [".$student->getId()."] for the token student part [".$studentToken."]",Errorcode::ERRCODE_STUDENT_NOT_ENABLED);
+    						 
+    		// Get the session info
+    		$session = $this->getStudentHasCourseHasExamRepo()->findByIdentifier($sessionToken);
+    		if (!$session)
+    			throw new ObjectNotFound("No exam session found for the token session part [".$sessionToken."]",Errorcode::ERRCODE_SESSION_NOT_FOUND);
+    							 
+    		// Does the session belong to the student?
+    		if ($session->getStudentHasCourse()->getStudent() != $student)
+    			throw new InconsistentContent("Both student and session token part are correct [".$studentToken."], [".$sessionToken."], but not related. Possible hacking trial");
+    								 
+    		// Get course information
+    		$course = $session->getStudentHasCourse()->getCourse();
+    		if ($course->getActivationstatus()->getId() != ActivationStatus::STATUS_ENABLED)
+    			throw new ObjectNotEnabled("Not enabled course found [".$course->getId()."] for the token session part [".$sessionToken."]",Errorcode::ERRCODE_COURSE_NOT_ENABLED);
+    }
+    
+    /**
      * Get current session information
      * @param string $token
      */
     public function getCurrentExamSessionItemByToken($token,$isChallenge = false)
     {
     	// Start validation process
-    	
     	if (strpos($token,".") === false) 
     		throw new MalformedRequest("The \".\" character is missing in the token [".$token."]");
     		 
@@ -638,7 +655,7 @@ final class ExamService extends BaseService
     	// Does the session belong to the student?
     	if ($session->getStudentHasCourse()->getStudent() != $student)
     		throw new InconsistentContent("Both student and session token part are correct [".$studentToken."], [".$sessionToken."], but not related. Possible hacking trial");
-    		
+    	
     	// End validation process
     		
     		

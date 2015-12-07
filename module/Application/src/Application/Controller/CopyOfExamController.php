@@ -18,7 +18,6 @@ use Zend\Form\Form;
 use Application\Form\ExamMultisubmit;
 use Application\Form\ExamDragDrop;
 use Zend\Db\Sql\Ddl\Column\Boolean;
-use Core\Exception\ObjectNotEnabled;
 
 class ExamController extends AbstractActionController
 {
@@ -42,17 +41,6 @@ class ExamController extends AbstractActionController
 	 * @var Logger
 	 */
 	private $logger;
-	
-	/**
-	 * Controller index action.
-	 * Nothing really to do here, so we can redirect the user to the corporate site.
-	 * {@inheritDoc}
-	 * @see \Zend\Mvc\Controller\AbstractActionController::indexAction()
-	 */
-	public function indexAction()
-	{
-		return $this->redirect()->toUrl($this->config['corporateurl']);
-	}
 	
 	/**
 	 * Richiesta JS di verifica risultato di una risposta utente.
@@ -131,6 +119,8 @@ class ExamController extends AbstractActionController
 		echo json_encode($result);die();
 	}
 	
+	public function indexAction() 
+	{}
 	
 	public function challengesAction()
 	{
@@ -159,9 +149,12 @@ class ExamController extends AbstractActionController
 	}
 	
 	/**
-	 * Exam session tarting point: token given by the user (click on email)
-	 * retrieve the current session (if any) and related information.
-	 * 
+	 * Ingresso nella funzione di accesso all'esame.
+	 * Questa action verifica la presenza del token utente (inviato via email).
+	 * In caso di consistenza, verifica se un utente puo' partecipare all'esame:
+	 * - se non c'e' token o non si verificano le condizioni di partecipazione, carica una pagina di errore
+	 * - altrimenti invia la richiesta utente al quesito
+	 *
 	 * @return void
 	 * @see \Zend\Mvc\Controller\AbstractActionController::indexAction()
 	 */
@@ -170,16 +163,10 @@ class ExamController extends AbstractActionController
 		return $this->tokenize(false);
 	}
 	
-	/**
-	 * Exam challenge starting point: token given by the user,
-	 * the function tries to show the currently available challenges
-	 */
 	public function tokenchallengeAction()
 	{
 		return $this->tokenize(true);
 	}
-	
-	
 	
 	private function tokenize($challenge)
 	{
@@ -187,10 +174,6 @@ class ExamController extends AbstractActionController
 		$stmt = $this->params('tkn',"");
 		
 		try {
-			// Validate the token			
-			$this->getExamService()->validateToken($stmt);
-			
-			
 			// Load session info
 			$res = $this->getExamService()->getCurrentExamSessionItemByToken($stmt,$challenge);
 			
@@ -223,10 +206,8 @@ class ExamController extends AbstractActionController
 			
 			if ($e instanceof MalformedRequest || $e instanceof InconsistentContent) {
 				// Richiesta volutamente errata
-				$this->logger->notice("Received inconsistant/malfrormed request token [".$stmt."]");
+				$this->getServiceLocator()->get("Logger")->notice("Received inconsistant/malfrormed request token [".$stmt."]");
 				$this->redirect()->toUrl($this->config['corporateurl']);
-			} else if ($e instanceof ObjectNotEnabled) {
-				// 
 			} else {
 				// Errore 500
 				$this->session->error_message = "Errore interno del Server (codice: ".$e->getCode().")";
@@ -261,7 +242,42 @@ class ExamController extends AbstractActionController
 		}
 		return $vm;
 	}
+	
+	/**
+	 * Visualizzazione pagina interstiziale di inizio esame. Viene visualizzata in fase di inizio esame
+	 * 
+	 * @deprecated
+	 * @return void
+	 * @see \Zend\Mvc\Controller\AbstractActionController 
+	 */
+	public function startAction()
+	{
+		$this->initExam();
 		
+		// Inizializza variabili d'ambiente
+		$this->session->offsetUnset('startedTime');
+		$this->session->offsetUnset('usedTries');
+		return $this->composeParticipationVM();
+	}
+	
+	/**
+	 * Visualizzazione pagina interstiziale di inizio esame. Viene visualizzata in fase di ripresa esame
+	 *
+	 * @deprecated
+	 * @return void
+	 * @see \Zend\Mvc\Controller\AbstractActionController 
+	 */
+	public function restartAction()
+	{
+		$this->initExam();
+
+		// Inizializza variabili d'ambiente
+		$this->session->offsetUnset('startedTime');
+		$this->session->offsetUnset('usedTries');
+		
+		return $this->composeParticipationVM();
+	}
+	
 	/**
 	 * Visualizzazione pagina interstiziale di fine esame. Viene visualizzato al termine di una sessione
 	 * 
@@ -345,10 +361,9 @@ class ExamController extends AbstractActionController
 		$this->session->offsetUnset('startedTime');
 		$this->session->offsetUnset('usedTries');
 		
-		if ($retval === 1 || $retval === 2) {
-		
-			// Finito esame e/o corso
-			$this->redirect()->toRoute('exam_end',array('termination' => $retval));
+		if ($retval === 1) {
+			// Finito esame
+			$this->redirect()->toRoute('exam_end');
 			return;
 		} else {
 			$res = $this->getExamService()->getCurrentExamSessionItemByToken($this->session->token,$this->session->exam['session']['challenge']);
@@ -359,8 +374,8 @@ class ExamController extends AbstractActionController
 	}
 	
 	/**
-	 * Question/answer generic page. 
-	 * Handles the current step of the session, and composes the view with question and info elements
+	 * Visualizzazione pagina di partecipazione al concorso: acquisisce lo step attuale, il relativo item 
+	 * e lo visualizza per ottenere la risposta dall'utente.
 	 * 
 	 * @return void
 	 * @see \Zend\Mvc\Controller\AbstractActionController
@@ -368,29 +383,27 @@ class ExamController extends AbstractActionController
 	public function participateAction()
 	{
 		$this->initExam();
-		
-		//try {
-			
+		try {
+			// Impostazione valore corrente per la sessione d'esame
 			$view = $this->composeParticipationVM();
 			$form = $this->composeForm();
 			if ($form instanceof ExamDragDrop) {
 				$view->scramble = $form->getUlReorderOptions();
-			}
-			$view->form = $form;
+			}$view->form = $form;
 			return $view;
-		//} catch (\Exception $e) {
-		//	$this->logger->warn($e->getMessage());
-		//	$this->logger->info($e->getTraceAsString());
+		} catch (\Exception $e) {
+			$this->logger->warn($e->getMessage());
+			$this->logger->info($e->getTraceAsString());
 			
-		//	if ($e instanceof MalformedRequest || $e instanceof InconsistentContent) {
-		//		// Richiesta volutamente errata
-		//		$this->redirect()->toUrl($this->config['corporateurl']);
-		//	} else {
-		//		// Errore 500
-		//		$this->session->error_message = "Si &egrave; verificato un errore nella partecipazione all'esame (codice: ".$e->getCode().")";
-		//		$this->redirect()->toRoute('exam_500');
-		//	}
-		//}
+			if ($e instanceof MalformedRequest || $e instanceof InconsistentContent) {
+				// Richiesta volutamente errata
+				$this->redirect()->toUrl($this->config['corporateurl']);
+			} else {
+				// Errore 500
+				$this->session->error_message = "Si &egrave; verificato un errore nella partecipazione all'esame (codice: ".$e->getCode().")";
+				$this->redirect()->toRoute('exam_500');
+			}
+		}
 	}
 	
 	/**
@@ -408,7 +421,7 @@ class ExamController extends AbstractActionController
 	}
 	
 	/**
-	 * Initialize page with Verifica la presenza dei dati di accesso in sessione, altrimenti invalida e
+	 * Verifica la presenza dei dati di accesso in sessione, altrimenti invalida e
 	 * re-invia l'utente a STM
 	 *
 	 * @return void
@@ -419,10 +432,10 @@ class ExamController extends AbstractActionController
 		$this->init();
 		
 		$this->session->error_message = "";
-		if (!$this->session || !$this->session->offsetExists('exam')) {
+		if (!$this->session->offsetExists('exam')) {
 			// Accesso utente a pagina senza sessione
 			$this->logger->notice("Utente ha eseguito l'accesso diretto alla pagina di partecipazione (o affini) senza esame in sessione");
-			return $this->redirect()->toUrl($this->config['corporateurl']);
+			$this->redirect()->toUrl($this->config['corporateurl']);
 		}
 	}
 	

@@ -1,0 +1,1 @@
+2015-12-05T23:47:03+01:00 NOTICE (5): Undefined variable: console {"errno":8,"file":"/private/var/www/stmhub/bin/console.php","line":68,"Zf2Logger":"{\"sessionId\":\"pj0tbga95nd6fnl4ov26okme47\",\"host\":\"CLI\",\"ip\":\"unavailable\"}"}
