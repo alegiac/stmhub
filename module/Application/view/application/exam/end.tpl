@@ -14,7 +14,7 @@
 	        		<div class="card-header">
 	        			<div class="row">
 	        				<center>
-	        					{$message}
+	        					<h3>{$message}</h3>
 	        					<hr>
 	        					<h4>Hai accumulato {$points} punti, continua a seguirci!</h4>
 	                   		</center>

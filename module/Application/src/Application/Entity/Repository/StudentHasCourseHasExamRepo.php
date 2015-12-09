@@ -67,8 +67,7 @@ class StudentHasCourseHasExamRepo extends \Doctrine\ORM\EntityRepository
 	 */
 	public function findByExam(Exam $exam)
 	{
-		$criteria = Criteria::create()->where(Criteria::expr()->eq('exam',$exam))->andWhere(Criteria::expr()->eq('mandatory', 1))
-	;
+		$criteria = Criteria::create()->where(Criteria::expr()->eq('exam',$exam));
 		$result = $this->matching($criteria);
 		if ($result->count()) return $result->getValues();
 		return array();

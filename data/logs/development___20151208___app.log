@@ -1,0 +1,16 @@
+2015-12-08T00:56:39+01:00 WARN (4): Creating default object from empty value {"errno":2,"file":"/private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php","line":279,"Zf2Logger":"{\"sessionId\":\"enn4pkm2cdvg66tql5lbmk09d2\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-08T01:04:10+01:00 WARN (4): No exam session found for the token session part [23e24d90c6975b633f20329226281e642e52ab03] {"Zf2Logger":"{\"sessionId\":\"enn4pkm2cdvg66tql5lbmk09d2\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-12-08T01:04:10+01:00 INFO (6): #0 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(191): Application\Service\ExamService->getCurrentExamSessionItemByToken('39311445254797....', true)
+#1 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(179): Application\Controller\ExamController->tokenize(true)
+#2 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractActionController.php(82): Application\Controller\ExamController->tokenchallengeAction()
+#3 [internal function]: Zend\Mvc\Controller\AbstractActionController->onDispatch(Object(Zend\Mvc\MvcEvent))
+#4 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractController.php(118): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/DispatchListener.php(93): Zend\Mvc\Controller\AbstractController->dispatch(Object(ZF\ContentNegotiation\Request), Object(Zend\Http\PhpEnvironment\Response))
+#8 [internal function]: Zend\Mvc\DispatchListener->onDispatch(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#10 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#11 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(314): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#12 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#13 {main} {"Zf2Logger":"{\"sessionId\":\"enn4pkm2cdvg66tql5lbmk09d2\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}

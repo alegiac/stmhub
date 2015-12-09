@@ -187,10 +187,6 @@ class ExamController extends AbstractActionController
 		$stmt = $this->params('tkn',"");
 		
 		try {
-			// Validate the token			
-			$this->getExamService()->validateToken($stmt);
-			
-			
 			// Load session info
 			$res = $this->getExamService()->getCurrentExamSessionItemByToken($stmt,$challenge);
 			
@@ -272,17 +268,29 @@ class ExamController extends AbstractActionController
 	{
 		
 		$this->initExam();
-
-		// Inizializza variabili d'ambiente
-		$this->session->offsetUnset('startedTime');
-		$this->session->offsetUnset('usedTries');
 		
+		$terminationValue = $this->params()->fromQuery('termination');
+
 		$vm = new ViewModel();
 		// Dati studente
 		$vm->firstName = $this->session->exam['student']['firstname'];
 		$vm->lastName = $this->session->exam['student']['lastname'];
+
+		switch ($terminationValue) {
+			case ExamService::SESSION_TERMINATED:
+				$vm->message = $this->session->exam['student']['firstname'].", hai completato questa sessione.";
+				break;
+			case ExamService::EXAM_TERMINATED:
+				$vm->message = "Complimenti ".$this->session->exam['student']['firstname'].", hai completato il livello ".$this->session->exam['exam']['name'];
+				break;
+			case ExamService::COURSE_TERMINATED:
+				$vm->message = "Complimenti ".$this->session->exam['student']['firstname'].", hai completato il corso ".$this->session->exam['course']['name'];
+				break;
+		}
+		// Inizializza variabili d'ambiente
+		$this->session->offsetUnset('startedTime');
+		$this->session->offsetUnset('usedTries');
 		
-		print_r($this->session->exam);die();
 		
 		// Resetta i dati di sessione
 		//$this->cleanSessionExamVars();
@@ -304,9 +312,10 @@ class ExamController extends AbstractActionController
 		
 		$retval = $this->getExamService()->responseWithATimeout($sessionId, $examId, $itemId);
 		
-		if ($retval === 1) {
-			// Finito esame
-			$this->redirect()->toRoute('exam_end');
+		if ($retval !== 0) {
+		
+			// Finito esame e/o corso
+			$this->redirect()->toRoute('exam_end',array('termination' => $retval));
 			return;
 		} else {
 			$res = $this->getExamService()->getCurrentExamSessionItemByToken($this->session->token,$this->session->exam['session']['challenge']);
@@ -345,7 +354,7 @@ class ExamController extends AbstractActionController
 		$this->session->offsetUnset('startedTime');
 		$this->session->offsetUnset('usedTries');
 		
-		if ($retval === 1 || $retval === 2) {
+		if ($retval !== 0) {
 		
 			// Finito esame e/o corso
 			$this->redirect()->toRoute('exam_end',array('termination' => $retval));
@@ -525,9 +534,9 @@ class ExamController extends AbstractActionController
 	
 	protected function composeExamList($list,$doShort = false)
 	{
-		$fontSize = "150%";
+		$fontSize = "110%";
 		if ($doShort === true) {
-			$fontSize = "80%";
+			$fontSize = "70%";
 		}
 		
 		if ($doShort === true) {

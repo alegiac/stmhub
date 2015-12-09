@@ -23,6 +23,11 @@ use Application\Entity\StudentHasCourse;
 
 final class ExamService extends BaseService
 {	
+	const SESSION_NOT_TERMINATED = 0;
+	const SESSION_TERMINATED = 1;
+	const EXAM_TERMINATED = 2;
+	const COURSE_TERMINATED = 3;
+	
 	/**
 	 * Load all exams for the course
 	 * @param Course $course
@@ -40,31 +45,59 @@ final class ExamService extends BaseService
 			$name = $exam->getName();
 			$sessRepo = $this->getStudentHasCourseHasExamRepo();
 			$examStarted = false;
-			$examCompleted = true;
+			$examCompleted = false;
 			
 			// Got all the sessions. 
 			$sessionsExam = $sessRepo->findByExam($exam);
 			foreach ($sessionsExam as $sesEx) {
 				/* @var $sesEx StudentHasCourseHasExam */
-				if ($sesEx->getProgressive() > 0) {
+				if ($sesEx->getRealStartDate() != null) {
 					// At least one session has been started. The exam is started!
 					$examStarted = true;
 				}
-				if (!$sesEx->getCompleted()) {
-					$examCompleted = false;
+				if ($sesEx->getEndDate() != null) {
+					$examCompleted = true;
 					break;
 				}
 			}
 			
 			$rv = array('name' => $name);
-			if ($examStarted === false) {
-				$rv['started'] = false;
-				$rv['completed'] = false;
-			} else {
-				$rv['started'] = true;
-				$rv['completed'] = $examCompleted;
-			}
+			$rv['started'] = $examStarted;
+			$rv['completed'] = $examCompleted;
 			$retval[] = $rv;
+		}
+		
+		$challenges = $this->getExamRepo()->findNotMandatoriesByCourse($course);
+		
+		foreach ($challenges as $challenge) {
+			/* @var $challenge Exam */
+			$name = $challenge->getName();
+			$sessRepo = $this->getStudentHasCourseHasExamRepo();
+			$challengeStarted = false;
+			$challengeCompleted = false;
+			
+			// Got all the sessions.
+			$sessionsChallenge = $sessRepo->findByExam($challenge);
+			foreach ($sessionsChallenge as $sesCh) {
+			
+				/* @var $sesCh StudentHasCourseHasExam */
+				if ($sesCh->getRealStartDate() != null) {
+					// At least one session has been started. The challenge is started!
+					$challengeStarted = true;
+				}
+				if ($sesCh->getEndDate() != null) {
+					$challengeCompleted = true;
+					break;
+				}
+			}
+				
+			$rv = array('name' => $name);
+			
+			$rv['started'] = $challengeStarted;
+			$rv['completed'] = $challengeCompleted;
+			
+			$retval[] = $rv;
+			
 		}
 		
 		return $retval;
@@ -441,11 +474,25 @@ final class ExamService extends BaseService
     			$newPoints = ceil($session->getPoints() - (($session->getPoints()*$perc)/100));
     		}
     		$this->getEntityManager()->persist($session);
-    		$retval = 1;
-    	} else {
-    		$retval = 0;
-    	}
     	
+    		$index = split("/",$session->getSessionIndex());
+    		if ($index[0] == $index[1]) {
+    			// Session has terminated, and exam has terminated too:
+    			// let's check for the course
+    			$exam = $session->getExam();
+    			$course = $exam->getCourse();
+    			if ($exam->getMandatory() === 1 && $exam->getProgOnCourse() == $course->getTotalexams()) {
+    				$retval = self::COURSE_TERMINATED;
+    			} else {
+    				$retval = self::EXAM_TERMINATED;
+    			}
+    		} else {
+    			$retval = self::SESSION_TERMINATED;
+    		}
+    	} else {
+    		$retval = self::SESSION_NOT_TERMINATED;
+    	}
+    	 
     	$this->getEntityManager()->flush();
     	$this->getEntityManager()->commit();
     	 
@@ -509,14 +556,16 @@ final class ExamService extends BaseService
     			// let's check for the course
     			$exam = $session->getExam();
     			$course = $exam->getCourse();
-    			if ($exam->getMandatory() === 1 && $exam->getProgOnCourse() == $course->getTotalexams()	 {
-    				$retval = 2;
+    			if ($exam->getMandatory() === 1 && $exam->getProgOnCourse() == $course->getTotalexams())	 {
+    				$retval = self::COURSE_TERMINATED;
+    			} else {
+    				$retval = self::EXAM_TERMINATED;
     			}
     		} else {
-    			$retval = 1;
+    			$retval = self::SESSION_TERMINATED;
     		}
     	} else {
-    		$retval = 0;
+    		$retval = self::SESSION_NOT_TERMINATED;
     	}
     	
     	$this->getEntityManager()->flush();
@@ -562,63 +611,29 @@ final class ExamService extends BaseService
     			$newPoints = ceil($session->getPoints() - (($session->getPoints()*$perc)/100));
     		}
     		$this->getEntityManager()->persist($session);
-    		$retval = 1;
+    	
+    		$index = split("/",$session->getSessionIndex());
+    		if ($index[0] == $index[1]) {
+    			// Session has terminated, and exam has terminated too:
+    			// let's check for the course
+    			$exam = $session->getExam();
+    			$course = $exam->getCourse();
+    			if ($exam->getMandatory() === 1 && $exam->getProgOnCourse() == $course->getTotalexams()) {
+    				$retval = self::COURSE_TERMINATED;
+    			} else {
+    				$retval = self::EXAM_TERMINATED;
+    			}
+    		} else {
+    			$retval = self::SESSION_TERMINATED;
+    		}
     	} else {
-    		$retval = 0;
+    		$retval = self::SESSION_NOT_TERMINATED;
     	}
-
+    	 
     	$this->getEntityManager()->flush();
     	$this->getEntityManager()->commit();
     	
     	return $retval;
-    }
-    
-    /**
-     * Token validation 
-     * The function destructurate the token received, grabs the "student part" and separate it from the
-     * "session part". If everything is consistent, the function returns void. Otherwise, it raises an 
-     * exception that should be used to determine the error received.
-     *  
-     * @param string $token
-     * @return void
-     * @throws \Exception 
-     */
-    public function validateToken($token)
-    {
-    	// Start validation process
-    	if (strpos($token,".") === false)
-    		throw new MalformedRequest("The \".\" character is missing in the token [".$token."]");
-    		 
-    		$studentToken = substr($token,0,strpos($token, "."));
-    		$sessionToken = substr($token,strpos($token, ".") + 1);
-    		 
-    		if (!$studentToken || strlen($studentToken) == 0)
-    			throw new MalformedRequest("The token student part is not valued [".$token."]");
-    			
-    		if (!$sessionToken || strlen($sessionToken) == 0)
-    			throw new MalformedRequest("The token session part is not valued [".$token."]");
-    				 
-    		// Get the student info
-    		$student = $this->getStudentRepo()->findByIdentifier($studentToken);
-    		if (!$student)
-    			throw new ObjectNotFound("No student found for the token student part [".$studentToken."]",Errorcode::ERRCODE_STUDENT_NOT_FOUND);
-    		
-    		if ($student->getActivationstatus()->getId() != ActivationStatus::STATUS_ENABLED)
-    			throw new ObjectNotEnabled("Not enabled student found [".$student->getId()."] for the token student part [".$studentToken."]",Errorcode::ERRCODE_STUDENT_NOT_ENABLED);
-    						 
-    		// Get the session info
-    		$session = $this->getStudentHasCourseHasExamRepo()->findByIdentifier($sessionToken);
-    		if (!$session)
-    			throw new ObjectNotFound("No exam session found for the token session part [".$sessionToken."]",Errorcode::ERRCODE_SESSION_NOT_FOUND);
-    							 
-    		// Does the session belong to the student?
-    		if ($session->getStudentHasCourse()->getStudent() != $student)
-    			throw new InconsistentContent("Both student and session token part are correct [".$studentToken."], [".$sessionToken."], but not related. Possible hacking trial");
-    								 
-    		// Get course information
-    		$course = $session->getStudentHasCourse()->getCourse();
-    		if ($course->getActivationstatus()->getId() != ActivationStatus::STATUS_ENABLED)
-    			throw new ObjectNotEnabled("Not enabled course found [".$course->getId()."] for the token session part [".$sessionToken."]",Errorcode::ERRCODE_COURSE_NOT_ENABLED);
     }
     
     /**
@@ -697,6 +712,9 @@ final class ExamService extends BaseService
     		foreach ($allSessions as $sess) {
     			if ($sess->getCompleted() === 0 && $sess->getStartDate() < new \DateTime()) {
    					// Segue session found to complete
+   					$sess->setRealStartDate(new \DateTime());
+   					$this->getEntityManager()->persist($sess);
+   					$this->getEntityManager()->flush();
    					return $this->composeAnswer($sess,false,"Questa sessione risulta completata. Trovata una sessione successiva da completare");
    				}
    			}
@@ -710,8 +728,15 @@ final class ExamService extends BaseService
    				if ($sess->getCompleted() === 0 && $sess->getStartDate() < new \DateTime()) {
    					// Found previous session
    					if ($sess != $session) {
+   						$sess->setRealStartDate(new \DateTime());
+   						$this->getEntityManager()->persist($sess);
+   						$this->getEntityManager()->flush();
    						return $this->composeAnswer($sess,false,"Sessione precedente trovata da completare");
    					}
+   					
+   					$session->setRealStartDate(new \DateTime());
+   					$this->getEntityManager()->persist($session);
+   					$this->getEntityManager()->flush();
    					return $this->composeAnswer($session,false,'Sessione corrente trovata');
    				}
    			}
