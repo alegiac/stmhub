@@ -118,18 +118,13 @@
 	            		</div>
 	            		<div class="col-xs-4">
 	            			<div class="pv-body">
-	            				<center>
-									<small>Punti</small><br>
-									<strong style="color:black;">{$points}</strong><br>
 									<p>
+										<small style="color:light-grey;">Punti</small>:  <strong style="color:black;">{$points}</strong><br>
 										<small style="color:light-grey;">Scadenza</small>:  <strong style="color:black;">{$expectedEndDateShort}</strong><br>
-										&nbsp;
 										<small style="color:light-grey;">Sessione</small>:  <strong style="color:black;">{$sessionIndex}</strong><br>
-										&nbsp;
 										<small style="color:light-grey;">Domanda</small>:  <strong style="color:black;">{$actualQuestion}/{$totalQuestion}</strong><br>
-										&nbsp;		
+										<small style="color:light-grey;">In sessione da</small>: <strong style="color:black;">{$minInSession}</strong>
 									</p>
-		            			</center>
 	                		</div>
 	                	</div>
 	                	<div class="col-xs-4">
@@ -162,11 +157,13 @@
 	                    		</div>
 	                		</div>
 						</div>
+						In questa sessione da<br>
+						{$minInSession}
                     </div>
                 </div>
                 <div class="card" style="margin-top:-25px;">
                 	<div class="pv-body">
-                		<center><br><h4>{$courseName}</h4><hr><br></center>
+                		<center><br><h4>{$courseName}</h4><hr></center>
                 		{$examList}
                 	</div>
                 </div>
@@ -183,6 +180,11 @@
 		
 		{literal}
 			$(document).ready(function() {
+	
+		    	function disableBack() {window.history.forward()}
+
+    			window.onload = disableBack();
+    			window.onpageshow = function (evt) {if (evt.persisted) disableBack()}
 	
 				$('.scrambled').sortable(
 					{

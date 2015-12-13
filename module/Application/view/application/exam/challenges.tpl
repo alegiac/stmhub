@@ -53,35 +53,25 @@
                 	<div class="pv-header">
                    	</div>
                             
-                    <div class="pv-body">
+                    <div class="pv-body" style="margin-top: 30px;">
                         <h2>{$firstName} {$lastName}</h2>
-                        <small>{$email}</small>
+                        <br>
+                        <div class="mini-charts-item bgm-cyan">
+							<div class="clearfix">
+	                    		<div class="count">
+	                        		<small>Punti</small>
+	                        		<h2>{$points}</h2>
+	                    		</div>
+	                		</div>
+						</div>
                     </div>
                 </div>
-                
-                <div class="card">
+                <div class="card" style="margin-top:-25px;">
                 	<div class="pv-body">
-                		<center><br><h4>{$courseName}</h4><hr><br></center>
+                		<center><br><h4>{$courseName}</h4><hr></center>
                 		{$examList}
                 	</div>
                 </div>
-                
-                <div class="card">
-                	<div class="pv-body">
-                		<center><br><small>Data termine sessione</small><br><h4>{$expectedEndDate}</h4><br></center>
-                	</div>
-                </div>
-                
-                <div class="mini-charts-item bgm-cyan">
-					<div class="clearfix">
-	                    <div class="chart chart-pie stats-pie"></div>
-	                    <div class="count">
-	                        <small>Punteggio accumulato</small>
-	                        <h2>{$points}/{$maxpoints}</h2>
-	                    </div>
-	                </div>
-				</div>
             </div>
-
         </section>
 {/block}

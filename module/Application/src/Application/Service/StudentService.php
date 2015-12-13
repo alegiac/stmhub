@@ -112,7 +112,8 @@ final class StudentService extends BaseService
     		$session->setStartDate($lastDateStart);
     		$session->setStudentHasCourse($studentHasCourse);
     		$session->setToken($token);
-    		$session->setSessionIndex("1/1");
+    		$session->setSessionOnCourse(1);
+    		$session->setSessionOnExam("1/1");
     		
     		$arrayItemsForSession = array();
     		 
@@ -145,6 +146,7 @@ final class StudentService extends BaseService
     		$this->getEntityManager()->persist($session);
     		$this->getEntityManager()->flush();
     	}
+    	$ss = 0;
     	
     	// For session logic, only mandatory exams will be used 
     	$exams = $this->getExamRepo()->findMandatoriesByCourse($course);
@@ -152,6 +154,8 @@ final class StudentService extends BaseService
     	
     	$lastDateStart = $startDate;
     	$lastDateEnd = $lastDateStart->add(new \DateInterval('P'.$periodicityWeek.'W'));
+    	
+    	$currentSession = 0;
     	
     	foreach ($exams as $exam) {
     		
@@ -164,7 +168,7 @@ final class StudentService extends BaseService
     		$upto = count($itemsForExam);
     		
     		for($i=0;$i<$sessionsForExam;$i++) {
-    			
+    			$currentSession += 1;
     			// Create an universal token
     			$token = $this->generateSessionToken($student->getId(), $exam->getId(), $i);
     			
@@ -180,9 +184,8 @@ final class StudentService extends BaseService
 	    		$session->setStartDate($lastDateStart);
 	    		$session->setStudentHasCourse($studentHasCourse);
 	    		$session->setToken($token);
-	    		$session->setSessionIndex(($i+1)."/".$sessionsForExam);
-	    		
-	    		
+	    		$session->setSessionOnCourse($currentSession);
+	    		$session->setSessionOnExam(($i+1)."/".$sessionsForExam);
 	    		
 	    		// Extend dates
 	    		$next = new \DateInterval('P'.$periodicityWeek.'W');

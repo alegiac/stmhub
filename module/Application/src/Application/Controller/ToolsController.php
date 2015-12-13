@@ -65,50 +65,6 @@ class ToolsController extends AbstractActionController
 		die();
 	}
 	
-	public function studentsAction()
-	{
-		$this->init();
-		
-		$stud1 = array(
-			'firstname' => 'Federico',
-			'lastname' => 'Cocheo',
-			'email' => 'f.cocheo@smiletomove.it',
-			'passwordsha1' => sha1("password"),
-			'sex' => 'M'
-		);
-		
-		$stud2 = array(
-				'firstname' => 'Daniela',
-				'lastname' => 'Gomiero',
-				'email' => 'd.gomiero@smiletomove.it',
-				'passwordsha1' => sha1("password"),
-				'sex' => 'F'
-		);
-		
-		$stud3 = array(
-				'firstname' => 'Marianna',
-				'lastname' => 'Marcuzzo',
-				'email' => 'm.marcuzzo@smiletomove.it',
-				'passwordsha1' => sha1("password"),
-				'sex' => 'F'
-		);
-		
-		$stud4 = array(
-				'firstname' => 'Debora',
-				'lastname' => 'Oliosi',
-				'email' => 'd.oliosi@smiletomove.it',
-				'passwordsha1' => sha1("password"),
-				'sex' => 'F'
-		);
-		
-		$res = $this->getStudentService()->insertStudent($stud1);
-		$res = $this->getStudentService()->insertStudent($stud2);
-		$res = $this->getStudentService()->insertStudent($stud3);
-		$res = $this->getStudentService()->insertStudent($stud4);
-		
-		echo "ssss";
-	}
-	
 	/**
 	 * Impostazioni di default (acquisizione sessione, impostazione config e logger).
 	 * Verifica la presenza dei dati di accesso in sessione, altrimenti invalida e 

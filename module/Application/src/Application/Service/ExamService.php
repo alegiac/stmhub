@@ -36,6 +36,8 @@ final class ExamService extends BaseService
 	private function getExamsForCourse(Course $course)
 	{
 		$retval = array();
+		$retval['Esami'] = array();
+		$retval['Sfide'] = array();
 		
 		$exams = $this->getExamRepo()->findMandatoriesByCourse($course);
 		
@@ -64,7 +66,8 @@ final class ExamService extends BaseService
 			$rv = array('name' => $name);
 			$rv['started'] = $examStarted;
 			$rv['completed'] = $examCompleted;
-			$retval[] = $rv;
+			
+			$retval['Esami'][] = $rv;
 		}
 		
 		$challenges = $this->getExamRepo()->findNotMandatoriesByCourse($course);
@@ -96,7 +99,7 @@ final class ExamService extends BaseService
 			$rv['started'] = $challengeStarted;
 			$rv['completed'] = $challengeCompleted;
 			
-			$retval[] = $rv;
+			$retval['Sfide'][] = $rv;
 			
 		}
 		
@@ -268,68 +271,11 @@ final class ExamService extends BaseService
     	return $this->getStudentHasCourseHasExamRepo()->sumStudentPoints($studentCourse);
     }
     
-    /**
-     * Acquisizione delle statistiche per studente, a partire da una sessione di esame
-     * 
-     * @param StudentHasCourseHasExam $studentCourseExam
-     * @return array
-     */
-    private function getStatsForStudent(StudentHasCourseHasExam $studentCourseExam)
+    private function getTotalSessionsForStudentInCourse(StudentHasCourse $studentCourse)
     {
-    	// Inizializzazione array di ritorno
-    	$retval = array();
-    	$retval['exams_completed'] = 0;
-    	$retval['exams_points'] = 0;
-    	// Calcolo punti totali possibili per il corso
-    	$retval['course_total_points'] = $this->getCourseMaxPoints($studentCourseExam->getStudentHasCourse()->getCourse());
-    	$retval['course_max_possible_points'] = $retval['course_total_points'];
-    	$retval['exam_max_possible_points'] = $this->getExamMaxPoints($studentCourseExam->getExam());
-    	
-    	// Numero totale di esami sostenuti per il corso corrente E punteggio totale raggiunto nel corso
-    	$gw_shche = $this->getStudentHasCourseHasExamRepo();
-    	$gw_shati = $this->getStudentHasAnsweredToItemRepo();
-    	$gw_itemoptions = $this->getItemoptionRepo();
-    
-    	$allExamsForStudent = $gw_shche->findByStudentOnCourse($studentCourseExam->getStudentHasCourse());
-    	// Per tutti gli esemi sostenuti dallo studente leggo i punti e li sommo.
-    	// Se poi l'esame � completato, si aggiunge alla lista degli esami corso completato
-    	if (count($allExamsForStudent)) {
-    		foreach ($allExamsForStudent as $examForStudent) {
-    			/* @var $examForStudent StudentHasCourseHasExam */
-    			$retval['exams_points'] += $examForStudent->getPoints();
-    			if ($examForStudent->getCompleted()) $retval['exams_completed']++;
-    			// Controlliamo se lo studente ha risposto a questa domanda
-    			$answers = $gw_shati->findByStudentCourseExam($examForStudent);
-    			if (count($answers)) {
-    				// L'utente ha risposto agli item dell'esame: confronto la risposta.
-    				foreach ($answers as $answer) {
-    					/* @var $answer StudentHasAnsweredToItem */
-    					$realOption = null;
-    					$itOptions = $this->getItemoptionRepo()->findByItem($answer->getItem());
-    					if (count($itOptions)) {
-    						foreach ($itOptions as $option) {
-    							if ($option->getCorrect() === 1) {
-    								$realOption = $option;
-    								break;
-    							}
-    						}
-    					}
-    					/* @var $actualOption Itemoption */
-    					if ($answer->getOptionId() != null) {
-    						$actualOption = $gw_itemoptions->find($answer->getOptionId());
-    						if ($realOption != $actualOption) {
-    							$points = $realOption->getPoints();
-    							$actualPoints = $actualOption->getPoints();
-    							$exceedingPoints = $points-$actualPoints;
-    							$retval['course_max_possible_points'] -= $exceedingPoints;
-    						}
-    					}
-    				}
-    			}		
-    		}
-    	}
-    	return $retval;
+    	return $this->getStudentHasCourseHasExamRepo()->countSessions($studentCourse);
     }
+    
     private function composeAnswer(StudentHasCourseHasExam $session,$isError = false,$message = "")
     {
     	$retval = array();
@@ -366,7 +312,7 @@ final class ExamService extends BaseService
     				'startdate' => $session->getStartDate(),
     				'realstartdate' => $session->getRealStartDate(),
     				'challenge' => !$session->getMandatory(),
-    				'index' => $session->getSessionIndex(),
+    				'index' => $session->getSessionOnCourse()."/".$this->getTotalSessionsForStudentInCourse($session->getStudentHasCourse()),
     		);
     
     		//$retval['stats'] = $this->getStatsForStudent($session);
@@ -475,7 +421,12 @@ final class ExamService extends BaseService
     		}
     		$this->getEntityManager()->persist($session);
     	
-    		$index = split("/",$session->getSessionIndex());
+    		//$index = split("/",$session->getSessionIndex());
+    		$exam = $session->getExam();
+    		$course = $exam->getCourse();
+    		
+    		$index = $session->getSessionOnExam();
+    		
     		if ($index[0] == $index[1]) {
     			// Session has terminated, and exam has terminated too:
     			// let's check for the course
@@ -550,7 +501,7 @@ final class ExamService extends BaseService
     		}
     		$this->getEntityManager()->persist($session);
     		
-    		$index = split("/",$session->getSessionIndex());
+    		$index = split("/",$session->getSessionOnExam());
     		if ($index[0] == $index[1]) {
     			// Session has terminated, and exam has terminated too:
     			// let's check for the course
@@ -612,7 +563,8 @@ final class ExamService extends BaseService
     		}
     		$this->getEntityManager()->persist($session);
     	
-    		$index = split("/",$session->getSessionIndex());
+    		$index = split("/",$session->getSessionOnExam());
+    		
     		if ($index[0] == $index[1]) {
     			// Session has terminated, and exam has terminated too:
     			// let's check for the course
@@ -712,9 +664,11 @@ final class ExamService extends BaseService
     		foreach ($allSessions as $sess) {
     			if ($sess->getCompleted() === 0 && $sess->getStartDate() < new \DateTime()) {
    					// Segue session found to complete
-   					$sess->setRealStartDate(new \DateTime());
-   					$this->getEntityManager()->persist($sess);
-   					$this->getEntityManager()->flush();
+   					if ($sess->getRealStartDate() == null) {
+   						$sess->setRealStartDate(new \DateTime());
+   						$this->getEntityManager()->persist($sess);
+   						$this->getEntityManager()->flush();
+   					}
    					return $this->composeAnswer($sess,false,"Questa sessione risulta completata. Trovata una sessione successiva da completare");
    				}
    			}
@@ -728,15 +682,19 @@ final class ExamService extends BaseService
    				if ($sess->getCompleted() === 0 && $sess->getStartDate() < new \DateTime()) {
    					// Found previous session
    					if ($sess != $session) {
-   						$sess->setRealStartDate(new \DateTime());
-   						$this->getEntityManager()->persist($sess);
-   						$this->getEntityManager()->flush();
+   						if ($sess->getRealStartDate() == null) {
+   							$sess->setRealStartDate(new \DateTime());
+   							$this->getEntityManager()->persist($sess);
+   							$this->getEntityManager()->flush();
+   						}
    						return $this->composeAnswer($sess,false,"Sessione precedente trovata da completare");
    					}
    					
-   					$session->setRealStartDate(new \DateTime());
-   					$this->getEntityManager()->persist($session);
-   					$this->getEntityManager()->flush();
+   					if ($session->getRealStartDate() == null) {
+   						$session->setRealStartDate(new \DateTime());
+   						$this->getEntityManager()->persist($session);
+   						$this->getEntityManager()->flush();
+   					}
    					return $this->composeAnswer($session,false,'Sessione corrente trovata');
    				}
    			}

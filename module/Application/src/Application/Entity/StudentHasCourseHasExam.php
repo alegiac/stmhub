@@ -106,11 +106,18 @@ class StudentHasCourseHasExam
     private $realStartDate;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="session_on_course", type="integer", nullable=true)
+     */
+    private $sessionOnCourse;
+
+    /**
      * @var string
      *
-     * @ORM\Column(name="session_index", type="string", length=45, nullable=true)
+     * @ORM\Column(name="session_on_exam", type="string", length=45, nullable=true)
      */
-    private $sessionIndex;
+    private $sessionOnExam;
 
     /**
      * @var \Application\Entity\Exam
@@ -455,27 +462,51 @@ class StudentHasCourseHasExam
     }
 
     /**
-     * Set sessionIndex
+     * Set sessionOnCourse
      *
-     * @param string $sessionIndex
+     * @param integer $sessionOnCourse
      *
      * @return StudentHasCourseHasExam
      */
-    public function setSessionIndex($sessionIndex)
+    public function setSessionOnCourse($sessionOnCourse)
     {
-        $this->sessionIndex = $sessionIndex;
+        $this->sessionOnCourse = $sessionOnCourse;
 
         return $this;
     }
 
     /**
-     * Get sessionIndex
+     * Get sessionOnCourse
+     *
+     * @return integer
+     */
+    public function getSessionOnCourse()
+    {
+        return $this->sessionOnCourse;
+    }
+
+    /**
+     * Set sessionOnExam
+     *
+     * @param string $sessionOnExam
+     *
+     * @return StudentHasCourseHasExam
+     */
+    public function setSessionOnExam($sessionOnExam)
+    {
+        $this->sessionOnExam = $sessionOnExam;
+
+        return $this;
+    }
+
+    /**
+     * Get sessionOnExam
      *
      * @return string
      */
-    public function getSessionIndex()
+    public function getSessionOnExam()
     {
-        return $this->sessionIndex;
+        return $this->sessionOnExam;
     }
 
     /**

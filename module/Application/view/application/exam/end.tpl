@@ -37,3 +37,18 @@
             
         </section>
 {/block}
+
+{block name="custom_js"}
+	<script type="text/javascript">
+		
+		{literal}
+			$(document).ready(function() {
+	
+		    	function disableBack() {window.history.forward()}
+
+    			window.onload = disableBack();
+    			window.onpageshow = function (evt) {if (evt.persisted) disableBack()}
+			});
+		{/literal}
+	</script>
+{/block}

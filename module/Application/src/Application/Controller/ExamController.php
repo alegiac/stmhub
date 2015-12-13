@@ -268,8 +268,8 @@ class ExamController extends AbstractActionController
 	{
 		
 		$this->initExam();
-		
-		$terminationValue = $this->params()->fromQuery('termination');
+		$terminationValue = $this->session->offsetGet('session_termination');
+		$this->session->offsetUnset('session_termination');
 
 		$vm = new ViewModel();
 		// Dati studente
@@ -313,9 +313,10 @@ class ExamController extends AbstractActionController
 		$retval = $this->getExamService()->responseWithATimeout($sessionId, $examId, $itemId);
 		
 		if ($retval !== 0) {
-		
+			$this->session->offsetSet('session_termination', $retval);
+			
 			// Finito esame e/o corso
-			$this->redirect()->toRoute('exam_end',array('termination' => $retval));
+			$this->redirect()->toRoute('exam_end');
 			return;
 		} else {
 			$res = $this->getExamService()->getCurrentExamSessionItemByToken($this->session->token,$this->session->exam['session']['challenge']);
@@ -355,9 +356,11 @@ class ExamController extends AbstractActionController
 		$this->session->offsetUnset('usedTries');
 		
 		if ($retval !== 0) {
+			
+			$this->session->offsetSet('session_termination', $retval);
 		
 			// Finito esame e/o corso
-			$this->redirect()->toRoute('exam_end',array('termination' => $retval));
+			$this->redirect()->toRoute('exam_end');
 			return;
 		} else {
 			$res = $this->getExamService()->getCurrentExamSessionItemByToken($this->session->token,$this->session->exam['session']['challenge']);
@@ -538,25 +541,33 @@ class ExamController extends AbstractActionController
 		if ($doShort === true) {
 			$fontSize = "70%";
 		}
+		$tag = "";
 		
-		if ($doShort === true) {
-			$tag = "<ul style=\"list-style-type: none;margin-top:5px;\">";
-		} else {
-			$tag = "<ul style=\"list-style-type: none;margin-top:-20px;\">";
-		}
-
-		foreach ($list as $exam) {
-			if ($exam['started'] === false) {
-				$tag .='<li style="color: lightgrey; font-size:'.$fontSize.';"><i class="fa fa-clock-o fa-fw"></i>&nbsp;&nbsp;'.$exam['name'].'</li>';
+		foreach ($list as $type=>$exams) {
+		
+			$tag .= "<center><strong>".$type."</strong></center><br>";
+		
+			if ($doShort === true) {
+				$tag .= "<ul style=\"list-style-type: none;margin-top:5px;\">";
 			} else {
-				if ($exam['completed'] === true) {
-					$tag .='<li style="color: green; font-size:'.$fontSize.';"><i class="fa fa-check-circle-o fa-fw"></i>&nbsp;&nbsp;<s>'.$exam['name'].'</s></li>';
+				$tag .= "<ul style=\"list-style-type: none;margin-top:-20px;\">";
+			}
+			
+			foreach ($exams as $exam) {
+				if ($exam['started'] === false) {
+					$tag .='<li style="color: lightgrey; font-size:'.$fontSize.';"><i class="fa fa-clock-o fa-fw"></i>&nbsp;&nbsp;'.$exam['name'].'</li>';
 				} else {
-					$tag .='<li style="color: black; font-size:'.$fontSize.';"><i class="fa fa-eye fa-fw"></i>&nbsp;&nbsp;'.$exam['name'].'</li>';
+					if ($exam['completed'] === true) {
+						$tag .='<li style="color: green; font-size:'.$fontSize.';"><i class="fa fa-check-circle-o fa-fw"></i>&nbsp;&nbsp;<s>'.$exam['name'].'</s></li>';
+					} else {
+						$tag .='<li style="color: black; font-size:'.$fontSize.';"><i class="fa fa-eye fa-fw"></i>&nbsp;&nbsp;'.$exam['name'].'</li>';
+					}
 				}
 			}
+			
+			$tag .= "</ul>";
 		}
-		$tag .= "</ul>";
+		
 		return $tag;
 	}
 		
@@ -590,14 +601,24 @@ class ExamController extends AbstractActionController
 			
 			// Dati sessione
 			$vm->expectedEndDate = $this->session->exam['session']['expectedenddate']->format('m/Y');
-			$vm->expectedEndDateShort = $this->session->exam['session']['expectedenddate']->format('d/m');
+			$vm->expectedEndDateShort = $this->session->exam['session']['expectedenddate']->format('m/Y');
 	
 			$vm->points = $this->session->exam['session']['points'];
 			
 			$vm->sessionIndex = $this->session->exam['session']['index'];
 			$vm->actualQuestion = $this->session->exam['current_item']['question_number'];
 			$vm->totalQuestion = $this->session->exam['current_item']['question_total'];
+			//print_r($this->session->exam['session']['realstartdate']);die();
+			$since_start = $this->session->exam['session']['realstartdate']->diff(new \DateTime());
 			
+			$minutes = $since_start->i;
+			$hours = $since_start->h;
+			
+			if ($hours > 0) {
+				$vm->minInSession = $since_start->h."ore e ".$since_start->i." min"; 
+			} else {
+				$vm->minInSession = $since_start->i." min";
+			}
 			// Dati esame
 			$vm->examName = $this->session->exam['exam']['name'];
 			$vm->examDesc = $this->session->exam['exam']['description'];

@@ -27,6 +27,17 @@ class StudentHasCourseHasExamRepo extends \Doctrine\ORM\EntityRepository
 		return $query->getResult()[0][1];
 	}
 	
+	public function countSessions(StudentHasCourse $studentInCourse)
+	{
+		$qb = $this->createQueryBuilder("count");
+		$qb->add('select','COUNT(r.id)')
+		->add('from','Application\Entity\StudentHasCourseHasExam r')
+		->add('where','r.studentHasCourse = :shc')->andWhere('r.mandatory = 1');
+		$query = $qb->getQuery()->setParameter('shc', $studentInCourse);
+		
+		return $query->getResult()[0][1];
+	}
+	
 	/**
 	 * Acquisizione unico record sessione per identificativo
 	 *
