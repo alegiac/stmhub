@@ -34,7 +34,6 @@
                     </div>
                 </div>
             </div>
-            
         </section>
 {/block}
 
@@ -43,11 +42,9 @@
 		
 		{literal}
 			$(document).ready(function() {
-	
-		    	function disableBack() {window.history.forward()}
-
-    			window.onload = disableBack();
-    			window.onpageshow = function (evt) {if (evt.persisted) disableBack()}
+				function disableBack() {window.history.forward()}
+				window.onload = disableBack();
+				window.onpageshow = function (evt) {if (evt.persisted) disableBack()}
 			});
 		{/literal}
 	</script>

@@ -19,6 +19,7 @@ use Application\Form\ExamMultisubmit;
 use Application\Form\ExamDragDrop;
 use Zend\Db\Sql\Ddl\Column\Boolean;
 use Core\Exception\ObjectNotEnabled;
+use Core\Exception\ObjectNotFound;
 
 class ExamController extends AbstractActionController
 {
@@ -162,8 +163,7 @@ class ExamController extends AbstractActionController
 	 * Exam session tarting point: token given by the user (click on email)
 	 * retrieve the current session (if any) and related information.
 	 * 
-	 * @return void
-	 * @see \Zend\Mvc\Controller\AbstractActionController::indexAction()
+	 * @return \Zend\View\Model\ViewModel
 	 */
 	public function tokenAction()
 	{
@@ -171,67 +171,79 @@ class ExamController extends AbstractActionController
 	}
 	
 	/**
-	 * Exam challenge starting point: token given by the user,
+	 * Exam challenge starting point: token given by the user (click on a challenge button),
 	 * the function tries to show the currently available challenges
+	 * 
+	 * @return \Zend\View\Model\ViewModel
 	 */
 	public function tokenchallengeAction()
 	{
 		return $this->tokenize(true);
 	}
 	
-	
-	
-	private function tokenize($challenge)
+	/**
+	 * Tokenization function: get the token in the query string,
+	 * retrieve the session info from the token and redirect the user
+	 * to:
+	 * - exam_participate --> exam session to start/complete
+	 * - exam_challenges --> no exam sessions, go to available challenges
+	 * - exam_nothing --> no challenges available, go to nothing to do action
+	 * 
+	 * @param boolean $isChallenge Flag for challenge token
+	 * @return \Zend\View\Model\ViewModel 
+	 */
+	private function tokenize($isChallenge)
 	{
 		$this->init();
 		$stmt = $this->params('tkn',"");
 		
 		try {
+			
 			// Load session info
 			$res = $this->getExamService()->getCurrentExamSessionItemByToken($stmt,$challenge);
 			
-			if ($res['result'] === 0) {
-				
-				// No exam available:
-				if ($challenge === false) {
-				
-					// No mandatory exams, try to load challenges
-					$this->redirect()->toRoute('exam_challenges');
-					return;
-				} else {
-					
-					$this->redirect()->toRoute('exam_nothing');
-					return;
-				}
-			} else {
-			
+			if ($res['result'] === 1) {
+				// Session found: set token in session for future interactions in the exam session
 				$this->session->token = $stmt;
 				$this->session->exam = $res;
-			
+				
 				$this->redirect()->toRoute('exam_participate');
 				return;
 			}
-				
+			
+			// No session available: different behavior for exam and challenge
+			if ($isChallenge === false) {
+				// Redirect the user to the challenges, if any
+				$this->redirect()->toRoute('exam_challenges');
+			} else {
+				// Nothing left to do
+				$this->redirect()->torRoute('exam_nothing');
+			}
+			
 		} catch (\Exception $e) {
 
-			$this->logger->warn($e->getMessage());
+			// Exception in loading token data
+			$this->logger->err("Request token [".$stmt."] received exception from service of type ".get_class($e)." with message ".$e->getMessage());
 			$this->logger->info($e->getTraceAsString());
 			
-			if ($e instanceof MalformedRequest || $e instanceof InconsistentContent) {
-				// Richiesta volutamente errata
-				$this->logger->notice("Received inconsistant/malfrormed request token [".$stmt."]");
+			if ($e instanceof MalformedRequest || $e instanceof InconsistentContent || $e instanceof ObjectNotFound || $e instanceof ObjectNotEnabled) {
+				// Richiesta errata 
 				$this->redirect()->toUrl($this->config['corporateurl']);
-			} else if ($e instanceof ObjectNotEnabled) {
-				// 
 			} else {
 				// Errore 500
-				$this->session->error_message = "Errore interno del Server (codice: ".$e->getCode().")";
+				$this->session->error_message = "Errore interno del Server";
 				$this->redirect()->toRoute('exam_error');
 			}
 		}
 	}
 	
-	
+	/**
+	 * Nothing action
+	 * No activity available for the student. Presenting a page with the no-activity
+	 * notification.
+	 * 
+	 * @return \Zend\View\Model\ViewModel
+	 */
 	public function nothingAction()
 	{
 		$this->initExam();
@@ -239,8 +251,9 @@ class ExamController extends AbstractActionController
 	}
 	
 	/**
-	 * Visualizzazione pagina di errore da inviare all'utente finale in caso di errore, eccezione o problema
-	 * che in generale sia bloccante per l'esecuzione del task
+	 * Error action
+	 * Show a view for any 500 errors. The link in the page should bring the user
+	 * to the corporate url.
 	 * 
 	 * @return void
 	 * @see \Zend\Mvc\Controller\AbstractActionController
@@ -259,23 +272,23 @@ class ExamController extends AbstractActionController
 	}
 		
 	/**
-	 * Visualizzazione pagina interstiziale di fine esame. Viene visualizzato al termine di una sessione
+	 * End session page
+	 * Shows the closing session message. In case the student has completed
+	 * the entire exam (all the sessions) or the course, the message is changed
+	 * dynamically.
 	 * 
-	 * @return void
-	 * @see \Zend\Mvc\Controller\AbstractActionController
+	 * @return \Zend\View\Helper\ViewModel
 	 */
 	public function endAction()
 	{
 		
 		$this->initExam();
 		$terminationValue = $this->session->offsetGet('session_termination');
+		
+		// TEST: not remove the offsetUnset of termination value here!
 		$this->session->offsetUnset('session_termination');
 
-		$vm = new ViewModel();
-		// Dati studente
-		$vm->firstName = $this->session->exam['student']['firstname'];
-		$vm->lastName = $this->session->exam['student']['lastname'];
-
+		$vm = $this->composeParticipationVM();
 		switch ($terminationValue) {
 			case ExamService::SESSION_TERMINATED:
 				$vm->message = $this->session->exam['student']['firstname'].", hai completato questa sessione.";
@@ -287,21 +300,24 @@ class ExamController extends AbstractActionController
 				$vm->message = "Complimenti ".$this->session->exam['student']['firstname'].", hai completato il corso ".$this->session->exam['course']['name'];
 				break;
 		}
+		
 		// Inizializza variabili d'ambiente
 		$this->session->offsetUnset('startedTime');
 		$this->session->offsetUnset('usedTries');
 		
-		
-		// Resetta i dati di sessione
-		//$this->cleanSessionExamVars();
 		return $vm;
 	}
 	
+	/**
+	 * Timeout handling action
+	 * Handle the timeout event in case of time based questions
+	 * 
+	 * @return \Zend\View\Helper\ViewModel
+	 */
 	public function timeoutAction()
 	{
 		$this->initExam();
 		
-		// Domanda
 		$sessionId = $this->session->exam['session']['id'];
 		$examId = $this->session->exam['exam']['id'];
 		$itemId = $this->session->exam['current_item']['id'];
@@ -312,26 +328,25 @@ class ExamController extends AbstractActionController
 		
 		$retval = $this->getExamService()->responseWithATimeout($sessionId, $examId, $itemId);
 		
+		// The session is now terminated: redirect to exam_end
 		if ($retval !== 0) {
 			$this->session->offsetSet('session_termination', $retval);
-			
-			// Finito esame e/o corso
 			$this->redirect()->toRoute('exam_end');
 			return;
-		} else {
-			$res = $this->getExamService()->getCurrentExamSessionItemByToken($this->session->token,$this->session->exam['session']['challenge']);
-			$this->session->exam = $res;
-			$this->redirect()->toRoute('exam_participate');
-			return;
 		}
+		
+		// The session goes on
+		$res = $this->getExamService()->getCurrentExamSessionItemByToken($this->session->token,$this->session->exam['session']['challenge']);
+		$this->session->exam = $res;
+		$this->redirect()->toRoute('exam_participate');
+		return;
 	}
 	
 	/**
-	 * Memorizzazione risultato risposta utente e redirect ad analisi della partecipazione 
-	 * seguente.
+	 * Save answer action
+	 * The answer needs to be stored in the database.  
 	 * 
-	 * @return void
-	 * @see \Zend\Mvc\Controller\AbstractActionController
+	 * @return \Zend\View\Helper\ViewModel
 	 */
 	public function saveanswerAction()
 	{
@@ -355,19 +370,18 @@ class ExamController extends AbstractActionController
 		$this->session->offsetUnset('startedTime');
 		$this->session->offsetUnset('usedTries');
 		
+		// The session is now terminated: redirect to exam_end
 		if ($retval !== 0) {
-			
 			$this->session->offsetSet('session_termination', $retval);
-		
-			// Finito esame e/o corso
 			$this->redirect()->toRoute('exam_end');
 			return;
-		} else {
-			$res = $this->getExamService()->getCurrentExamSessionItemByToken($this->session->token,$this->session->exam['session']['challenge']);
-			$this->session->exam = $res;
-			$this->redirect()->toRoute('exam_participate');
-			return;
 		}
+		
+		// The session goes on
+		$res = $this->getExamService()->getCurrentExamSessionItemByToken($this->session->token,$this->session->exam['session']['challenge']);
+		$this->session->exam = $res;
+		$this->redirect()->toRoute('exam_participate');
+		return;
 	}
 	
 	/**
@@ -381,34 +395,18 @@ class ExamController extends AbstractActionController
 	{
 		$this->initExam();
 		
-		//try {
-			
-			$view = $this->composeParticipationVM();
-			$form = $this->composeForm();
-			if ($form instanceof ExamDragDrop) {
-				$view->scramble = $form->getUlReorderOptions();
-			}
-			$view->form = $form;
-			return $view;
-		//} catch (\Exception $e) {
-		//	$this->logger->warn($e->getMessage());
-		//	$this->logger->info($e->getTraceAsString());
-			
-		//	if ($e instanceof MalformedRequest || $e instanceof InconsistentContent) {
-		//		// Richiesta volutamente errata
-		//		$this->redirect()->toUrl($this->config['corporateurl']);
-		//	} else {
-		//		// Errore 500
-		//		$this->session->error_message = "Si &egrave; verificato un errore nella partecipazione all'esame (codice: ".$e->getCode().")";
-		//		$this->redirect()->toRoute('exam_500');
-		//	}
-		//}
+		$vm = $this->composeParticipationVM();
+		$form = $this->composeForm();
+		if ($form instanceof ExamDragDrop) {
+			$vm->scramble = $form->getUlReorderOptions();
+		}
+		$vm->form = $form;
+		return $vm;
 	}
 	
 	/**
-	 * Impostazioni di default (acquisizione sessione, impostazione config e logger).
-	 * Verifica la presenza dei dati di accesso in sessione, altrimenti invalida e 
-	 * re-invia l'utente a STM
+	 * Action initialization
+	 * Get config, logger, session for any action needs
 	 * 
 	 * @return void
 	 */
@@ -420,8 +418,11 @@ class ExamController extends AbstractActionController
 	}
 	
 	/**
-	 * Initialize page with Verifica la presenza dei dati di accesso in sessione, altrimenti invalida e
-	 * re-invia l'utente a STM
+	 * Action initialization under exam control
+	 * The exam session needs to be in session, because it is subordinated
+	 * to the prosecution of the session question sequence.
+	 * If a user tries to access an "under-exam" section without the exam in session,
+	 * he is redirected outside, to the corporate url
 	 *
 	 * @return void
 	 * @see ExamController::init()
@@ -433,13 +434,14 @@ class ExamController extends AbstractActionController
 		$this->session->error_message = "";
 		if (!$this->session || !$this->session->offsetExists('exam')) {
 			// Accesso utente a pagina senza sessione
-			$this->logger->notice("Utente ha eseguito l'accesso diretto alla pagina di partecipazione (o affini) senza esame in sessione");
+			$this->logger->warn('[initExam] - user has requested a page that needs an exam session without it. Redirecting to corporate URL');
 			return $this->redirect()->toUrl($this->config['corporateurl']);
 		}
 	}
 	
 	/**
-	 * Composizione dati multimediali
+	 * Multimedia composition for view
+	 * 
 	 * @param array $mediaArr Array media
 	 * @return string
 	 */
@@ -659,13 +661,6 @@ class ExamController extends AbstractActionController
 			$vm->media = $this->composeMedia($item['media']);
 		}
 		
-		if (strlen($this->session->message) > 0) {
-			$vm->enableMessage 	= true;
-			$vm->message 		= $this->session->message;
-		} else {
-			$vm->enableMessage 	= false;
-			$vm->message 		= "";
-		}
 		return $vm;
 	}
 	

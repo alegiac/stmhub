@@ -29,12 +29,17 @@ final class ExamService extends BaseService
 	const COURSE_TERMINATED = 3;
 	
 	/**
-	 * Load all exams for the course
+	 * Load all exams for the course.
+	 * The function is needed to display the list of exams
+	 * and challenges composing the course in the UI.
+	 * 
 	 * @param Course $course
 	 * @return array
 	 */
 	private function getExamsForCourse(Course $course)
 	{
+		// Initialize the retval: exams and challenges are under an associative array
+		// that use the keys as labels in the view.
 		$retval = array();
 		$retval['Esami'] = array();
 		$retval['Sfide'] = array();
@@ -77,7 +82,7 @@ final class ExamService extends BaseService
 			$name = $challenge->getName();
 			$sessRepo = $this->getStudentHasCourseHasExamRepo();
 			$challengeStarted = false;
-			$challengeCompleted = false;
+			$challengeCompleted = true;
 			
 			// Got all the sessions.
 			$sessionsChallenge = $sessRepo->findByExam($challenge);
@@ -88,49 +93,48 @@ final class ExamService extends BaseService
 					// At least one session has been started. The challenge is started!
 					$challengeStarted = true;
 				}
-				if ($sesCh->getEndDate() != null) {
-					$challengeCompleted = true;
+				if ($sesCh->getEndDate() == null) {
+					$challengeCompleted = false;
 					break;
 				}
 			}
 				
 			$rv = array('name' => $name);
-			
 			$rv['started'] = $challengeStarted;
 			$rv['completed'] = $challengeCompleted;
 			
 			$retval['Sfide'][] = $rv;
-			
 		}
 		
 		return $retval;
 	}
+	
     /**
      * Acquisizione di tutti gli item per un esame
      * @param Exam $exam
      * @return array
      */
-    private function getExamItems(StudentHasCourseHasExam $session) 
-    {
-    	$retval = array();
+//     private function getExamItems(StudentHasCourseHasExam $session) 
+//     {
+//     	$retval = array();
     	
-    	// Acquisizione items
-    	foreach ($session->getItem() as $examHasItem) {
-    		/* @var $examHasItem ExamHasItem */
-    		$retval[] = array(
-    			'id' => $examHasItem->getItem()->getId(),
-    			'question' => $examHasItem->getItem()->getQuestion(),
-    			'media' => $examHasItem->getItem()->getImage(),
-    			'maxsecs' => $examHasItem->getItem()->getMaxsecs(),
-    			'maxtries' => $examHasItem->getItem()->getMaxtries(),
-    			'type' => $examHasItem->getItem()->getItemtype()->getId(),
-    			'media' => $this->getExamItemMedia($examHasItem->getItem()),
-    			'options' => $this->getExamItemOptions($examHasItem->getItem()),
-    		);
-    	}
-    	return $retval;
-    }
-    
+//     	// Acquisizione items
+//     	foreach ($session->getItem() as $examHasItem) {
+//     		/* @var $examHasItem ExamHasItem */
+//     		$retval[] = array(
+//     			'id' => $examHasItem->getItem()->getId(),
+//     			'question' => $examHasItem->getItem()->getQuestion(),
+//     			'media' => $examHasItem->getItem()->getImage(),
+//     			'maxsecs' => $examHasItem->getItem()->getMaxsecs(),
+//     			'maxtries' => $examHasItem->getItem()->getMaxtries(),
+//     			'type' => $examHasItem->getItem()->getItemtype()->getId(),
+//     			'media' => $this->getExamItemMedia($examHasItem->getItem()),
+//     			'options' => $this->getExamItemOptions($examHasItem->getItem()),
+//     		);
+//     	}
+//     	return $retval;
+//     }
+
     /**
      * Acquisizione di tutti i media di un item
      * @param Item $item
