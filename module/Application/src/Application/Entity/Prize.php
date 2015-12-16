@@ -43,6 +43,13 @@ class Prize
     private $position;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="url", type="string", length=255, nullable=true)
+     */
+    private $url;
+
+    /**
      * @var \Application\Entity\ClientHasCourse
      *
      * @ORM\ManyToOne(targetEntity="Application\Entity\ClientHasCourse")
@@ -134,6 +141,30 @@ class Prize
     public function getPosition()
     {
         return $this->position;
+    }
+
+    /**
+     * Set url
+     *
+     * @param string $url
+     *
+     * @return Prize
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+
+        return $this;
+    }
+
+    /**
+     * Get url
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
     }
 
     /**

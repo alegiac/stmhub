@@ -2,8 +2,6 @@
 
 namespace Application\Entity\Repository;
 
-use Application\Entity\ClientHasCourse;
-use Doctrine\Common\Collections\Criteria;
 /**
  * PrizeRepo
  *
@@ -11,15 +9,4 @@ use Doctrine\Common\Collections\Criteria;
  * repository methods below.
  */
 class PrizeRepo extends \Doctrine\ORM\EntityRepository
-{
-	
-	public function findByPositionAndCourse($pos,ClientHasCourse $cc)
-	{
-		$criteria = Criteria::create()
-			->where(Criteria::expr()->eq('clientHasCourse', $cc))
-			->andWhere(Criteria::expr()->eq('position', $pos));
-		$result = $this->matching($criteria);
-		if ($result->count()) return $result->last();
-		return null;
-	}
-}
+{}

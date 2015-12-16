@@ -17,7 +17,6 @@ use Application\Form\ExamEmpty;
 use Zend\Form\Form;
 use Application\Form\ExamMultisubmit;
 use Application\Form\ExamDragDrop;
-use Zend\Db\Sql\Ddl\Column\Boolean;
 use Core\Exception\ObjectNotEnabled;
 use Core\Exception\ObjectNotFound;
 
@@ -487,6 +486,7 @@ class ExamController extends AbstractActionController
 		$this->session->offsetUnset('message');
 		$this->session->offsetUnset('error_message');
 		$this->session->offsetUnset('usedTries');
+		$this->session->offsetUnset('session_termination');
 	}
 	
 	/**

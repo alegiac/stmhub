@@ -29,9 +29,9 @@ final class ExamService extends BaseService
 	const COURSE_TERMINATED = 3;
 	
 	/**
-	 * Load all exams for the course.
-	 * The function is needed to display the list of exams
-	 * and challenges composing the course in the UI.
+	 * Load exams and challenges of the course passed as parameter.
+	 * Return a shortlist (name, started, completed by the student) to be 
+	 * displayed in the views
 	 * 
 	 * @param Course $course
 	 * @return array
@@ -136,9 +136,11 @@ final class ExamService extends BaseService
 //     }
 
     /**
-     * Acquisizione di tutti i media di un item
+     * Return all the media related to an item, for display
+     * in the view
+     * 
      * @param Item $item
-     * @return multitype:|multitype:multitype:string number
+     * @return array
      */
     private function getExamItemMedia(Item $item)
     {
@@ -158,9 +160,10 @@ final class ExamService extends BaseService
     }
     
     /**
-     * Acquisizione di tutte le opzioni di un item
+     * Loading all the available options for an item
+     *  
      * @param Item $item
-     * @return unknown
+     * @return array
      */
     private function getExamItemOptions(Item $item)
     {
@@ -235,6 +238,47 @@ final class ExamService extends BaseService
     	return $this->getStudentHasCourseHasExamRepo()->countSessions($studentCourse);
     }
     
+    private function getClassificationAndPrizes(StudentHasCourse $studentCourse)
+    {
+    	$retval = array();
+    	$index = 1;
+    	$clientCourse = $this->getClientHasCourseRepo()->findOneBy(array('course' => $studentCourse->getCourse()));
+    	
+    	$list = $this->getStudentHasCourseHasExamRepo()->getAllByPoints();
+    	$prizes = $this->getPrizeRepo()->findBy(array('clientHasCourse' => $clientCourse),array('position' => 'ASC'));
+    	$countPrizes = count($prizes);
+    	
+    	// List is ordered, so getting data in the right order determine the pricing association
+    	foreach ($list as $element) {
+    		/* @var $studentCourseFound StudentHasCourse */
+    		$studentCourseFound = $this->getStudentHasCourseRepo()->find($element['student_has_course_id']);
+    		
+    		if ($index > $countPrizes) break;
+    		
+    		$firstName = $studentCourseFound->getStudent()->getFirstname();
+    		$lastName = $studentCourseFound->getStudent()->getLastname();
+    		$retval[$index] = array();
+    		
+    		$retval[$index]['student'] = array(
+    			'firstname' => $firstName,
+    			'lastname' => $lastName,
+    			'position' => $index,
+    			'points' => $this->getTotalPointsForStudentInCourse($studentCourseFound),
+    			'is_current' => (int)$studentCourse->getId() == $element['student_has_course_id'],
+    		);
+    		
+    		$retval[$index]['prize'] = array(
+    			'name' => $prizes[$index-1]->getName(),
+    			'desc' => $prizes[$index-1]->getDescription(),
+    			'url' => $prizes[$index-1]->getUrl(),
+    		);
+    		
+    		$index++;
+    	}
+    	
+    	return $retval;	
+    }
+    
     private function getCurrentPositionAndPrizeForStudentInCourse(StudentHasCourse $studentCourse)
     {
     	$list = $this->getStudentHasCourseHasExamRepo()->getAllByPoints();
@@ -281,6 +325,7 @@ final class ExamService extends BaseService
     		);
     
     		$retval['classification'] = $this->getCurrentPositionAndPrizeForStudentInCourse($session->getStudentHasCourse());
+    		$retval['prizes'] = $this->getClassificationAndPrizes($session->getStudentHasCourse());
     		
     		$retval['exam'] = array(
     				'id' => $session->getExam()->getId(),

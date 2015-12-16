@@ -79,6 +79,15 @@ abstract class BaseService implements ServiceLocatorAwareInterface
     }
     
     /**
+     * Get repository for student_has_course
+     * @return StudentHasCourseRepo
+     */
+    protected function getStudentHasCourseRepo()
+    {
+    	return $this->getEntityManager()->getRepository('Application\Entity\StudentHasCourse');
+    }
+    
+    /**
      * Get repository for prize 
      * @return PrizeRepo
      */
