@@ -17,6 +17,8 @@ use Application\Entity\Repository\ExamHasItemRepo;
 use Application\Entity\Repository\CourseRepo;
 use Application\Entity\Repository\StudentHasCourseHasExamRepo;
 use Application\Entity\Repository\StudentRepo;
+use Application\Entity\Repository\PrizeRepo;
+use Application\Entity\Repository\ClientHasCourseRepo;
 
 abstract class BaseService implements ServiceLocatorAwareInterface
 {
@@ -74,6 +76,24 @@ abstract class BaseService implements ServiceLocatorAwareInterface
     protected function getStudentHasCourseHasExamRepo()
     {
     	return $this->getEntityManager()->getRepository('Application\Entity\StudentHasCourseHasExam');
+    }
+    
+    /**
+     * Get repository for prize 
+     * @return PrizeRepo
+     */
+    protected function getPrizeRepo()
+    {
+    	return $this->getEntityManager()->getRepository('Application\Entity\Prize');
+    }
+    
+    /**
+     * Get repository for client_has_course
+     * @return ClientHasCourseRepo
+     */
+    protected function getClientHasCourseRepo()
+    {
+    	return $this->getEntityManager()->getRepository('Application\Entity\ClientHasCourse');
     }
     
     /**

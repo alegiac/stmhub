@@ -587,6 +587,11 @@ class ExamController extends AbstractActionController
 			$vm->lastName = $this->session->exam['student']['lastname'];
 			$this->session->exam['student']['sex'] == 'F' ? $vm->sexDesc = 'a' : $vm->sexDesc = 'o';
 			
+			// Dati classifica
+			$vm->position = $this->session->exam['classification']['position'];
+			$vm->hasPrize = $this->session->exam['classification']['has_prize'];
+			$vm->prizeName = $this->session->exam['classification']['prizename'];
+			
 			// Dati corso
 			$vm->courseName = $this->session->exam['course']['name'];
 			
@@ -608,7 +613,7 @@ class ExamController extends AbstractActionController
 			$vm->sessionIndex = $this->session->exam['session']['index'];
 			$vm->actualQuestion = $this->session->exam['current_item']['question_number'];
 			$vm->totalQuestion = $this->session->exam['current_item']['question_total'];
-			//print_r($this->session->exam['session']['realstartdate']);die();
+
 			$since_start = $this->session->exam['session']['realstartdate']->diff(new \DateTime());
 			
 			$minutes = $since_start->i;

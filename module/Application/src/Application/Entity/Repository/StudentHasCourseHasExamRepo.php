@@ -7,6 +7,7 @@ use Application\Entity\StudentHasCourseHasExam;
 use Doctrine\Common\Collections\Criteria;
 use Application\Entity\Exam;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Query\ResultSetMapping;
 
 /**
  * StudentHasCourseHasExamRepo
@@ -16,6 +17,14 @@ use Doctrine\ORM\QueryBuilder;
  */
 class StudentHasCourseHasExamRepo extends \Doctrine\ORM\EntityRepository
 {
+	
+	public function getAllByPoints()
+	{
+		$rsm = new ResultSetMapping();
+		$query = $this->getEntityManager()->getConnection()->prepare('SELECT SUM(points) AS tot,student_has_course_id, SUM(TIMESTAMPDIFF(SECOND,real_start_date,end_date)) AS timing FROM student_has_course_has_exam GROUP BY student_has_course_id ORDER BY tot DESC,timing ASC');
+		$query->execute();
+		return $query->fetchAll();
+	}
 	
 	public function sumStudentPoints(StudentHasCourse $studentInCourse)
 	{

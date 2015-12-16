@@ -152,8 +152,13 @@
                         <div class="mini-charts-item bgm-cyan">
 							<div class="clearfix">
 	                    		<div class="count">
-	                        		<small>Punti</small>
-	                        		<h2>{$points}</h2>
+									<small>Punti</small><h2>{$points}</h2><hr>
+	                        		<small>Posizione</small><h2>{$position}</h2>
+	                        		
+	                        		{if $hasPrize eq 1}
+	                        			<hr>
+	                        			<small>Premio</small><h2>{$prizeName}</h2>
+	                        		{/if}
 	                    		</div>
 	                		</div>
 						</div>

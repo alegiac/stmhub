@@ -47,7 +47,7 @@ final class ExamService extends BaseService
 			$name = $exam->getName();
 			$sessRepo = $this->getStudentHasCourseHasExamRepo();
 			$examStarted = false;
-			$examCompleted = false;
+			$examCompleted = true;
 			
 			// Got all the sessions. 
 			$sessionsExam = $sessRepo->findByExam($exam);
@@ -57,8 +57,8 @@ final class ExamService extends BaseService
 					// At least one session has been started. The exam is started!
 					$examStarted = true;
 				}
-				if ($sesEx->getEndDate() != null) {
-					$examCompleted = true;
+				if ($sesEx->getEndDate() == null) {
+					$examCompleted = false;
 					break;
 				}
 			}
@@ -221,51 +221,6 @@ final class ExamService extends BaseService
     	return $totPoints;
     }
     
-    /**
-     * Acquisizione del massimo di punti ottenibili per un esame
-     * 
-     * @param Exam $exam
-     * @return number
-     */
-    private function getExamMaxPoints(Exam $exam)
-    {
-    	$totPoints = 0;
-    	
-    	$gw = $this->getExamHasItemRepo();
-    	$items = $gw->findByExam($exam);
-    	
-    	if (count($items)) {
-    		foreach ($items as $item) {
-    			/* @var $item ExamHasItem */
-    			$totPoints += $this->getItemMaxPoints($item->getItem());
-    		}
-    	}
-    	return $totPoints;
-    }
-    
-    /**
-     * Acquisizione del massimo di punti ottenibili per un corso
-     * 
-     * @param Course $course
-     * @return number
-     */
-    private function getCourseMaxPoints(Course $course)
-    {
-    	$totPoints = 0;
-    	
-    	$gwExams = $this->getExamRepo();
-    	$exams = $gwExams->findByCourse($course);
-
-    	if (count($exams)) {
-    		foreach ($exams as $exam) {
-    			/* @var $exam Exam */
-    			$totPoints += $this->getExamMaxPoints($exam);
-    		}
-    	}
-    	
-    	return $totPoints;
-    }
-    
     private function getTotalPointsForStudentInCourse(StudentHasCourse $studentCourse)
     {
     	return $this->getStudentHasCourseHasExamRepo()->sumStudentPoints($studentCourse);
@@ -274,6 +229,40 @@ final class ExamService extends BaseService
     private function getTotalSessionsForStudentInCourse(StudentHasCourse $studentCourse)
     {
     	return $this->getStudentHasCourseHasExamRepo()->countSessions($studentCourse);
+    }
+    
+    private function getCurrentPositionAndPrizeForStudentInCourse(StudentHasCourse $studentCourse)
+    {
+    	$list = $this->getStudentHasCourseHasExamRepo()->getAllByPoints();
+    	$index = 1;
+    	$hasPrize = 0;
+    	$prizename = null;
+    	
+    	foreach ($list as $element) {
+    		if ($studentCourse->getId() == $element['student_has_course_id']) {
+    			break;
+    		} else {
+    			$index++;
+    		}
+    	}
+    	
+    	// Get prize
+    	$clientCourse = $this->getClientHasCourseRepo()->findOneBy(array('course' => $studentCourse->getCourse()));
+    	
+    	$prize = $this->getPrizeRepo()->findOneBy(array('clientHasCourse' => $clientCourse,'position' => $index));
+    	
+    	if (is_null($prize)) {
+    		$hasPrize = 0;	
+    	} else {
+    		$hasPrize = 1;
+    		$prizename = $prize->getName();
+    	}
+    	
+    	return array(
+    		'position' => $index,
+    		'has_prize' => $hasPrize,
+    		'prizename' => $prizename
+    	);
     }
     
     private function composeAnswer(StudentHasCourseHasExam $session,$isError = false,$message = "")
@@ -287,6 +276,8 @@ final class ExamService extends BaseService
     				'name' => $session->getStudentHasCourse()->getCourse()->getName(),
     		);
     
+    		$retval['classification'] = $this->getCurrentPositionAndPrizeForStudentInCourse($session->getStudentHasCourse());
+    		
     		$retval['exam'] = array(
     				'id' => $session->getExam()->getId(),
     				'name' => $session->getExam()->getName(),
@@ -307,7 +298,6 @@ final class ExamService extends BaseService
     				'completed' => $session->getCompleted(),
     				'expectedenddate' => $session->getExpectedEndDate(),
     				'points' => $this->getTotalPointsForStudentInCourse($session->getStudentHasCourse()),
-    				//'maxpoints' => $this->getSessionMaxPoints($session),
     				'progressive' => $session->getProgressive(),
     				'startdate' => $session->getStartDate(),
     				'realstartdate' => $session->getRealStartDate(),
@@ -337,6 +327,7 @@ final class ExamService extends BaseService
     			}
     		}
     	}
+    	
     	return $retval;
     }
     
