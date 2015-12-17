@@ -33,82 +33,82 @@
 			width: 800px; 
 		}
 		.competition-podium {
-    		height: 250px;
-    		position: relative;
-    		width: 600px;
-    		margin:50px;
+			height: 250px;
+			position: relative;
+			width: 600px;
+			margin:50px;
   			display: inline-block;
-    		background:#f6f3ed;
+			background:#f6f3ed;
 		}
 		.competition-podium .podium-block {
-		    width: 200px;
-		    text-align: left;
-		    display: inline-block;
-		    position: absolute;
-		    bottom: 0;
+			width: 200px;
+			text-align: left;
+			display: inline-block;
+			position: absolute;
+			bottom: 0;
 		}
 		.competition-podium .podium-block .place {
-		    font-size: 1em;
-		    font-weight: bold;
-		    font-family: Arial, Helvetica, sans-serif;
-		    line-height: 15px;
+			font-size: 1em;
+			font-weight: bold;
+			font-family: Arial, Helvetica, sans-serif;
+			line-height: 15px;
 		}
 		.competition-podium .podium-block .sum {
-		    font-size: 1.2em;
-		    font-weight: bold;
-		    font-family: Arial, Helvetica, sans-serif;
-		    line-height: 70px;
+			font-size: 1.2em;
+			font-weight: bold;
+			font-family: Arial, Helvetica, sans-serif;
+			line-height: 70px;
 		}
 		
 		.competition-podium .podium-block.bronze {
-		    color: #e6d6bf;
-		    left: 0px;
+			color: #e6d6bf;
+			left: 0px;
 		}
 		.competition-podium .podium-block.bronze .podium {
-		    background: #e6d6bf;
-		    height: 0px;
+			background: #e6d6bf;
+			height: 0px;
 		}
 		.competition-podium .podium-block.bronze .name {
-		    color: #856e4e;
+			color: #856e4e;
 		}
 		
 		.competition-podium .podium-block.gold {
-		    color: #E87E04;
-		    left: 200px;
+			color: #E87E04;
+			left: 200px;
 		}
 		.competition-podium .podium-block.gold .podium {
-		    background: #ead679;
-		    height: 0px;
+			background: #ead679;
+			height: 0px;
 		}
 		.competition-podium .podium-block.gold .name {
-		    color: #856e4e;
-		    text-align:center
+			color: #856e4e;
+			text-align:center
 		}
 		
 		.competition-podium .podium-block.silver {
-		    color: #cbd9de;
-		    left: 400px;
+			color: #cbd9de;
+			left: 400px;
 		}
 		.competition-podium .podium-block.silver .podium {
-		    background: #cbd9de;
-		    height: 0px;
+			background: #cbd9de;
+			height: 0px;
 		}
 		.competition-podium .podium-block.silver .name {
-		    color: #856e4e;
+			color: #856e4e;
 		  text-align:center
 		}
 		.podium {
-		    display: table;
-		    width: 100%;
-		    border-top-left-radius: 4px;
-		    border-top-right-radius: 4px;
+			display: table;
+			width: 100%;
+			border-top-left-radius: 4px;
+			border-top-right-radius: 4px;
 		}
 		.podium > * {
-		    display: table-cell;
-		    vertical-align: middle;
-		    text-align: center;
-		    color: #4D4D4D;
-		    font-size: 1.5em;
+			display: table-cell;
+			vertical-align: middle;
+			text-align: center;
+			color: #4D4D4D;
+			font-size: 1.5em;
 		}
 	</style>
 {/block}
@@ -165,6 +165,7 @@
 							<div class="pv-body">
 								<strong>{$firstName} {$lastName}</strong>
 								<p style="color:light-grey;">{$courseName}</p>
+								
 							</div>
 						</div>
 						<div class="col-xs-4">
@@ -175,7 +176,6 @@
 										{if $hasPrize eq 1}
 											<small style="color:light-grey;">Premio</small>: <strong style="color:black;">{$prizeName}</strong><br>
 										{/if}
-										
 										<small style="color:light-grey;">Scadenza</small>:  <strong style="color:black;">{$expectedEndDateShort}</strong><br>
 										<small style="color:light-grey;">Sessione</small>:  <strong style="color:black;">{$sessionIndex}</strong><br>
 										<small style="color:light-grey;">Domanda</small>:  <strong style="color:black;">{$actualQuestion}/{$totalQuestion}</strong><br>
@@ -208,6 +208,7 @@
 							<div class="clearfix">
 								<div class="count">
 									<small>Punti</small><h2>{$points}</h2><hr>
+									<!-- <a href="#myModal" role="button" data-toggle="modal">Launch demo modal</a> -->
 									<small>Posizione</small><h2>{$position}</h2>
 									{if $hasPrize eq 1}
 										<hr>
@@ -218,36 +219,35 @@
 						</div>
 						In questa sessione da<br>
 						{$minInSession}<br><hr>
-						<button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#myModal">VAI ALLA CLASSIFICA</button>
 					</div>
 					<!-- Modal RANKING -->
 					<div id="myModal" class="modal fade" role="dialog">
-  						<div class="modal-dialog">
-    						<!-- Modal content-->
-    						<div class="modal-content">
-      							<div class="modal-header">
-        							<button type="button" class="close" data-dismiss="modal">&times;</button>
-        							<h2>CLASSIFICA</h2>
-      							</div>
-      							<div class="modal-body">
-        							<div class="competition-podium">
-  										<div class="podium-block bronze">	
+						<div class="modal-dialog">
+							<!-- Modal content-->
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+									<h2>CLASSIFICA</h2>
+								</div>
+								<div class="modal-body">
+									<div class="competition-podium">
+										<div class="podium-block bronze">	
 											<div class="name">waza</div>
-										    <div class="podium"><span>3<sup>ème</sup></span></div>
+											<div class="podium"><span>3<sup>ème</sup></span></div>
 										</div>
 										<div class="podium-block gold">	
 											<div class="name">waza00</div>
-										    <div class="podium"><span>1<sup>er</sup></span></div>
+											<div class="podium"><span>1<sup>er</sup></span></div>
 										</div>
 										<div class="podium-block silver">	
 											<div class="name">waaza0</div>
-										    <div class="podium"><span>2<sup>ème</sup></span></div>
+											<div class="podium"><span>2<sup>ème</sup></span></div>
 										</div>
 									</div>
-      							</div>      						
-    						</div>
-  						</div>
-  					</div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="card" style="margin-top:-25px;">
 				<div class="pv-body">
@@ -275,21 +275,21 @@
 				window.onload = disableBack();
 				window.onpageshow = function (evt) {if (evt.persisted) disableBack()}
 				
-				    function podiumAnimate() {
-        $('.bronze .podium').animate({
-            "height": "62px"
-        }, 1500);
-        $('.gold .podium').animate({
-            "height": "165px"
-        }, 1500);
-        $('.silver .podium').animate({
-            "height": "106px"
-        }, 1500);
-        $('.competition-container .name').delay(1000).animate({
-            "opacity": "1"
-        }, 500);
-    }
-    podiumAnimate();
+					function podiumAnimate() {
+		$('.bronze .podium').animate({
+			"height": "62px"
+		}, 1500);
+		$('.gold .podium').animate({
+			"height": "165px"
+		}, 1500);
+		$('.silver .podium').animate({
+			"height": "106px"
+		}, 1500);
+		$('.competition-container .name').delay(1000).animate({
+			"opacity": "1"
+		}, 500);
+	}
+	podiumAnimate();
 
 				
 				
@@ -375,8 +375,8 @@
 									} else {
 										// Wrong, can't try again
 										swal({
- 											title: "",
- 											text: itemAnswer,
+											title: "",
+											text: itemAnswer,
 											type: "error",
 											html: true,
 											showCancelButton: false,
