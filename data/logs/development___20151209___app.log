@@ -1,1 +1,0 @@
-2015-12-09T22:58:36+01:00 WARN (4): shuffle() expects parameter 1 to be array, boolean given {"errno":2,"file":"/private/var/www/stmhub/module/Application/src/Application/Form/ExamDragDrop.php","line":22,"Zf2Logger":"{\"sessionId\":\"dpsilbskd8ae4qbciha9khg616\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
