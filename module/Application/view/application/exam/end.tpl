@@ -31,6 +31,20 @@
                    	</div>
                     <div class="pv-body">
                         <h2>{$firstName} {$lastName}</h2>
+                         <br>
+                        <div class="row" style="background-color: #64c8ff;">
+							<br>
+							<div class="row">
+								<div class="col-xs-12 col-md-6">
+									<small style="color: white;">Punti</small><h4 style="color: white;">{$points}</h4>
+								</div>
+								<div class="col-xs-12 col-md-6">
+									<a href="#myModal" role="button" data-toggle="modal">
+									<small style="color: white;">Classifica</small><h4 style="color: white;">{$position}°</h4></a>
+								</div>
+							</div>
+							<br>
+						</div>
                     </div>
                 </div>
             </div>

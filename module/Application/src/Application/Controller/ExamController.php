@@ -148,7 +148,7 @@ class ExamController extends AbstractActionController
 				
 				$text = $name."   [".$totQuestions." quiz - ".$totPoints." punti]";
 				
-				$btn .= '<a href="/exam/tokenchallenge/'.$token.'" class="btn btn-lg btn-primary">'.$text.'</a><br><br>';
+				$btn .= '<a href="/exam/tokenchallenge/'.$token.'" class="btn btn-lg btn-primary" style="white-space:normal !important; max-width:1000px; margin-right: 10px;margin-left: 10px;margin-top: 10px;">'.$text.'</a><br><br>';
 			}
 		} else {
 			$btn .= "Nessuna sfida disponibile al momento";
@@ -429,7 +429,6 @@ class ExamController extends AbstractActionController
 	protected function initExam()
 	{
 		$this->init();
-		
 		$this->session->error_message = "";
 		if (!$this->session || !$this->session->offsetExists('exam')) {
 			// Accesso utente a pagina senza sessione
@@ -531,7 +530,7 @@ class ExamController extends AbstractActionController
 			$fontSize = "80%";
 		}
 	
-		$tag = "<ul style=\"list-style-type: none;\">";
+		$tag = "<br><ul style=\"list-style-type: none;\">";
 		$tag .='<li style="color: black; font-size:'.$fontSize.';"><i class="fa fa-eye fa-fw"></i>&nbsp;&nbsp;'.$name.'</li>';
 		$tag .= "</ul>";
 		return $tag;
@@ -547,7 +546,7 @@ class ExamController extends AbstractActionController
 		
 		foreach ($list as $type=>$exams) {
 		
-			$tag .= "<center><strong>".$type."</strong></center><br>";
+			$tag .= "<center><strong>".$type."</strong></center><br><br>";
 		
 			if ($doShort === true) {
 				$tag .= "<ul style=\"list-style-type: none;margin-top:5px;\">";
@@ -618,13 +617,14 @@ class ExamController extends AbstractActionController
 
 			$since_start = $this->session->exam['session']['realstartdate']->diff(new \DateTime());
 			
+			$secs = $since_start->s;
 			$minutes = $since_start->i;
 			$hours = $since_start->h;
 			
 			if ($hours > 0) {
-				$vm->minInSession = $since_start->h."ore e ".$since_start->i." min"; 
+				$vm->minInSession = $since_start->h."h".$since_start->i."m".$since_start->s."s"; 
 			} else {
-				$vm->minInSession = $since_start->i." min";
+				$vm->minInSession = $since_start->i."m".$since_start->s."s";
 			}
 			// Dati esame
 			$vm->examName = $this->session->exam['exam']['name'];

@@ -23,29 +23,41 @@
 	        		</div>
 	        	</div>
 	        
-			<div class="visible-xs .visible-xs-block">
-	        		<div class="col-xs-4 card" style="height:80px;">
-	        			<div class="pv-body">
-            				<h4>{$firstName} {$lastName}</h4>
-            				<p style="color:light-grey;">{$courseName}<br>{$examName}</p>
-            			</div>
-            		</div>
-            		<div class="col-xs-4 card" style="height:80px;">
-            			<div class="pv-body">
-            				<center>
-	            				<small>Scadenza</small><br>
-	            				<strong style="color:black;">{$expectedEndDate}</strong>
-	            				<br>
-	            				<p style="color:light-grey;"><small>Punti</small><br><strong style="color:black;">{$points}/{$maxpoints}</strong></p>
-	            			</center>
-                		</div>
-                	</div>
-                	<div class="col-xs-4 card" style="height:80px;">
-            			<div class="pv-body">
-            				{$examListShort}
-            			</div>
-                	</div>
-	        	</div>
+				<div id="base_mobile"  class="row visible-xs .visible-xs-block card">
+					<div class="pv-card clearfix">
+						<div class="col-xs-4">
+							<div class="pv-body">
+								<p>
+									<h4>{$firstName} {$lastName}</h4>
+									<span style="color:light-grey;">{$courseName}</span><br>
+									<span style="color:light-grey;">{$examName}</span><br>
+								</p>
+							</div>
+						</div>
+						<div class="col-xs-4" style="text-align:center;">
+							<div class="pv-body">
+								<br>
+								<p>
+									<br>
+									<small style="color:light-grey;">Sessione</small>:  <strong style="color:black;">{$sessionIndex}</strong><br>
+									<small style="color:light-grey;">Domanda</small>:  <strong style="color:black;">{$actualQuestion}/{$totalQuestion}</strong><br>
+									<small style="color:light-grey;">Scadenza</small>:  <strong style="color:black;">{$expectedEndDateShort}</strong><br>
+								</p>
+							</div>
+						</div>
+						<div class="col-xs-4" style="text-align:right;">
+							<div class="pv-body">
+								<br>
+								<p>
+									<br>
+									<small style="color:light-grey;">Tempo</small>: <strong style="color:black;">{$minInSession}</strong><br>
+									<small style="color:light-grey;">Punti</small>:  <strong style="color:black;">{$points}</strong><br>
+									<small style="color:light-grey;">Classifica</small>:  <strong style="color:black;">{$position}</strong><br>
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 			<div class="col-sm-3 .visible-xs-block, hidden-xs">
 				<!-- Profile view -->
@@ -56,13 +68,18 @@
                     <div class="pv-body" style="margin-top: 30px;">
                         <h2>{$firstName} {$lastName}</h2>
                         <br>
-                        <div class="mini-charts-item bgm-cyan">
-							<div class="clearfix">
-	                    		<div class="count">
-	                        		<small>Punti</small>
-	                        		<h2>{$points}</h2>
-	                    		</div>
-	                		</div>
+                        <div class="row" style="background-color: #64c8ff;">
+							<br>
+							<div class="row">
+								<div class="col-xs-12 col-md-6">
+									<small style="color: white;">Punti</small><h4 style="color: white;">{$points}</h4>
+								</div>
+								<div class="col-xs-12 col-md-6">
+									<a href="#myModal" role="button" data-toggle="modal">
+									<small style="color: white;">Classifica</small><h4 style="color: white;">{$position}°</h4></a>
+								</div>
+							</div>
+							<br>
 						</div>
                     </div>
                 </div>

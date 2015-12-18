@@ -29,28 +29,24 @@
 				</div>
 				<div id="base_mobile"  class="row visible-xs .visible-xs-block card">
 					<div class="pv-card clearfix">
-						<div class="col-xs-4">
+						<div class="col-xs-6">
 							<div class="pv-body">
-								<strong>{$firstName} {$lastName}</strong>
-								<p style="color:light-grey;">{$courseName}</p>
+								<p>
+									<h4>{$firstName} {$lastName}</h4>
+									<span style="color:light-grey;">{$courseName}</span><br>
+									<span style="color:light-grey;">{$examName}</span><br>
+								</p>
 							</div>
 						</div>
-						<div class="col-xs-4">
+						<div class="col-xs-6" style="text-align:right;">
 							<div class="pv-body">
-									<p>
-										<small style="color:light-grey;">Punti</small>:  <strong style="color:black;">{$points}</strong><br>
-										<small style="color:light-grey;">Posizione</small>:  <strong style="color:black;">{$position}</strong><br>
-										{if $hasPrize eq 1}
-											<small style="color:light-grey;">Premio</small>: <strong style="color:black;">{$prizeName}</strong><br>
-										{/if}
-										<small style="color:light-grey;">Scadenza</small>:  <strong style="color:black;">{$expectedEndDateShort}</strong><br>
-									</p>
-							</div>
-						</div>
-						<div class="col-xs-4">
-							<div class="pv-header"></div>
-							<div class="pv-body">
-								{$examListShort}
+								<br>
+								<p>
+									<br>
+									<br>
+									<small style="color:light-grey;">Punti</small>:  <strong style="color:black;">{$points}</strong><br>
+									<small style="color:light-grey;">Classifica</small>:  <strong style="color:black;">{$position}</strong><br>
+								</p>
 							</div>
 						</div>
 					</div>
@@ -62,18 +58,19 @@
 					<div class="pv-header"></div>
 					<div class="pv-body" style="margin-top: 30px;">
 						<h2>{$firstName} {$lastName}</h2>
-						<small>{$email}</small>
-					</div>
-					<div class="mini-charts-item bgm-cyan">
-						<div class="clearfix">
-							<div class="count">
-								<small>Punti</small><h2>{$points}</h2><hr>
-								<small>Posizione</small><h2>{$position}</h2>
-								{if $hasPrize eq 1}
-									<hr>
-									<small>Premio</small><h2>{$prizeName}</h2>
-								{/if}
+						<br>
+                        <div class="row" style="background-color: #64c8ff;">
+							<br>
+							<div class="row">
+								<div class="col-xs-12 col-md-6">
+									<small style="color: white;">Punti</small><h4 style="color: white;">{$points}</h4>
+								</div>
+								<div class="col-xs-12 col-md-6">
+									<a href="#myModal" role="button" data-toggle="modal">
+									<small style="color: white;">Classifica</small><h4 style="color: white;">{$position}°</h4></a>
+								</div>
 							</div>
+							<br>
 						</div>
 					</div>
 				</div>
