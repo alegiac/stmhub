@@ -593,6 +593,69 @@ class ExamController extends AbstractActionController
 			$vm->hasPrize = $this->session->exam['classification']['has_prize'];
 			$vm->prizeName = $this->session->exam['classification']['prizename'];
 			
+			// Premi e classifica
+			$vm->goldFirstName = ""; $vm->silverFirstName = ""; $vm->bronzeFirstName = "";
+			$vm->goldPrizeUrl = ""; $vm->silverPrizeUrl = ""; $vm->bronzePrizeUrl = "";
+			$vm->goldPrizeTitle = ""; $vm->silverPrizeTitle = ""; $vm->bronzePrizeTitle = "";
+			$vm->goldPoints = ""; $vm->silverPoints = ""; $vm->bronzePoints = "";
+			
+			$prizes = $this->session->exam['prizes'];
+			if (count($prizes) > 0) {
+				$vm->showClassification = 1;
+				// Show gold, silver, gold
+				$vm->goldFirstName = $prizes[1]['student']['firstname'];
+				if (strlen($prizes[1]['prize']['url']) > 0) {
+					$vm->goldPrizeUrl = $prizes[1]['prize']['url'];
+				} else {
+					$vm->goldPrizeUrl = "http://wpitalyplugin.com/wp-content/plugins/InstaBuilder/images/unavailable-200x145.png";
+				}
+				$vm->goldPrizeTitle = $prizes[1]['prize']['name'];
+				$vm->goldPoints = $prizes[1]['student']['points']." p.ti";
+				
+				if (array_key_exists(2, $prizes)) {
+					$vm->silverFirstName = $prizes[2]['student']['firstname'];
+					if (strlen($prizes[2]['prize']['url']) > 0) {
+						$vm->silverPrizeUrl = $prizes[2]['prize']['url'];
+					} else {
+						$vm->silverPrizeUrl = "http://wpitalyplugin.com/wp-content/plugins/InstaBuilder/images/unavailable-200x145.png";
+					}
+					$vm->silverPrizeTitle = $prizes[2]['prize']['name'];
+					$vm->silverPoints = $prizes[2]['student']['points']." p.ti";
+				}
+				
+				if (array_key_exists(3, $prizes)) {
+					$vm->bronzeFirstName = $prizes[3]['student']['firstname'];
+					$vm->bronzePrizeUrl = "http://wpitalyplugin.com/wp-content/plugins/InstaBuilder/images/unavailable-200x145.png";
+					if (strlen($prizes[3]['prize']['url']) > 0) {
+						$vm->bronzePrizeUrl = $prizes[3]['prize']['url'];
+					}
+					$vm->bronzePrizeTitle = $prizes[3]['prize']['name'];
+					$vm->bronzePoints = $prizes[3]['student']['points']." p.ti";
+				}
+				
+				$others ="";
+				if (count($prizes) > 3) {
+					for ($i=4;$i<=count($prizes);$i++) {
+						$others.= '<div class="col-xs-4"><center><br>'.$i.'° premio<br>';
+						$prizeBorderColor = "white"; $prizeText = "black";
+						if ($this->session->exam['classification']['position'] == $i) {
+							$prizeBorderColor = "blue";$prizeText = "blue";
+						}
+						$prizeUrl = "http://wpitalyplugin.com/wp-content/plugins/InstaBuilder/images/unavailable-200x145.png";
+						if (strlen($prizes[$i]['url'] > 0)) $prizeUrl = $prizes[$i]['url'];
+						
+						$others.='<div style="max-width:130px; background-color:'.$prizeBorderColor.';">';
+						$others.='<img style="max-width:120px;" src="'.$prizeUrl.'"/>';
+						$others.='</div><br><span style="color:'.$prizeText.';>'.$prize['student']['firstname'].'</span></center></div>';
+					}
+					
+					$vm->otherPrices = $others;
+				}
+				
+			} else {
+				$vm->showClassification = 0;
+			}
+			
 			// Dati corso
 			$vm->courseName = $this->session->exam['course']['name'];
 			
