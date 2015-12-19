@@ -119,6 +119,14 @@
 	        					<hr>
 	        					<br>
 	        					<h3>Classifica</h3>
+	        					{if $hasPrize eq 1}
+	        						<hr>
+      								<h4>Complimenti! Sei alla posizione <strong>{$position}</strong></h4>
+      							{else}
+									<h4>Il tuo punteggio: <strong>{$points}</strong></h4>
+									<h4>La tua posizione: <strong>{$position}</strong></h4>
+								{/if}
+      								<hr>
 								<div class="competition-podium">
 							  		<div class="podium-block bronze">	
 										<div class="name">
@@ -208,8 +216,7 @@
 									<small style="color: white;">Punti</small><h4 style="color: white;">{$points}</h4>
 								</div>
 								<div class="col-xs-12 col-md-6">
-									<a href="#myModal" role="button" data-toggle="modal">
-									<small style="color: white;">Classifica</small><h4 style="color: white;">{$position}°</h4></a>
+									<small style="color: white;">Classifica</small><h4 style="color: white;">{$position}°</h4>
 								</div>
 							</div>
 							<br>

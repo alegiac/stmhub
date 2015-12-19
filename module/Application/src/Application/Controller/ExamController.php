@@ -199,7 +199,7 @@ class ExamController extends AbstractActionController
 		try {
 			
 			// Load session info
-			$res = $this->getExamService()->getCurrentExamSessionItemByToken($stmt,$challenge);
+			$res = $this->getExamService()->getCurrentExamSessionItemByToken($stmt,$isChallenge);
 			
 			if ($res['result'] === 1) {
 				// Session found: set token in session for future interactions in the exam session
@@ -216,7 +216,7 @@ class ExamController extends AbstractActionController
 				$this->redirect()->toRoute('exam_challenges');
 			} else {
 				// Nothing left to do
-				$this->redirect()->torRoute('exam_nothing');
+				$this->redirect()->toRoute('exam_nothing');
 			}
 			
 		} catch (\Exception $e) {
@@ -660,13 +660,8 @@ class ExamController extends AbstractActionController
 			$vm->courseName = $this->session->exam['course']['name'];
 			
 			// Esami (o sfida)
-			if ($this->session->exam['session']['challenge'] == 1) {
-				$vm->examList = $this->composeChallengeList($this->session->exam['exam']['name']);
-				$vm->examListShort = $this->composeChallengeList($this->session->exam['exam']['name'],true);
-			} else {
-				$vm->examList = $this->composeExamList($this->session->exam['allexams']);
-				$vm->examListShort = $this->composeExamList($this->session->exam['allexams'],true);
-			}
+			$vm->examList = $this->composeExamList($this->session->exam['allexams']);
+			$vm->examListShort = $this->composeExamList($this->session->exam['allexams'],true);
 			
 			// Dati sessione
 			$vm->expectedEndDate = $this->session->exam['session']['expectedenddate']->format('m/Y');

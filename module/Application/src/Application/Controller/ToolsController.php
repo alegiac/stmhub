@@ -51,7 +51,7 @@ class ToolsController extends AbstractActionController
 	{
 		$this->init();
 		$this->getStudentService()->rollEmailForSessions();
-		echo "aaa";die();
+		echo "Done";die();
 	}
 	
 	public function structureAction()
