@@ -237,6 +237,11 @@ final class ExamService extends BaseService
     	return $this->getStudentHasCourseHasExamRepo()->sumStudentPoints($studentCourse);
     }
     
+    private function getTotalTimeForStudentInCourse(StudentHasCourse $studentCourse)
+    {
+    	return $this->getStudentHasCourseHasExamRepo()->getTimingForStudent($studentCourse);
+    }
+    
     private function getTotalSessionsForStudentInCourse(StudentHasCourse $studentCourse)
     {
     	return $this->getStudentHasCourseHasExamRepo()->countSessions($studentCourse);
@@ -268,6 +273,7 @@ final class ExamService extends BaseService
     			'lastname' => $lastName,
     			'position' => $index,
     			'points' => $this->getTotalPointsForStudentInCourse($studentCourseFound),
+    			'timing' => $this->getTotalTimeForStudentInCourse($studentCourseFound),
     			'is_current' => (int)$studentCourse->getId() == $element['student_has_course_id'],
     		);
     		
@@ -313,7 +319,8 @@ final class ExamService extends BaseService
     	return array(
     		'position' => $index,
     		'has_prize' => $hasPrize,
-    		'prizename' => $prizename
+    		'prizename' => $prizename,
+    		'totaltime' => $timing,
     	);
     }
     

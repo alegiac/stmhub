@@ -184,7 +184,7 @@
 												</div>
 								                <div class="podium">
 								                	<span class="position">3</span>
-									                <span>{$bronzeFirstName}<br>{$bronzePoints}</span>
+									                <span>{$bronzeFirstName}<br>{$bronzePoints}<br>{$bronzeTiming}</span>
 									            </div>
 											</div>
 											<div class="podium-block gold">	
@@ -197,7 +197,7 @@
 												</div>
 												<div class="podium">
 													<span class="position">1</span>
-	                        						<span>{$goldFirstName}<br>{$goldPoints}</span>
+	                        						<span>{$goldFirstName}<br>{$goldPoints}<br>{$goldTiming}</span>
                         						</div>
 											</div>
 											<div class="podium-block silver">	
@@ -210,7 +210,7 @@
 												</div>
 												<div class="podium">
 													<span class="position">2</span>
-	                        						<span>{$silverFirstName}<br>{$silverPoints}</span>
+	                        						<span>{$silverFirstName}<br>{$silverPoints}<br>{$silverTiming}</span>
 	                    						</div>
 											</div>
 										</div>

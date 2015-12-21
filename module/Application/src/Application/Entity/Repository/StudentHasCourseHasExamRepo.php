@@ -18,6 +18,14 @@ use Doctrine\ORM\Query\ResultSetMapping;
 class StudentHasCourseHasExamRepo extends \Doctrine\ORM\EntityRepository
 {
 	
+	public function getTimingForStudent(StudentHasCourse $studentInCourse)
+	{
+		$rsm = new ResultSetMapping();
+		$query = $this->getEntityManager()->getConnection()->prepare('SELECT SUM(TIMESTAMPDIFF(SECOND,real_start_date,end_date)) AS timing FROM student_has_course_has_exam WHERE student_has_course_id = '.$studentInCourse->getId().' GROUP BY student_has_course_id');
+		$query->execute();
+		return $query->fetch();
+	}
+	
 	public function getAllByPoints()
 	{
 		$rsm = new ResultSetMapping();

@@ -594,7 +594,7 @@ class ExamController extends AbstractActionController
 			$vm->position = $this->session->exam['classification']['position'];
 			$vm->hasPrize = $this->session->exam['classification']['has_prize'];
 			$vm->prizeName = $this->session->exam['classification']['prizename'];
-			
+
 			// Premi e classifica
 			$vm->goldFirstName = ""; $vm->silverFirstName = ""; $vm->bronzeFirstName = "";
 			$vm->goldPrizeUrl = ""; $vm->silverPrizeUrl = ""; $vm->bronzePrizeUrl = "";
@@ -613,6 +613,7 @@ class ExamController extends AbstractActionController
 				}
 				$vm->goldPrizeTitle = $prizes[1]['prize']['name'];
 				$vm->goldPoints = $prizes[1]['student']['points']." p.ti";
+				$vm->goldTiming = $this->seconds_to_hms($prizes[1]['student']['timing']);
 				
 				if (array_key_exists(2, $prizes)) {
 					$vm->silverFirstName = $prizes[2]['student']['firstname'];
@@ -623,6 +624,7 @@ class ExamController extends AbstractActionController
 					}
 					$vm->silverPrizeTitle = $prizes[2]['prize']['name'];
 					$vm->silverPoints = $prizes[2]['student']['points']." p.ti";
+					$vm->silverTiming = $this->seconds_to_hms($prizes[2]['student']['timing']);
 				}
 				
 				if (array_key_exists(3, $prizes)) {
@@ -633,6 +635,7 @@ class ExamController extends AbstractActionController
 					}
 					$vm->bronzePrizeTitle = $prizes[3]['prize']['name'];
 					$vm->bronzePoints = $prizes[3]['student']['points']." p.ti";
+					$vm->bronzeTiming = $this->seconds_to_hms($prizes[3]['student']['timing']);
 				}
 				
 				if (count($prizes) > 3) {
@@ -723,6 +726,63 @@ class ExamController extends AbstractActionController
 		}
 		return $vm;
 	}
+	
+	private function hms_conversion($hours,$minutes,$seconds,$precision=0) {
+	$hours = abs($hours);
+	$minutes = abs($minutes);
+	$seconds = abs($seconds);
+	$total_seconds = ($hours * 3600) + ($minutes * 60) + $seconds;
+	if ($precision === 0) { $total_seconds = round($total_seconds); }
+	elseif ($precision !== false) { $total_seconds = round($total_seconds,$precision); }
+
+	//calculate hours, minutes, seconds
+	$hours = floor($total_seconds / 3600);
+	$remaining_seconds = $total_seconds - ($hours * 3600);
+	$minutes = floor($remaining_seconds / 60);
+	$seconds = $remaining_seconds - ($minutes * 60);
+	unset($remaining_seconds);
+
+	$hms = array('total_seconds'=>$total_seconds,'hours'=>$hours,'minutes'=>$minutes,'seconds'=>$seconds);
+
+	//now, format text and longtext
+	$text = '';
+	$longtext = '';
+	if ($hours > 0) {
+		$hh = $hours;
+		$text .= $hours.':' ;
+		if ($hours > 1) { $longtext .= number_format($hours).' h, '; }
+		else { $longtext .= '1 h, '; }
+	} else {
+		$hh = '';
+	}
+	if (($minutes >= 10) || ($hours == 0)) { $mm = $minutes; }
+	elseif ($hours > 0) { $mm = '0'.$minutes; }
+	if (($minutes > 0) || ($hours > 0)) {
+		$text .= $mm.':';
+		if ($minutes != 1) { $longtext .= $minutes.' m, '; }
+		else { $longtext .= '1 m, '; }
+	} else {
+		$mm = '';
+	}
+	if ((($minutes > 0) || ($hours > 0)) && ($seconds == 0)) { $ss = '00 s'; }
+	elseif ($seconds >= 10) { $ss = $seconds; }
+	else { $ss = '0'.$seconds." s";}
+	$text .= $ss;
+	if ($seconds != 1) { $longtext .= $seconds.' s'; }
+	else { $longtext .= '1 s'; }
+	$hms['hh'] = $hh; //blank (instead of "0") if no hours
+	$hms['mm'] = $mm; //includes preceding zero so hh:mm:ss looks right, blank if no hours and no minutes
+	$hms['ss'] = $ss; //includes preceding zero so hh:mm:ss looks right
+	$hms['text'] = $text;
+	$hms['longtext'] = $longtext;
+
+	return $hms;
+}
+
+function seconds_to_hms($seconds) {
+	$hms = $this->hms_conversion(null,null,$seconds,0);
+	return $hms['text'];
+}
 	
 	/**
 	 * @return ExamService
