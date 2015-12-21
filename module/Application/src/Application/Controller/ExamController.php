@@ -548,7 +548,7 @@ class ExamController extends AbstractActionController
 		
 		foreach ($list as $type=>$exams) {
 		
-			$tag .= "<center><strong>".$type."</strong></center><br><br>";
+			$tag .= '<strong style="margin-left:10px;">'.$type."</strong><br><br>";
 		
 			if ($doShort === true) {
 				$tag .= "<ul style=\"list-style-type: none;margin-top:5px;\">";
@@ -558,12 +558,12 @@ class ExamController extends AbstractActionController
 			
 			foreach ($exams as $exam) {
 				if ($exam['started'] === false) {
-					$tag .='<li style="color: lightgrey; font-size:'.$fontSize.';"><i class="fa fa-clock-o fa-fw"></i>&nbsp;&nbsp;'.$exam['name'].'</li>';
+					$tag .='<li style="color: lightgrey; font-size:'.$fontSize.'; margin-left: -20px;"><i class="fa fa-clock-o fa-fw"></i>&nbsp;&nbsp;'.$exam['name'].'</li>';
 				} else {
 					if ($exam['completed'] === true) {
-						$tag .='<li style="color: green; font-size:'.$fontSize.';"><i class="fa fa-check-circle-o fa-fw"></i>&nbsp;&nbsp;<s>'.$exam['name'].'</s></li>';
+						$tag .='<li style="color: green; font-size:'.$fontSize.'; margin-left: -20px;"><i class="fa fa-check-circle-o fa-fw"></i>&nbsp;&nbsp;<s>'.$exam['name'].'</s></li>';
 					} else {
-						$tag .='<li style="color: black; font-size:'.$fontSize.';"><i class="fa fa-eye fa-fw"></i>&nbsp;&nbsp;'.$exam['name'].'</li>';
+						$tag .='<li style="color: black; font-size:'.$fontSize.'; margin-left: -20px;"><i class="fa fa-eye fa-fw"></i>&nbsp;&nbsp;'.$exam['name'].'</li>';
 					}
 				}
 			}
@@ -609,7 +609,7 @@ class ExamController extends AbstractActionController
 				if (strlen($prizes[1]['prize']['url']) > 0) {
 					$vm->goldPrizeUrl = $prizes[1]['prize']['url'];
 				} else {
-					$vm->goldPrizeUrl = "http://wpitalyplugin.com/wp-content/plugins/InstaBuilder/images/unavailable-200x145.png";
+					$vm->goldPrizeUrl = "";
 				}
 				$vm->goldPrizeTitle = $prizes[1]['prize']['name'];
 				$vm->goldPoints = $prizes[1]['student']['points']." p.ti";
@@ -619,7 +619,7 @@ class ExamController extends AbstractActionController
 					if (strlen($prizes[2]['prize']['url']) > 0) {
 						$vm->silverPrizeUrl = $prizes[2]['prize']['url'];
 					} else {
-						$vm->silverPrizeUrl = "http://wpitalyplugin.com/wp-content/plugins/InstaBuilder/images/unavailable-200x145.png";
+						$vm->silverPrizeUrl = "";
 					}
 					$vm->silverPrizeTitle = $prizes[2]['prize']['name'];
 					$vm->silverPoints = $prizes[2]['student']['points']." p.ti";
@@ -627,7 +627,7 @@ class ExamController extends AbstractActionController
 				
 				if (array_key_exists(3, $prizes)) {
 					$vm->bronzeFirstName = $prizes[3]['student']['firstname'];
-					$vm->bronzePrizeUrl = "http://wpitalyplugin.com/wp-content/plugins/InstaBuilder/images/unavailable-200x145.png";
+					$vm->bronzePrizeUrl = "";
 					if (strlen($prizes[3]['prize']['url']) > 0) {
 						$vm->bronzePrizeUrl = $prizes[3]['prize']['url'];
 					}
@@ -643,7 +643,7 @@ class ExamController extends AbstractActionController
 						if ($this->session->exam['classification']['position'] == $i) {
 							$prizeBorderColor = "blue";$prizeText = "blue";
 						}
-						$prizeUrl = "http://wpitalyplugin.com/wp-content/plugins/InstaBuilder/images/unavailable-200x145.png";
+						$prizeUrl = "";
 						if (strlen($prizes[$i]['url'] > 0)) $prizeUrl = $prizes[$i]['url'];
 						
 						$others.='<div style="max-width:130px; background-color:'.$prizeBorderColor.';">';
@@ -667,8 +667,8 @@ class ExamController extends AbstractActionController
 			$vm->examListShort = $this->composeExamList($this->session->exam['allexams'],true);
 			
 			// Dati sessione
-			$vm->expectedEndDate = $this->session->exam['session']['expectedenddate']->format('m/Y');
-			$vm->expectedEndDateShort = $this->session->exam['session']['expectedenddate']->format('m/Y');
+			$vm->expectedEndDate = $this->session->exam['session']['expectedenddate']->format('d/m');
+			$vm->expectedEndDateShort = $this->session->exam['session']['expectedenddate']->format('d/m');
 	
 			$vm->points = $this->session->exam['session']['points'];
 			
