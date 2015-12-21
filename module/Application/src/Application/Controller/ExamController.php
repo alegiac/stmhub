@@ -717,7 +717,6 @@ class ExamController extends AbstractActionController
 			// Gestione elementi multimediali
 			$vm->media = $this->composeMedia($item['media']);
 		}
-		
 		return $vm;
 	}
 	
