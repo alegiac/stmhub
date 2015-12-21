@@ -646,7 +646,7 @@ class ExamController extends AbstractActionController
 						
 						$others.='<div style="max-width:130px; background-color:'.$prizeBorderColor.';">';
 						$others.='<img style="max-width:120px;" src="'.$prizeUrl.'"/>';
-						$others.='</div><br><span style="color:'.$prizeText.';>'.$prize['student']['firstname'].'</span></center></div>';
+						$others.='</div><br><span style="color:'.$prizeText.';>'.$prizes[$i]['student']['firstname'].'</span></center></div>';
 					}
 					
 					$vm->otherPrices = $others;
