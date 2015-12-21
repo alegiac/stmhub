@@ -8,11 +8,17 @@
 			img {
 				max-width: 70%;
 			}
+			h2 {
+				font-size: 20px;
+			}
 	}
 	
 	@media screen and (min-width: 1025px) {
 		img {
 			max-width: 100%;
+		}
+		h2 {
+			font-size: 27px;
 		}
 	}
 	
