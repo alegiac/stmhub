@@ -34,10 +34,7 @@
     
     <body>
     
-    	{block name="header"}
-  			{include "../../_common/header.tpl"}
-      	{/block}
-      	
+    	
       	{block name="main"}{/block}
       	
         <!-- Javascript Libraries -->

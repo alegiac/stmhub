@@ -395,11 +395,13 @@ class ExamController extends AbstractActionController
 		$this->initExam();
 		
 		$vm = $this->composeParticipationVM();
+		
 		$form = $this->composeForm();
 		if ($form instanceof ExamDragDrop) {
 			$vm->scramble = $form->getUlReorderOptions();
 		}
 		$vm->form = $form;
+		
 		return $vm;
 	}
 	
@@ -580,7 +582,8 @@ class ExamController extends AbstractActionController
 	{
 		$tmpMedia = "";
 		$vm = new ViewModel();
-
+		$others ="";
+		
 		if (isset($this->session->exam)) {
 		
 			// Dati studente
@@ -633,8 +636,8 @@ class ExamController extends AbstractActionController
 					$vm->bronzePoints = $prizes[3]['student']['points']." p.ti";
 				}
 				
-				$others ="";
 				if (count($prizes) > 3) {
+					
 					for ($i=4;$i<=count($prizes);$i++) {
 						$others.= '<div class="col-xs-4"><center><br>'.$i.'° premio<br>';
 						$prizeBorderColor = "white"; $prizeText = "black";
@@ -648,9 +651,10 @@ class ExamController extends AbstractActionController
 						$others.='<img style="max-width:120px;" src="'.$prizeUrl.'"/>';
 						$others.='</div><br><span style="color:'.$prizeText.';>'.$prizes[$i]['student']['firstname'].'</span></center></div>';
 					}
-					
-					$vm->otherPrices = $others;
 				}
+				
+				$vm->otherPrices = $others;
+				
 				
 			} else {
 				$vm->showClassification = 0;
