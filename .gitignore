@@ -1,5 +1,5 @@
 /vendor/
 /composer.lock
-/data/*.log
+/data/logs/*.log
 /data/*.bak
 /data/SmartyModule/

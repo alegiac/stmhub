@@ -29,13 +29,6 @@
 		.ui-state-highlight { 
 			height: 1.5em; line-height: 1.2em; 
 		}
-		.modal { 
-		  	width: 100%;
-		}
-		
-		.modal-dialog {
-			width: 100%;
-		}
 		
 		span.position {
 		  font-size: 800%;
@@ -46,14 +39,14 @@
 		}
 		.competition-podium {
 		  height: 320px;
+		  max-width: 450px;
+		  min-width: 200px;
 		  position: relative;
-		  width: 600px;
-		  margin:50px;
-		  display: inline-block;
+		  margin:-10px;
 		  background:#FFFFFF;
 		}
 		.competition-podium .podium-block {
-		  width: 200px;
+		  width: 150px;
 		  text-align: left;
 		  display: inline-block;
 		  position: absolute;
@@ -86,7 +79,7 @@
 		
 		.competition-podium .podium-block.gold {
 		  color: #E87E04;
-		  left: 200px;
+		  left: 150px;
 		}
 		.competition-podium .podium-block.gold .podium {
 		  background: #ead679;
@@ -99,7 +92,7 @@
 		
 		.competition-podium .podium-block.silver {
 		  color: #cbd9de;
-		  left: 400px;
+		  left: 300px;
 		}
 		.competition-podium .podium-block.silver .podium {
 		  background: #cbd9de;
@@ -128,6 +121,94 @@
 {block name="main"}
 	<section id="content">
 		<div class="container">
+		<!-- Modal EXAMLIST -->
+		<div id="myModal2" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+						<h3 id="myModalLabel2">{$courseName}</h3>
+					</div>
+					<div class="modal-body">
+						{$examList}
+					</div>
+					<div class="modal-footer">
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Modal RANKING -->
+					<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+									<h3 id="myModalLabel">Classifica</h3>
+								</div>
+								<div class="modal-body">
+      								<center>
+      									{if $hasPrize eq 1}
+	        								<h4>Complimenti! Sei alla posizione <strong>{$position}</strong></h4>
+      									{else}
+											<h4>Il tuo punteggio: <strong>{$points}</strong></h4>
+											<h4>La tua posizione: <strong>{$position}</strong></h4>
+										{/if}
+      									<hr>
+								    	<div class="competition-podium">
+								  			<div class="podium-block bronze">	
+												<div class="name">
+													<center>
+														<img style="max-width:120px;" src="{$bronzePrizeUrl}"/>
+														<br>
+														<h4>{$bronzePrizeTitle}</h4>
+													</center>
+												</div>
+								                <div class="podium">
+								                	<span class="position">3</span>
+									                <span>{$bronzeFirstName}<br>{$bronzePoints}</span>
+									            </div>
+											</div>
+											<div class="podium-block gold">	
+												<div class="name">
+													<center>
+														<img style="max-width:120px;" src="{$goldPrizeUrl}"/>
+														<br>
+														<h4>{$goldPrizeTitle}</h4>
+													</center>
+												</div>
+												<div class="podium">
+													<span class="position">1</span>
+	                        						<span>{$goldFirstName}<br>{$goldPoints}</span>
+                        						</div>
+											</div>
+											<div class="podium-block silver">	
+												<div class="name">
+													<center>
+														<img style="max-width:120px;" src="{$silverPrizeUrl}"/>
+														<br>
+														<h4>{$silverPrizeTitle}</h4>
+													</center>
+												</div>
+												<div class="podium">
+													<span class="position">2</span>
+	                        						<span>{$silverFirstName}<br>{$silverPoints}</span>
+	                    						</div>
+											</div>
+										</div>
+      								</center>
+      								<hr>
+      								<center>
+      									<div class="col-xs-10 col-xs-offset-1">
+      										{$otherPrices}
+      									</div>
+  									</center>
+  								</div>
+								<div class="modal-footer">
+								</div>
+							</div>
+						</div>
+					</div>
+		
 			<div class="col-sm-9">
 				<!-- Content of questions -->
 				<div class="card">
@@ -178,7 +259,9 @@
 								<p>
 									<h4>{$firstName} {$lastName}</h4>
 									<span style="color:light-grey;">{$courseName}</span><br>
-									<span style="color:light-grey;">{$examName}</span><br>
+									<a href="#myModal2" role="button" data-toggle="modal">
+										<span style="color:light-grey;">{$examName}</span><br>
+									</a>
 								</p>
 							</div>
 						</div>
@@ -200,7 +283,11 @@
 									<br>
 									<small style="color:light-grey;">Tempo</small>: <strong style="color:black;">{$minInSession}</strong><br>
 									<small style="color:light-grey;">Punti</small>:  <strong style="color:black;">{$points}</strong><br>
-									<small style="color:light-grey;">Classifica</small>:  <strong style="color:black;">{$position}</strong><br>
+									{if $showClassification eq 1}
+										<a href="#myModal" role="button" data-toggle="modal">
+											<small style="color:light-grey;">Classifica</small>:  <strong style="color:black;">{$position}</strong><br>
+										</a>
+									{/if}
 								</p>
 							</div>
 						</div>
@@ -226,8 +313,10 @@
 									<small style="color: white;">Punti</small><h4 style="color: white;">{$points}</h4>
 								</div>
 								<div class="col-xs-12 col-md-4">
-									<a href="#myModal" role="button" data-toggle="modal">
-									<small style="color: white;">Classifica</small><h4 style="color: white;">{$position}°</h4></a>
+									{if $showClassification eq 1}
+										<a href="#myModal" role="button" data-toggle="modal">
+										<small style="color: white;">Classifica</small><h4 style="color: white;">{$position}°</h4></a>
+									{/if}
 								</div>
 								<div class="col-xs-12 col-md-4">
 									<small style="color: white;">Tempo</small><h4 style="color: white;">{$minInSession}</h4>
@@ -236,59 +325,6 @@
 							<br>
 						</div>
 					</div>
-					<!-- Modal RANKING -->
-					<div id="myModal" class="modal fade" role="dialog">
-						<div class="modal-dialog">
-    						<!-- Modal content-->
-    						<div class="modal-content">
-					      		<div class="modal-header">
-					        		<button type="button" class="close" data-dismiss="modal">&times;</button>
-					        		<h3>CLASSIFICA</h3>
-					      		</div>
-					      		<div class="modal-body">
-					        		<div class="competition-podium">
-					  					<div class="podium-block bronze">	
-											<div class="name">
-												<center>
-													<img style="max-width:150px;" src="http://wpitalyplugin.com/wp-content/plugins/InstaBuilder/images/unavailable-200x145.png"/>
-												</center>
-												<br>
-											</div>
-					                      	<div class="podium">
-					                        	<span class="position">3</span>
-						                        <span>Federico<br>70 pt.</span>
-						                    </div>
-										</div>
-										<div class="podium-block gold">	
-											<div class="name">
-												<center>
-													<img style="max-width:150px;" src="http://wpitalyplugin.com/wp-content/plugins/InstaBuilder/images/unavailable-200x145.png"/>
-												</center>
-												<br>
-											</div>
-											<div class="podium">
-												<span class="position">1</span>
-						                        <span>Debora<br>125 pt.</span>
-					                        </div>
-										</div>
-										<div class="podium-block silver">	
-											<div class="name">
-												<center>
-													<img style="max-width:150px;" src="http://wpitalyplugin.com/wp-content/plugins/InstaBuilder/images/unavailable-200x145.png"/>
-												</center>
-												<br>
-											</div>
-											<div class="podium">
-												<span class="position">2</span>
-						                        <span>Alessandro<br>80 pt.</span>
-						                    </div>
-										</div>
-									</div>
-									<hr>
-					      		</div>      						
-    						</div>
-  						</div>
-					</div>					
 				</div>
 				<div class="card" style="margin-top:-25px;">
 				<div class="pv-body">
@@ -317,13 +353,13 @@
 				window.onpageshow = function (evt) {if (evt.persisted) disableBack()}
 				
 				function podiumAnimate() {
-        			$('.silver .podium').animate({
+        			$('.bronze .podium').animate({
 			            "height": "110px"
 			        }, 1500);
 			        $('.gold .podium').animate({
 			            "height": "200px"
 			        }, 1500);
-			        $('.bronze .podium').animate({
+			        $('.silver .podium').animate({
 			            "height": "140px"
 			        }, 1500);
 			        $('.competition-container .name').delay(1000).animate({

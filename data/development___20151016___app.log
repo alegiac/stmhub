@@ -1,0 +1,2523 @@
+2015-10-16T16:55:38+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Request] => Zend\Uri\Http Object
+                (
+                    [validHostTypes:protected] => 27
+                    [user:protected] => 
+                    [password:protected] => 
+                    [scheme:protected] => http
+                    [userInfo:protected] => 
+                    [host:protected] => smiletomove.local
+                    [port:protected] => 
+                    [path:protected] => /exam/token/12341234.12j21921dj90d9h39f3
+                    [query:protected] => 
+                    [fragment:protected] => 
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T16:55:38+02:00 WARN (4): An exception was raised while creating "Doctrine\ORM\EntityManager"; no instance returned {"Zf2Logger":"{\"sessionId\":\"3irelecl6rj0ve3nq3petrcj12\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T16:55:38+02:00 INFO (6): #0 /private/var/www/stmhub/vendor/zendframework/zend-servicemanager/src/ServiceManager.php(1097): Zend\ServiceManager\ServiceManager->createServiceViaCallback(Array, 'doctrineormenti...', 'Doctrine\\ORM\\En...')
+#1 /private/var/www/stmhub/vendor/zendframework/zend-servicemanager/src/ServiceManager.php(638): Zend\ServiceManager\ServiceManager->createFromFactory('doctrineormenti...', 'Doctrine\\ORM\\En...')
+#2 /private/var/www/stmhub/vendor/zendframework/zend-servicemanager/src/ServiceManager.php(598): Zend\ServiceManager\ServiceManager->doCreate('Doctrine\\ORM\\En...', 'doctrineormenti...')
+#3 /private/var/www/stmhub/vendor/zendframework/zend-servicemanager/src/ServiceManager.php(530): Zend\ServiceManager\ServiceManager->create(Array)
+#4 /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php(58): Zend\ServiceManager\ServiceManager->get('Doctrine\\ORM\\En...')
+#5 /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php(67): Application\Service\ExamService->getEntityManager()
+#6 /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php(622): Application\Service\ExamService->getStudentRepo()
+#7 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(130): Application\Service\ExamService->getCurrentExamSessionItemByToken('12341234.12j219...')
+#8 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractActionController.php(82): Application\Controller\ExamController->indexAction()
+#9 [internal function]: Zend\Mvc\Controller\AbstractActionController->onDispatch(Object(Zend\Mvc\MvcEvent))
+#10 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#11 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#12 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractController.php(118): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#13 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/DispatchListener.php(93): Zend\Mvc\Controller\AbstractController->dispatch(Object(ZF\ContentNegotiation\Request), Object(Zend\Http\PhpEnvironment\Response))
+#14 [internal function]: Zend\Mvc\DispatchListener->onDispatch(Object(Zend\Mvc\MvcEvent))
+#15 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#16 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#17 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(314): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#18 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#19 {main} {"Zf2Logger":"{\"sessionId\":\"3irelecl6rj0ve3nq3petrcj12\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T16:55:38+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Response] => Array
+                (
+                    [statusCode] => 302
+                    [content] => <!DOCTYPE html>
+<!--[if IE 9 ]><html class="ie9"><![endif]-->
+
+exception 'Zend\View\Exception\RuntimeException' with message 'SmartyModule\View\Renderer\SmartyRenderer::render: Unable to render template "application/exam/index"; resolver could not resolve to a file' in /private/var/www/stmhub/vendor/murganikolay/smarty-module/src/SmartyModule/View/Renderer/SmartyRenderer.php:137
+Stack trace:
+#0 /private/var/www/stmhub/vendor/zendframework/zend-view/src/View.php(205): SmartyModule\View\Renderer\SmartyRenderer->render(Object(Zend\View\Model\ViewModel))
+#1 /private/var/www/stmhub/vendor/zendframework/zend-view/src/View.php(233): Zend\View\View->render(Object(Zend\View\Model\ViewModel))
+#2 /private/var/www/stmhub/vendor/zendframework/zend-view/src/View.php(198): Zend\View\View->renderChildren(Object(Zend\View\Model\ViewModel))
+#3 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/View/Http/DefaultRenderingStrategy.php(103): Zend\View\View->render(Object(Zend\View\Model\ViewModel))
+#4 [internal function]: Zend\Mvc\View\Http\DefaultRenderingStrategy->render(Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('render', Object(Zend\Mvc\MvcEvent), Array)
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(353): Zend\EventManager\EventManager->trigger('render', Object(Zend\Mvc\MvcEvent))
+#8 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(328): Zend\Mvc\Application->completeRequest(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#10 {main}
+</html>
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"3irelecl6rj0ve3nq3petrcj12\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T16:55:38+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Request] => Zend\Uri\Http Object
+                (
+                    [validHostTypes:protected] => 27
+                    [user:protected] => 
+                    [password:protected] => 
+                    [scheme:protected] => http
+                    [userInfo:protected] => 
+                    [host:protected] => smiletomove.local
+                    [port:protected] => 
+                    [path:protected] => /exam/error
+                    [query:protected] => 
+                    [fragment:protected] => 
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T16:55:39+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Response] => Array
+                (
+                    [statusCode] => 200
+                    [content] => <!DOCTYPE html>
+<!--[if IE 9 ]><html class="ie9"><![endif]-->
+
+<head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>SmileToMove - Learning platform</title>
+
+        <!-- Vendor CSS -->
+        <link href="/static/assets/vendors/animate-css/animate.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/noUiSlider/jquery.nouislider.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/farbtastic/farbtastic.css" rel="stylesheet">
+        <link href="/static/assets/vendors/summernote/summernote.css" rel="stylesheet">
+        <link href="/static/assets/vendors/bootstrap-sweet-alert/sweet-alert.css" rel="stylesheet">
+        <link href="/static/assets/vendors/material-icons/material-design-iconic-font.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/socicon/socicon.min.css" rel="stylesheet">
+            
+        <!-- CSS -->
+        <link href="/static/assets/css/app.min.1.css" rel="stylesheet">
+        <link href="/static/assets/css/app.min.2.css" rel="stylesheet">
+        
+        <style type="text/css">
+            .toggle-switch .ts-label {
+                min-width: 130px;
+            }
+            form div {
+  				padding: 50px 0 50px 0;
+  				margin: 50px 0 50px 0;
+			}
+        </style>
+
+		
+
+    </head>
+    
+    <body>
+    
+    	
+  			<header id="header">
+	<ul class="header-inner">
+    	<li id="menu-trigger">
+			<!-- menu se serve -->
+		</li>
+
+		<li class="logo hidden-xs">
+			<a href="."><img src="/static/assets/img/logo.png" alt="Smile to Move"/></a>
+		</li>
+	</ul>
+</header>
+      	
+      	
+      	
+
+	<div class="four-zero">
+		<h2>500</h2>
+        <small>Errore interno del Server (codice: An exception was raised while creating "Doctrine\ORM\EntityManager"; no instance returned)</small>
+        <footer>
+        	<a href="/"><i class="md md-arrow-back"></i></a>
+            <a href="/"><i class="md md-home"></i></a>
+        </footer>
+	</div>
+
+      	
+        <!-- Javascript Libraries -->
+        <script src="/static/assets/js/jquery-2.1.1.min.js"></script>
+        <script src="/static/assets/js/bootstrap.min.js"></script>
+        
+        <script src="/static/assets/vendors/moment/moment.min.js"></script>
+        <script src="/static/assets/vendors/nicescroll/jquery.nicescroll.min.js"></script>
+        <script src="/static/assets/vendors/auto-size/jquery.autosize.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-select/bootstrap-select.min.js"></script>
+        <script src="/static/assets/vendors/chosen/chosen.jquery.min.js"></script>
+        <script src="/static/assets/vendors/noUiSlider/jquery.nouislider.all.min.js"></script>
+        <script src="/static/assets/vendors/input-mask/input-mask.min.js"></script>
+        <script src="/static/assets/vendors/farbtastic/farbtastic.min.js"></script>
+        <script src="/static/assets/vendors/summernote/summernote.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+        <script src="/static/assets/vendors/fileinput/fileinput.min.js"></script>
+        <script src="/static/assets/vendors/waves/waves.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-sweet-alert/sweet-alert.js"></script>
+        
+        <script src="/static/assets/js/demo.js"></script>
+        
+        
+       
+    </body>
+</html>
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"3irelecl6rj0ve3nq3petrcj12\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T16:55:39+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Request] => Zend\Uri\Http Object
+                (
+                    [validHostTypes:protected] => 27
+                    [user:protected] => 
+                    [password:protected] => 
+                    [scheme:protected] => http
+                    [userInfo:protected] => 
+                    [host:protected] => smiletomove.local
+                    [port:protected] => 
+                    [path:protected] => /exam/token/12341234.12j21921dj90d9h39f3
+                    [query:protected] => 
+                    [fragment:protected] => 
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T16:55:39+02:00 WARN (4): An exception was raised while creating "Doctrine\ORM\EntityManager"; no instance returned {"Zf2Logger":"{\"sessionId\":\"3irelecl6rj0ve3nq3petrcj12\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T16:55:39+02:00 INFO (6): #0 /private/var/www/stmhub/vendor/zendframework/zend-servicemanager/src/ServiceManager.php(1097): Zend\ServiceManager\ServiceManager->createServiceViaCallback(Array, 'doctrineormenti...', 'Doctrine\\ORM\\En...')
+#1 /private/var/www/stmhub/vendor/zendframework/zend-servicemanager/src/ServiceManager.php(638): Zend\ServiceManager\ServiceManager->createFromFactory('doctrineormenti...', 'Doctrine\\ORM\\En...')
+#2 /private/var/www/stmhub/vendor/zendframework/zend-servicemanager/src/ServiceManager.php(598): Zend\ServiceManager\ServiceManager->doCreate('Doctrine\\ORM\\En...', 'doctrineormenti...')
+#3 /private/var/www/stmhub/vendor/zendframework/zend-servicemanager/src/ServiceManager.php(530): Zend\ServiceManager\ServiceManager->create(Array)
+#4 /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php(58): Zend\ServiceManager\ServiceManager->get('Doctrine\\ORM\\En...')
+#5 /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php(67): Application\Service\ExamService->getEntityManager()
+#6 /private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php(622): Application\Service\ExamService->getStudentRepo()
+#7 /private/var/www/stmhub/module/Application/src/Application/Controller/ExamController.php(130): Application\Service\ExamService->getCurrentExamSessionItemByToken('12341234.12j219...')
+#8 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractActionController.php(82): Application\Controller\ExamController->indexAction()
+#9 [internal function]: Zend\Mvc\Controller\AbstractActionController->onDispatch(Object(Zend\Mvc\MvcEvent))
+#10 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#11 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#12 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Controller/AbstractController.php(118): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#13 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/DispatchListener.php(93): Zend\Mvc\Controller\AbstractController->dispatch(Object(ZF\ContentNegotiation\Request), Object(Zend\Http\PhpEnvironment\Response))
+#14 [internal function]: Zend\Mvc\DispatchListener->onDispatch(Object(Zend\Mvc\MvcEvent))
+#15 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#16 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#17 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(314): Zend\EventManager\EventManager->trigger('dispatch', Object(Zend\Mvc\MvcEvent), Object(Closure))
+#18 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#19 {main} {"Zf2Logger":"{\"sessionId\":\"3irelecl6rj0ve3nq3petrcj12\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T16:55:39+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Response] => Array
+                (
+                    [statusCode] => 302
+                    [content] => <!DOCTYPE html>
+<!--[if IE 9 ]><html class="ie9"><![endif]-->
+
+exception 'Zend\View\Exception\RuntimeException' with message 'SmartyModule\View\Renderer\SmartyRenderer::render: Unable to render template "application/exam/index"; resolver could not resolve to a file' in /private/var/www/stmhub/vendor/murganikolay/smarty-module/src/SmartyModule/View/Renderer/SmartyRenderer.php:137
+Stack trace:
+#0 /private/var/www/stmhub/vendor/zendframework/zend-view/src/View.php(205): SmartyModule\View\Renderer\SmartyRenderer->render(Object(Zend\View\Model\ViewModel))
+#1 /private/var/www/stmhub/vendor/zendframework/zend-view/src/View.php(233): Zend\View\View->render(Object(Zend\View\Model\ViewModel))
+#2 /private/var/www/stmhub/vendor/zendframework/zend-view/src/View.php(198): Zend\View\View->renderChildren(Object(Zend\View\Model\ViewModel))
+#3 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/View/Http/DefaultRenderingStrategy.php(103): Zend\View\View->render(Object(Zend\View\Model\ViewModel))
+#4 [internal function]: Zend\Mvc\View\Http\DefaultRenderingStrategy->render(Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('render', Object(Zend\Mvc\MvcEvent), Array)
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(353): Zend\EventManager\EventManager->trigger('render', Object(Zend\Mvc\MvcEvent))
+#8 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(328): Zend\Mvc\Application->completeRequest(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#10 {main}
+</html>
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"3irelecl6rj0ve3nq3petrcj12\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T16:55:39+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Request] => Zend\Uri\Http Object
+                (
+                    [validHostTypes:protected] => 27
+                    [user:protected] => 
+                    [password:protected] => 
+                    [scheme:protected] => http
+                    [userInfo:protected] => 
+                    [host:protected] => smiletomove.local
+                    [port:protected] => 
+                    [path:protected] => /exam/error
+                    [query:protected] => 
+                    [fragment:protected] => 
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T16:55:39+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Response] => Array
+                (
+                    [statusCode] => 200
+                    [content] => <!DOCTYPE html>
+<!--[if IE 9 ]><html class="ie9"><![endif]-->
+
+<head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>SmileToMove - Learning platform</title>
+
+        <!-- Vendor CSS -->
+        <link href="/static/assets/vendors/animate-css/animate.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/noUiSlider/jquery.nouislider.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/farbtastic/farbtastic.css" rel="stylesheet">
+        <link href="/static/assets/vendors/summernote/summernote.css" rel="stylesheet">
+        <link href="/static/assets/vendors/bootstrap-sweet-alert/sweet-alert.css" rel="stylesheet">
+        <link href="/static/assets/vendors/material-icons/material-design-iconic-font.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/socicon/socicon.min.css" rel="stylesheet">
+            
+        <!-- CSS -->
+        <link href="/static/assets/css/app.min.1.css" rel="stylesheet">
+        <link href="/static/assets/css/app.min.2.css" rel="stylesheet">
+        
+        <style type="text/css">
+            .toggle-switch .ts-label {
+                min-width: 130px;
+            }
+            form div {
+  				padding: 50px 0 50px 0;
+  				margin: 50px 0 50px 0;
+			}
+        </style>
+
+		
+
+    </head>
+    
+    <body>
+    
+    	
+  			<header id="header">
+	<ul class="header-inner">
+    	<li id="menu-trigger">
+			<!-- menu se serve -->
+		</li>
+
+		<li class="logo hidden-xs">
+			<a href="."><img src="/static/assets/img/logo.png" alt="Smile to Move"/></a>
+		</li>
+	</ul>
+</header>
+      	
+      	
+      	
+
+	<div class="four-zero">
+		<h2>500</h2>
+        <small>Errore interno del Server (codice: An exception was raised while creating "Doctrine\ORM\EntityManager"; no instance returned)</small>
+        <footer>
+        	<a href="/"><i class="md md-arrow-back"></i></a>
+            <a href="/"><i class="md md-home"></i></a>
+        </footer>
+	</div>
+
+      	
+        <!-- Javascript Libraries -->
+        <script src="/static/assets/js/jquery-2.1.1.min.js"></script>
+        <script src="/static/assets/js/bootstrap.min.js"></script>
+        
+        <script src="/static/assets/vendors/moment/moment.min.js"></script>
+        <script src="/static/assets/vendors/nicescroll/jquery.nicescroll.min.js"></script>
+        <script src="/static/assets/vendors/auto-size/jquery.autosize.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-select/bootstrap-select.min.js"></script>
+        <script src="/static/assets/vendors/chosen/chosen.jquery.min.js"></script>
+        <script src="/static/assets/vendors/noUiSlider/jquery.nouislider.all.min.js"></script>
+        <script src="/static/assets/vendors/input-mask/input-mask.min.js"></script>
+        <script src="/static/assets/vendors/farbtastic/farbtastic.min.js"></script>
+        <script src="/static/assets/vendors/summernote/summernote.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+        <script src="/static/assets/vendors/fileinput/fileinput.min.js"></script>
+        <script src="/static/assets/vendors/waves/waves.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-sweet-alert/sweet-alert.js"></script>
+        
+        <script src="/static/assets/js/demo.js"></script>
+        
+        
+       
+    </body>
+</html>
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"3irelecl6rj0ve3nq3petrcj12\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T16:56:30+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Request] => Zend\Uri\Http Object
+                (
+                    [validHostTypes:protected] => 27
+                    [user:protected] => 
+                    [password:protected] => 
+                    [scheme:protected] => http
+                    [userInfo:protected] => 
+                    [host:protected] => smiletomove.local
+                    [port:protected] => 
+                    [path:protected] => /exam/token/12341234.12j21921dj90d9h39f3
+                    [query:protected] => 
+                    [fragment:protected] => 
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T16:56:31+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Response] => Array
+                (
+                    [statusCode] => 302
+                    [content] => <!DOCTYPE html>
+<!--[if IE 9 ]><html class="ie9"><![endif]-->
+
+exception 'Zend\View\Exception\RuntimeException' with message 'SmartyModule\View\Renderer\SmartyRenderer::render: Unable to render template "application/exam/index"; resolver could not resolve to a file' in /private/var/www/stmhub/vendor/murganikolay/smarty-module/src/SmartyModule/View/Renderer/SmartyRenderer.php:137
+Stack trace:
+#0 /private/var/www/stmhub/vendor/zendframework/zend-view/src/View.php(205): SmartyModule\View\Renderer\SmartyRenderer->render(Object(Zend\View\Model\ViewModel))
+#1 /private/var/www/stmhub/vendor/zendframework/zend-view/src/View.php(233): Zend\View\View->render(Object(Zend\View\Model\ViewModel))
+#2 /private/var/www/stmhub/vendor/zendframework/zend-view/src/View.php(198): Zend\View\View->renderChildren(Object(Zend\View\Model\ViewModel))
+#3 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/View/Http/DefaultRenderingStrategy.php(103): Zend\View\View->render(Object(Zend\View\Model\ViewModel))
+#4 [internal function]: Zend\Mvc\View\Http\DefaultRenderingStrategy->render(Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('render', Object(Zend\Mvc\MvcEvent), Array)
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(353): Zend\EventManager\EventManager->trigger('render', Object(Zend\Mvc\MvcEvent))
+#8 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(328): Zend\Mvc\Application->completeRequest(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#10 {main}
+</html>
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"3irelecl6rj0ve3nq3petrcj12\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T16:56:31+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Request] => Zend\Uri\Http Object
+                (
+                    [validHostTypes:protected] => 27
+                    [user:protected] => 
+                    [password:protected] => 
+                    [scheme:protected] => http
+                    [userInfo:protected] => 
+                    [host:protected] => smiletomove.local
+                    [port:protected] => 
+                    [path:protected] => /exam/start
+                    [query:protected] => 
+                    [fragment:protected] => 
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T16:56:31+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Response] => Array
+                (
+                    [statusCode] => 200
+                    [content] => <!DOCTYPE html>
+<!--[if IE 9 ]><html class="ie9"><![endif]-->
+
+<head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>SmileToMove - Learning platform</title>
+
+        <!-- Vendor CSS -->
+        <link href="/static/assets/vendors/animate-css/animate.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/noUiSlider/jquery.nouislider.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/farbtastic/farbtastic.css" rel="stylesheet">
+        <link href="/static/assets/vendors/summernote/summernote.css" rel="stylesheet">
+        <link href="/static/assets/vendors/bootstrap-sweet-alert/sweet-alert.css" rel="stylesheet">
+        <link href="/static/assets/vendors/material-icons/material-design-iconic-font.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/socicon/socicon.min.css" rel="stylesheet">
+            
+        <!-- CSS -->
+        <link href="/static/assets/css/app.min.1.css" rel="stylesheet">
+        <link href="/static/assets/css/app.min.2.css" rel="stylesheet">
+        
+        <style type="text/css">
+            .toggle-switch .ts-label {
+                min-width: 130px;
+            }
+            form div {
+  				padding: 50px 0 50px 0;
+  				margin: 50px 0 50px 0;
+			}
+        </style>
+
+		
+
+
+
+    </head>
+    
+    <body>
+    
+    	
+  			<header id="header">
+	<ul class="header-inner">
+    	<li id="menu-trigger">
+			<!-- menu se serve -->
+		</li>
+
+		<li class="logo hidden-xs">
+			<a href="."><img src="/static/assets/img/logo.png" alt="Smile to Move"/></a>
+		</li>
+	</ul>
+</header>
+      	
+      	
+      	
+	<section id="content">
+	    <div class="container">
+	    	<div class="col-sm-9">
+            	<!-- Welcome area -->
+            	<div class="card">
+	        		<div class="card-header">
+	        			<div class="row">
+	        				<h2>Benvenuta, DEBORA</h2>
+	        				<br>
+	        				<h3>Nuova sessione d'esame disponibile</h3>
+	        				<hr>
+	        				<div class="col-xs-8">
+	        					<h4>Corso: Test course</h4>
+	        					This is the test course
+	        					<br><br>
+	        					<h4>Esame n. 1/1: Livello1</h4>
+	        					Livello1
+	        					<br><br><br><br><br><br>
+	                    	</div>
+	                    	<div class="col-xs-4">
+	                    		<img src="" style="max-width:100%;max-height:100%;"/>
+	                    	</div>
+	                    	<br><br><br><br><br><br>
+	                    	<a href="/exam/participate" class="btn btn-primary btn-lg col-xs-8 col-xs-offset-2">INIZIA</a>
+	                    	<br><br><br>
+	                   	</div>
+	        		</div>
+	        		<div class="card-body card-padding">
+	        			<h5>Informazioni sull'esame</h5>
+	        			<div class="row">
+	        				<div class="col-xs-12 col-sm-4">
+	        					<div class="mini-charts-item bgm-orange">
+									<div class="clearfix">
+	                    				<div class="chart chart-pie stats-pie"></div>
+	                    				<div class="count">
+	                        				<small>Numero quesiti</small>
+	                        				<h2>99</h2>
+	                    				</div>
+	                				</div>
+								</div>
+	        				</div>
+	        				<div class="col-xs-12 col-sm-4">
+	        					<div class="mini-charts-item bgm-orange">
+									<div class="clearfix">
+	                    				<div class="chart chart-pie stats-pie"></div>
+	                    				<div class="count">
+	                        				<small>Punti possibili</small>
+	                        				<h2>960</h2>
+	                    				</div>
+	                				</div>
+								</div>
+	        				</div><div class="col-xs-12 col-sm-4">
+	        					<div class="mini-charts-item bgm-orange">
+									<div class="clearfix">
+	                    				<div class="chart chart-pie stats-pie"></div>
+	                    				<div class="count">
+	                        				<small>Data termine</small>
+	                        				<h2>21/07/2015</h2>
+	                    				</div>
+	                				</div>
+								</div>
+	        				</div>
+	        			</div>
+	        		</div>
+	        	</div>
+			</div>
+			<div class="col-sm-3">
+				<!-- Profile view -->
+                <div class="card profile-view">
+                	<div class="pv-header">
+                    	<img src="/static/assets/img/profile-pics/profile-pic.gif" class="pv-main" alt="">
+                   	</div>
+                            
+                    <div class="pv-body">
+                        <h2>DEBORA OLIOSI</h2>
+                        
+                        <ul class="pv-contact">
+                        </ul>
+                        
+                        <ul class="pv-follow">
+                        </ul>
+                        
+                        <a href="/exam/stats" class="pv-follow-btn">Statistiche</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+      	
+        <!-- Javascript Libraries -->
+        <script src="/static/assets/js/jquery-2.1.1.min.js"></script>
+        <script src="/static/assets/js/bootstrap.min.js"></script>
+        
+        <script src="/static/assets/vendors/moment/moment.min.js"></script>
+        <script src="/static/assets/vendors/nicescroll/jquery.nicescroll.min.js"></script>
+        <script src="/static/assets/vendors/auto-size/jquery.autosize.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-select/bootstrap-select.min.js"></script>
+        <script src="/static/assets/vendors/chosen/chosen.jquery.min.js"></script>
+        <script src="/static/assets/vendors/noUiSlider/jquery.nouislider.all.min.js"></script>
+        <script src="/static/assets/vendors/input-mask/input-mask.min.js"></script>
+        <script src="/static/assets/vendors/farbtastic/farbtastic.min.js"></script>
+        <script src="/static/assets/vendors/summernote/summernote.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+        <script src="/static/assets/vendors/fileinput/fileinput.min.js"></script>
+        <script src="/static/assets/vendors/waves/waves.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-sweet-alert/sweet-alert.js"></script>
+        
+        <script src="/static/assets/js/demo.js"></script>
+        
+        
+       
+    </body>
+</html>
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"3irelecl6rj0ve3nq3petrcj12\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T17:03:49+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Request] => Zend\Uri\Http Object
+                (
+                    [validHostTypes:protected] => 27
+                    [user:protected] => 
+                    [password:protected] => 
+                    [scheme:protected] => http
+                    [userInfo:protected] => 
+                    [host:protected] => smiletomove.local
+                    [port:protected] => 
+                    [path:protected] => /exam/start
+                    [query:protected] => 
+                    [fragment:protected] => 
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T17:03:49+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Response] => Array
+                (
+                    [statusCode] => 200
+                    [content] => <!DOCTYPE html>
+<!--[if IE 9 ]><html class="ie9"><![endif]-->
+
+<head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>SmileToMove - Learning platform</title>
+
+        <!-- Vendor CSS -->
+        <link href="/static/assets/vendors/animate-css/animate.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/noUiSlider/jquery.nouislider.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/farbtastic/farbtastic.css" rel="stylesheet">
+        <link href="/static/assets/vendors/summernote/summernote.css" rel="stylesheet">
+        <link href="/static/assets/vendors/bootstrap-sweet-alert/sweet-alert.css" rel="stylesheet">
+        <link href="/static/assets/vendors/material-icons/material-design-iconic-font.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/socicon/socicon.min.css" rel="stylesheet">
+            
+        <!-- CSS -->
+        <link href="/static/assets/css/app.min.1.css" rel="stylesheet">
+        <link href="/static/assets/css/app.min.2.css" rel="stylesheet">
+        
+        <style type="text/css">
+            .toggle-switch .ts-label {
+                min-width: 130px;
+            }
+            form div {
+  				padding: 50px 0 50px 0;
+  				margin: 50px 0 50px 0;
+			}
+        </style>
+
+		
+
+
+
+    </head>
+    
+    <body>
+    
+    	
+  			<header id="header">
+	<ul class="header-inner">
+    	<li id="menu-trigger">
+			<!-- menu se serve -->
+		</li>
+
+		<li class="logo hidden-xs">
+			<a href="."><img src="/static/assets/img/logo.png" alt="Smile to Move"/></a>
+		</li>
+	</ul>
+</header>
+      	
+      	
+      	
+	<section id="content">
+	    <div class="container">
+	    	<div class="col-sm-9">
+            	<!-- Welcome area -->
+            	<div class="card">
+	        		<div class="card-header">
+	        			<div class="row">
+	        				<h2>Benvenuta, DEBORA</h2>
+	        				<br>
+	        				<h3>Nuova sessione d'esame disponibile</h3>
+	        				<hr>
+	        				<div class="col-xs-8">
+	        					<h4>Corso: Test course</h4>
+	        					This is the test course
+	        					<br><br>
+	        					<h4>Esame n. 1/1: Livello1</h4>
+	        					Livello1
+	        					<br><br><br><br><br><br>
+	                    	</div>
+	                    	<div class="col-xs-4">
+	                    		<img src="" style="max-width:100%;max-height:100%;"/>
+	                    	</div>
+	                    	<br><br><br><br><br><br>
+	                    	<a href="/exam/participate" class="btn btn-primary btn-lg col-xs-8 col-xs-offset-2">INIZIA</a>
+	                    	<br><br><br>
+	                   	</div>
+	        		</div>
+	        		<div class="card-body card-padding">
+	        			<h5>Informazioni sull'esame</h5>
+	        			<div class="row">
+	        				<div class="col-xs-12 col-sm-4">
+	        					<div class="mini-charts-item bgm-orange">
+									<div class="clearfix">
+	                    				<div class="chart chart-pie stats-pie"></div>
+	                    				<div class="count">
+	                        				<small>Numero quesiti</small>
+	                        				<h2>99</h2>
+	                    				</div>
+	                				</div>
+								</div>
+	        				</div>
+	        				<div class="col-xs-12 col-sm-4">
+	        					<div class="mini-charts-item bgm-orange">
+									<div class="clearfix">
+	                    				<div class="chart chart-pie stats-pie"></div>
+	                    				<div class="count">
+	                        				<small>Punti possibili</small>
+	                        				<h2>960</h2>
+	                    				</div>
+	                				</div>
+								</div>
+	        				</div><div class="col-xs-12 col-sm-4">
+	        					<div class="mini-charts-item bgm-orange">
+									<div class="clearfix">
+	                    				<div class="chart chart-pie stats-pie"></div>
+	                    				<div class="count">
+	                        				<small>Data termine</small>
+	                        				<h2>21/07/2015</h2>
+	                    				</div>
+	                				</div>
+								</div>
+	        				</div>
+	        			</div>
+	        		</div>
+	        	</div>
+			</div>
+			<div class="col-sm-3">
+				<!-- Profile view -->
+                <div class="card profile-view">
+                	<div class="pv-header">
+                    	<img src="/static/assets/img/profile-pics/profile-pic.gif" class="pv-main" alt="">
+                   	</div>
+                            
+                    <div class="pv-body">
+                        <h2>DEBORA OLIOSI</h2>
+                        
+                        <ul class="pv-contact">
+                        </ul>
+                        
+                        <ul class="pv-follow">
+                        </ul>
+                        
+                        <a href="/exam/stats" class="pv-follow-btn">Statistiche</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+      	
+        <!-- Javascript Libraries -->
+        <script src="/static/assets/js/jquery-2.1.1.min.js"></script>
+        <script src="/static/assets/js/bootstrap.min.js"></script>
+        
+        <script src="/static/assets/vendors/moment/moment.min.js"></script>
+        <script src="/static/assets/vendors/nicescroll/jquery.nicescroll.min.js"></script>
+        <script src="/static/assets/vendors/auto-size/jquery.autosize.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-select/bootstrap-select.min.js"></script>
+        <script src="/static/assets/vendors/chosen/chosen.jquery.min.js"></script>
+        <script src="/static/assets/vendors/noUiSlider/jquery.nouislider.all.min.js"></script>
+        <script src="/static/assets/vendors/input-mask/input-mask.min.js"></script>
+        <script src="/static/assets/vendors/farbtastic/farbtastic.min.js"></script>
+        <script src="/static/assets/vendors/summernote/summernote.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+        <script src="/static/assets/vendors/fileinput/fileinput.min.js"></script>
+        <script src="/static/assets/vendors/waves/waves.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-sweet-alert/sweet-alert.js"></script>
+        
+        <script src="/static/assets/js/demo.js"></script>
+        
+        
+       
+    </body>
+</html>
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"3irelecl6rj0ve3nq3petrcj12\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T17:03:53+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Request] => Zend\Uri\Http Object
+                (
+                    [validHostTypes:protected] => 27
+                    [user:protected] => 
+                    [password:protected] => 
+                    [scheme:protected] => http
+                    [userInfo:protected] => 
+                    [host:protected] => smiletomove.local
+                    [port:protected] => 
+                    [path:protected] => /exam/start
+                    [query:protected] => 
+                    [fragment:protected] => 
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T17:03:53+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Response] => Array
+                (
+                    [statusCode] => 200
+                    [content] => <!DOCTYPE html>
+<!--[if IE 9 ]><html class="ie9"><![endif]-->
+
+<head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>SmileToMove - Learning platform</title>
+
+        <!-- Vendor CSS -->
+        <link href="/static/assets/vendors/animate-css/animate.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/noUiSlider/jquery.nouislider.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/farbtastic/farbtastic.css" rel="stylesheet">
+        <link href="/static/assets/vendors/summernote/summernote.css" rel="stylesheet">
+        <link href="/static/assets/vendors/bootstrap-sweet-alert/sweet-alert.css" rel="stylesheet">
+        <link href="/static/assets/vendors/material-icons/material-design-iconic-font.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/socicon/socicon.min.css" rel="stylesheet">
+            
+        <!-- CSS -->
+        <link href="/static/assets/css/app.min.1.css" rel="stylesheet">
+        <link href="/static/assets/css/app.min.2.css" rel="stylesheet">
+        
+        <style type="text/css">
+            .toggle-switch .ts-label {
+                min-width: 130px;
+            }
+            form div {
+  				padding: 50px 0 50px 0;
+  				margin: 50px 0 50px 0;
+			}
+        </style>
+
+		
+
+
+
+    </head>
+    
+    <body>
+    
+    	
+  			<header id="header">
+	<ul class="header-inner">
+    	<li id="menu-trigger">
+			<!-- menu se serve -->
+		</li>
+
+		<li class="logo hidden-xs">
+			<a href="."><img src="/static/assets/img/logo.png" alt="Smile to Move"/></a>
+		</li>
+	</ul>
+</header>
+      	
+      	
+      	
+	<section id="content">
+	    <div class="container">
+	    	<div class="col-sm-9">
+            	<!-- Welcome area -->
+            	<div class="card">
+	        		<div class="card-header">
+	        			<div class="row">
+	        				<h2>Benvenuta, DEBORA</h2>
+	        				<br>
+	        				<h3>Nuova sessione d'esame disponibile</h3>
+	        				<hr>
+	        				<div class="col-xs-8">
+	        					<h4>Corso: Test course</h4>
+	        					This is the test course
+	        					<br><br>
+	        					<h4>Esame n. 1/1: Livello1</h4>
+	        					Livello1
+	        					<br><br><br><br><br><br>
+	                    	</div>
+	                    	<div class="col-xs-4">
+	                    		<img src="" style="max-width:100%;max-height:100%;"/>
+	                    	</div>
+	                    	<br><br><br><br><br><br>
+	                    	<a href="/exam/participate" class="btn btn-primary btn-lg col-xs-8 col-xs-offset-2">INIZIA</a>
+	                    	<br><br><br>
+	                   	</div>
+	        		</div>
+	        		<div class="card-body card-padding">
+	        			<h5>Informazioni sull'esame</h5>
+	        			<div class="row">
+	        				<div class="col-xs-12 col-sm-4">
+	        					<div class="mini-charts-item bgm-orange">
+									<div class="clearfix">
+	                    				<div class="chart chart-pie stats-pie"></div>
+	                    				<div class="count">
+	                        				<small>Numero quesiti</small>
+	                        				<h2>99</h2>
+	                    				</div>
+	                				</div>
+								</div>
+	        				</div>
+	        				<div class="col-xs-12 col-sm-4">
+	        					<div class="mini-charts-item bgm-orange">
+									<div class="clearfix">
+	                    				<div class="chart chart-pie stats-pie"></div>
+	                    				<div class="count">
+	                        				<small>Punti possibili</small>
+	                        				<h2>960</h2>
+	                    				</div>
+	                				</div>
+								</div>
+	        				</div><div class="col-xs-12 col-sm-4">
+	        					<div class="mini-charts-item bgm-orange">
+									<div class="clearfix">
+	                    				<div class="chart chart-pie stats-pie"></div>
+	                    				<div class="count">
+	                        				<small>Data termine</small>
+	                        				<h2>21/07/2015</h2>
+	                    				</div>
+	                				</div>
+								</div>
+	        				</div>
+	        			</div>
+	        		</div>
+	        	</div>
+			</div>
+			<div class="col-sm-3">
+				<!-- Profile view -->
+                <div class="card profile-view">
+                	<div class="pv-header">
+                    	<img src="/static/assets/img/profile-pics/profile-pic.gif" class="pv-main" alt="">
+                   	</div>
+                            
+                    <div class="pv-body">
+                        <h2>DEBORA OLIOSI</h2>
+                        
+                        <ul class="pv-contact">
+                        </ul>
+                        
+                        <ul class="pv-follow">
+                        </ul>
+                        
+                        <a href="/exam/stats" class="pv-follow-btn">Statistiche</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+      	
+        <!-- Javascript Libraries -->
+        <script src="/static/assets/js/jquery-2.1.1.min.js"></script>
+        <script src="/static/assets/js/bootstrap.min.js"></script>
+        
+        <script src="/static/assets/vendors/moment/moment.min.js"></script>
+        <script src="/static/assets/vendors/nicescroll/jquery.nicescroll.min.js"></script>
+        <script src="/static/assets/vendors/auto-size/jquery.autosize.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-select/bootstrap-select.min.js"></script>
+        <script src="/static/assets/vendors/chosen/chosen.jquery.min.js"></script>
+        <script src="/static/assets/vendors/noUiSlider/jquery.nouislider.all.min.js"></script>
+        <script src="/static/assets/vendors/input-mask/input-mask.min.js"></script>
+        <script src="/static/assets/vendors/farbtastic/farbtastic.min.js"></script>
+        <script src="/static/assets/vendors/summernote/summernote.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+        <script src="/static/assets/vendors/fileinput/fileinput.min.js"></script>
+        <script src="/static/assets/vendors/waves/waves.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-sweet-alert/sweet-alert.js"></script>
+        
+        <script src="/static/assets/js/demo.js"></script>
+        
+        
+       
+    </body>
+</html>
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"3irelecl6rj0ve3nq3petrcj12\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T17:03:55+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Request] => Zend\Uri\Http Object
+                (
+                    [validHostTypes:protected] => 27
+                    [user:protected] => 
+                    [password:protected] => 
+                    [scheme:protected] => http
+                    [userInfo:protected] => 
+                    [host:protected] => smiletomove.local
+                    [port:protected] => 
+                    [path:protected] => /exam/start
+                    [query:protected] => 
+                    [fragment:protected] => 
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T17:03:55+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Response] => Array
+                (
+                    [statusCode] => 200
+                    [content] => <!DOCTYPE html>
+<!--[if IE 9 ]><html class="ie9"><![endif]-->
+
+<head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>SmileToMove - Learning platform</title>
+
+        <!-- Vendor CSS -->
+        <link href="/static/assets/vendors/animate-css/animate.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/noUiSlider/jquery.nouislider.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/farbtastic/farbtastic.css" rel="stylesheet">
+        <link href="/static/assets/vendors/summernote/summernote.css" rel="stylesheet">
+        <link href="/static/assets/vendors/bootstrap-sweet-alert/sweet-alert.css" rel="stylesheet">
+        <link href="/static/assets/vendors/material-icons/material-design-iconic-font.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/socicon/socicon.min.css" rel="stylesheet">
+            
+        <!-- CSS -->
+        <link href="/static/assets/css/app.min.1.css" rel="stylesheet">
+        <link href="/static/assets/css/app.min.2.css" rel="stylesheet">
+        
+        <style type="text/css">
+            .toggle-switch .ts-label {
+                min-width: 130px;
+            }
+            form div {
+  				padding: 50px 0 50px 0;
+  				margin: 50px 0 50px 0;
+			}
+        </style>
+
+		
+
+
+
+    </head>
+    
+    <body>
+    
+    	
+  			<header id="header">
+	<ul class="header-inner">
+    	<li id="menu-trigger">
+			<!-- menu se serve -->
+		</li>
+
+		<li class="logo hidden-xs">
+			<a href="."><img src="/static/assets/img/logo.png" alt="Smile to Move"/></a>
+		</li>
+	</ul>
+</header>
+      	
+      	
+      	
+	<section id="content">
+	    <div class="container">
+	    	<div class="col-sm-9">
+            	<!-- Welcome area -->
+            	<div class="card">
+	        		<div class="card-header">
+	        			<div class="row">
+	        				<h2>Benvenuta, DEBORA</h2>
+	        				<br>
+	        				<h3>Nuova sessione d'esame disponibile</h3>
+	        				<hr>
+	        				<div class="col-xs-8">
+	        					<h4>Corso: Test course</h4>
+	        					This is the test course
+	        					<br><br>
+	        					<h4>Esame n. 1/1: Livello1</h4>
+	        					Livello1
+	        					<br><br><br><br><br><br>
+	                    	</div>
+	                    	<div class="col-xs-4">
+	                    		<img src="" style="max-width:100%;max-height:100%;"/>
+	                    	</div>
+	                    	<br><br><br><br><br><br>
+	                    	<a href="/exam/participate" class="btn btn-primary btn-lg col-xs-8 col-xs-offset-2">INIZIA</a>
+	                    	<br><br><br>
+	                   	</div>
+	        		</div>
+	        		<div class="card-body card-padding">
+	        			<h5>Informazioni sull'esame</h5>
+	        			<div class="row">
+	        				<div class="col-xs-12 col-sm-4">
+	        					<div class="mini-charts-item bgm-orange">
+									<div class="clearfix">
+	                    				<div class="chart chart-pie stats-pie"></div>
+	                    				<div class="count">
+	                        				<small>Numero quesiti</small>
+	                        				<h2>99</h2>
+	                    				</div>
+	                				</div>
+								</div>
+	        				</div>
+	        				<div class="col-xs-12 col-sm-4">
+	        					<div class="mini-charts-item bgm-orange">
+									<div class="clearfix">
+	                    				<div class="chart chart-pie stats-pie"></div>
+	                    				<div class="count">
+	                        				<small>Punti possibili</small>
+	                        				<h2>960</h2>
+	                    				</div>
+	                				</div>
+								</div>
+	        				</div><div class="col-xs-12 col-sm-4">
+	        					<div class="mini-charts-item bgm-orange">
+									<div class="clearfix">
+	                    				<div class="chart chart-pie stats-pie"></div>
+	                    				<div class="count">
+	                        				<small>Data termine</small>
+	                        				<h2>21/07/2015</h2>
+	                    				</div>
+	                				</div>
+								</div>
+	        				</div>
+	        			</div>
+	        		</div>
+	        	</div>
+			</div>
+			<div class="col-sm-3">
+				<!-- Profile view -->
+                <div class="card profile-view">
+                	<div class="pv-header">
+                    	<img src="/static/assets/img/profile-pics/profile-pic.gif" class="pv-main" alt="">
+                   	</div>
+                            
+                    <div class="pv-body">
+                        <h2>DEBORA OLIOSI</h2>
+                        
+                        <ul class="pv-contact">
+                        </ul>
+                        
+                        <ul class="pv-follow">
+                        </ul>
+                        
+                        <a href="/exam/stats" class="pv-follow-btn">Statistiche</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+      	
+        <!-- Javascript Libraries -->
+        <script src="/static/assets/js/jquery-2.1.1.min.js"></script>
+        <script src="/static/assets/js/bootstrap.min.js"></script>
+        
+        <script src="/static/assets/vendors/moment/moment.min.js"></script>
+        <script src="/static/assets/vendors/nicescroll/jquery.nicescroll.min.js"></script>
+        <script src="/static/assets/vendors/auto-size/jquery.autosize.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-select/bootstrap-select.min.js"></script>
+        <script src="/static/assets/vendors/chosen/chosen.jquery.min.js"></script>
+        <script src="/static/assets/vendors/noUiSlider/jquery.nouislider.all.min.js"></script>
+        <script src="/static/assets/vendors/input-mask/input-mask.min.js"></script>
+        <script src="/static/assets/vendors/farbtastic/farbtastic.min.js"></script>
+        <script src="/static/assets/vendors/summernote/summernote.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+        <script src="/static/assets/vendors/fileinput/fileinput.min.js"></script>
+        <script src="/static/assets/vendors/waves/waves.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-sweet-alert/sweet-alert.js"></script>
+        
+        <script src="/static/assets/js/demo.js"></script>
+        
+        
+       
+    </body>
+</html>
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"3irelecl6rj0ve3nq3petrcj12\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T17:06:14+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Request] => Zend\Uri\Http Object
+                (
+                    [validHostTypes:protected] => 27
+                    [user:protected] => 
+                    [password:protected] => 
+                    [scheme:protected] => http
+                    [userInfo:protected] => 
+                    [host:protected] => smiletomove.local
+                    [port:protected] => 
+                    [path:protected] => /exam/participate
+                    [query:protected] => 
+                    [fragment:protected] => 
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T17:06:14+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Response] => Array
+                (
+                    [statusCode] => 200
+                    [content] => <!DOCTYPE html>
+<!--[if IE 9 ]><html class="ie9"><![endif]-->
+
+<head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>SmileToMove - Learning platform</title>
+
+        <!-- Vendor CSS -->
+        <link href="/static/assets/vendors/animate-css/animate.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/noUiSlider/jquery.nouislider.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/farbtastic/farbtastic.css" rel="stylesheet">
+        <link href="/static/assets/vendors/summernote/summernote.css" rel="stylesheet">
+        <link href="/static/assets/vendors/bootstrap-sweet-alert/sweet-alert.css" rel="stylesheet">
+        <link href="/static/assets/vendors/material-icons/material-design-iconic-font.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/socicon/socicon.min.css" rel="stylesheet">
+            
+        <!-- CSS -->
+        <link href="/static/assets/css/app.min.1.css" rel="stylesheet">
+        <link href="/static/assets/css/app.min.2.css" rel="stylesheet">
+        
+        <style type="text/css">
+            .toggle-switch .ts-label {
+                min-width: 130px;
+            }
+            form div {
+  				padding: 50px 0 50px 0;
+  				margin: 50px 0 50px 0;
+			}
+        </style>
+
+		
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <style>
+  		.margins { margin: 10px; }
+  		#sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+  		#sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+  		#sortable li span { position: absolute; margin-left: -1.3em; }
+  </style>
+  
+
+
+    </head>
+    
+    <body>
+    
+    	
+  			<header id="header">
+	<ul class="header-inner">
+    	<li id="menu-trigger">
+			<!-- menu se serve -->
+		</li>
+
+		<li class="logo hidden-xs">
+			<a href="."><img src="/static/assets/img/logo.png" alt="Smile to Move"/></a>
+		</li>
+	</ul>
+</header>
+      	
+      	
+      	
+	<section id="content">
+	    <div class="container">
+	    	
+            <div class="col-sm-9">
+            	<!-- Content of questions -->
+	        		        	<div class="card">
+	        		<div class="card-header">
+	        			<div class="col-sm-6 pull-left">
+	        			</div>
+	        			<div class="col-sm-6 pull-right">
+	        					        				<div class="pull-left" id="countmesg">
+	        				</div><br><br>
+	          				<div class="media">
+                             	<div class="media-body">
+                                	<div class="progress">
+                                    	<div id="timerbar" class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="" style="width: %">
+                                        </div>
+									</div>
+                                </div>
+                            </div>
+	        					        			</div>
+	        		</div>
+	        		<br>
+	        		<div class="card-body card-padding">
+	        			<div class="row">
+	        				<div class="col-sm-12">
+	        					<div><img src="/static/assets/img/exam/2/2/1/1.png" alt="" style="width:100%;"/></div><br><div><img src="/static/media/2/2/7/07.png" alt="" style="width:100%;"/></div><br>
+		        				<hr>
+		        				<br>
+		        				<br>
+		        				<center>
+		        					<h2>Gli Â“accessoriesÂ” comprendono:</h2>
+		        				</center>
+		        				<hr>
+		        			</div>
+		        		</div>
+		        		<div class="row">
+		        			<center>
+		        			
+		        		 	<form method="POST" name="multisubmit_question" id="multisubmit_question"><input type="submit" name="submit_11" id="11" class="btn&#x20;btn-primary&#x20;btn-lg&#x20;margins" value="SOLO&#x20;LE&#x20;CAMICIE&#x20;DA&#x20;UOMO&#x20;PER&#x20;OCCASIONI&#x20;INFORMALI"><input type="submit" name="submit_12" id="12" class="btn&#x20;btn-primary&#x20;btn-lg&#x20;margins" value="BORSE,&#x20;SCIARPE,&#x20;GUANTI,&#x20;CINTURE,&#x20;GIOIELLI"><input type="submit" name="submit_13" id="13" class="btn&#x20;btn-primary&#x20;btn-lg&#x20;margins" value="SOLO&#x20;GLI&#x20;OROLOGI"></form>
+		        		 	</center>
+	        			</div>
+	        		</div>
+	        	</div>
+			</div>
+			<div class="col-sm-3">
+				<!-- Profile view -->
+                <div class="card profile-view">
+                	<div class="pv-header">
+                    	<img src="/static/assets/img/profile-pics/profile-pic.gif" class="pv-main" alt="">
+                   	</div>
+                            
+                    <div class="pv-body">
+                        <h2>DEBORA OLIOSI</h2>
+                        <small></small>
+                    
+                        
+                    </div>
+                </div>
+                <!-- Chart pies -->
+                <div class="mini-charts-item bgm-cyan">
+					<div class="clearfix">
+	                    <div class="chart chart-pie stats-pie"></div>
+	                    <div class="count">
+	                        <small>Completato sessione</small>
+	                        <h2>/ - </h2>
+	                    </div>
+	                </div>
+				</div>
+                <div class="mini-charts-item bgm-cyan">
+	                <div class="clearfix">
+	                    <div class="chart chart-pie stats-pie"></div>
+	                    <div class="count">
+	                        <small>Completato esame</small>
+	                        <h2>/ - </h2>
+	                    </div>
+	                </div>
+                </div>
+            </div>
+            
+        </section>
+
+      	
+        <!-- Javascript Libraries -->
+        <script src="/static/assets/js/jquery-2.1.1.min.js"></script>
+        <script src="/static/assets/js/bootstrap.min.js"></script>
+        
+        <script src="/static/assets/vendors/moment/moment.min.js"></script>
+        <script src="/static/assets/vendors/nicescroll/jquery.nicescroll.min.js"></script>
+        <script src="/static/assets/vendors/auto-size/jquery.autosize.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-select/bootstrap-select.min.js"></script>
+        <script src="/static/assets/vendors/chosen/chosen.jquery.min.js"></script>
+        <script src="/static/assets/vendors/noUiSlider/jquery.nouislider.all.min.js"></script>
+        <script src="/static/assets/vendors/input-mask/input-mask.min.js"></script>
+        <script src="/static/assets/vendors/farbtastic/farbtastic.min.js"></script>
+        <script src="/static/assets/vendors/summernote/summernote.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+        <script src="/static/assets/vendors/fileinput/fileinput.min.js"></script>
+        <script src="/static/assets/vendors/waves/waves.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-sweet-alert/sweet-alert.js"></script>
+        
+        <script src="/static/assets/js/demo.js"></script>
+        
+        
+	<script src="/static/assets/js/jquery.sortable.min.js"></script>  
+	<script type="text/javascript">
+		
+		var selectedOption = "";
+		
+			$(document).ready(function() {
+				$('.scrambled').sortable();
+				selectedOption = $('select :selected').val();
+				if (selectedOption == "") {
+					// Disabilitare il pulsante submit
+				    $("input[type=submit]").attr("disabled", "disabled");
+    			} else {
+    			    $("input[type=submit]").removeAttr("disabled", "disabled");
+    			}
+					
+				// Gestione cambio di valore select
+				$('select').change(function() {   
+    				selectedOption = $('select :selected').val();
+					if (selectedOption == "") {
+						// Disabilitare il pulsante submit
+					    $("input[type=submit]").attr("disabled", "disabled");
+    				} else {
+    				    $("input[type=submit]").removeAttr("disabled", "disabled");
+    				}
+				});
+					
+				// Gestione submit (pre pre-check)
+				$(":submit").click(function()
+				{
+					var form_id = $(this).closest("form").attr('id');
+					var ajax_post_data_value = "";
+					var postdata = [];
+						
+					// Se la domanda è nulla, nessun check. Si va direttamente al submit
+					if (form_id == "null_question") {
+						ajax_post_data_value = "-1";
+					// Se la domanda è di un multisubmit, si deve inviare il submit premuto
+					} else if (form_id == "multisubmit_question") {
+						ajax_post_data_value = $(this).attr("id");
+					// D&D
+					} else if (form_id == "dnd_question") {
+						ajax_post_data_value = "";
+					// Inserimento manuale
+					} else if (form_id == "input_question") {
+						ajax_post_data_value = $(this).closest(":input").val();
+					// Selezione tendina
+					} else {
+						ajax_post_data_value = selectedOption;
+					}
+					$.ajax({
+						type: "GET",
+  						url: "/exam/ajcheckanswer/"+ajax_post_data_value,
+  						data: ajax_post_data_value,
+  							success: function(data) {
+  							var checkResult = jQuery.parseJSON(data).result;
+  							var earnedPoints = jQuery.parseJSON(data).points;
+  							var itemAnswer = jQuery.parseJSON(data).answer;
+  							var tryagain = jQuery.parseJSON(data).tryagain;
+  							
+  							switch(checkResult) {
+  								// Sbagliato
+  								case 0:
+  									if (tryagain == 1) {
+  										swal({
+  											title: "Errato, puoi riprovare",
+  											text: "Puoi modificare la tua risposta",
+  											type: "warning",
+  											html: true,
+  											showCancelButton: false,
+  											confirmButtonClass: "btn-lg btn-warning",
+  											confirmButtonText: "OK",
+  											closeOnConfirm: true,
+  										});
+  									} else {
+  										swal({
+ 											title: "Errato",
+ 											text: itemAnswer,
+  											type: "error",
+  											html: true,
+  											showCancelButton: false,
+  											confirmButtonClass: "btn-lg btn-danger",
+  											confirmButtonText: "CONTINUA",
+  											closeOnConfirm: false,
+										},
+										function(isConfirm) {
+  											if (isConfirm) {
+    											window.location = "/exam/saveanswer/"+ajax_post_data_value;
+  											}
+										});
+  										break;
+  									}
+  									break;
+  								// Corretto:
+  								case 1:
+  									if (itemAnswer == "") {
+  										window.location = "/exam/saveanswer/"+ajax_post_data_value;
+  									} else {
+  										swal({
+  											title: "Corretto",
+  											text: itemAnswer,
+  											type: "success",
+  											html: true,
+  											showCancelButton: false,
+  											confirmButtonClass: "btn-lg btn-success",
+  											confirmButtonText: "CONTINUA",
+  											closeOnConfirm: false,
+										},
+										function(isConfirm) {
+  											if (isConfirm) {
+    											window.location = "/exam/saveanswer/"+ajax_post_data_value;
+  											}
+										});
+									}
+  									break;
+  								// Null question:
+  								case 2:
+  									swal({
+  										title: "Lo sapevi?",
+  										text: itemAnswer,
+  										type: "info",
+  										showCancelButton: false,
+  										confirmButtonClass: "btn-lg btn-info",
+  										confirmButtonText: "CONTINUA",
+  										closeOnConfirm: false,
+  									},
+  									function(isConfirm) {
+  										if (isConfirm) {
+  											window.location = "/exam/timeout";
+  										}
+  									});
+  							}
+  						},
+					});
+					return false;
+				});
+		
+								});
+		
+	</script>
+
+       
+    </body>
+</html>
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"3irelecl6rj0ve3nq3petrcj12\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T17:06:14+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Response] => Array
+                (
+                    [statusCode] => 404
+                    [content] => <!DOCTYPE html>
+<!--[if IE 9 ]><html class="ie9"><![endif]-->
+
+ --> Smarty: Unable to read template file '../../_common/base.tpl' <-- 
+</html>
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T17:06:28+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Request] => Zend\Uri\Http Object
+                (
+                    [validHostTypes:protected] => 27
+                    [user:protected] => 
+                    [password:protected] => 
+                    [scheme:protected] => http
+                    [userInfo:protected] => 
+                    [host:protected] => smiletomove.local
+                    [port:protected] => 
+                    [path:protected] => /exam/ajcheckanswer/11
+                    [query:protected] => 11
+                    [fragment:protected] => 
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T17:06:30+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Request] => Zend\Uri\Http Object
+                (
+                    [validHostTypes:protected] => 27
+                    [user:protected] => 
+                    [password:protected] => 
+                    [scheme:protected] => http
+                    [userInfo:protected] => 
+                    [host:protected] => smiletomove.local
+                    [port:protected] => 
+                    [path:protected] => /exam/ajcheckanswer/13
+                    [query:protected] => 13
+                    [fragment:protected] => 
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T17:06:31+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Request] => Zend\Uri\Http Object
+                (
+                    [validHostTypes:protected] => 27
+                    [user:protected] => 
+                    [password:protected] => 
+                    [scheme:protected] => http
+                    [userInfo:protected] => 
+                    [host:protected] => smiletomove.local
+                    [port:protected] => 
+                    [path:protected] => /exam/saveanswer/13
+                    [query:protected] => 
+                    [fragment:protected] => 
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T17:06:31+02:00 NOTICE (5): Undefined variable: retval {"errno":8,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":540,"Zf2Logger":"{\"sessionId\":\"3irelecl6rj0ve3nq3petrcj12\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T17:06:32+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Response] => Array
+                (
+                    [statusCode] => 302
+                    [content] => <!DOCTYPE html>
+<!--[if IE 9 ]><html class="ie9"><![endif]-->
+
+exception 'Zend\View\Exception\RuntimeException' with message 'SmartyModule\View\Renderer\SmartyRenderer::render: Unable to render template "application/exam/saveanswer"; resolver could not resolve to a file' in /private/var/www/stmhub/vendor/murganikolay/smarty-module/src/SmartyModule/View/Renderer/SmartyRenderer.php:137
+Stack trace:
+#0 /private/var/www/stmhub/vendor/zendframework/zend-view/src/View.php(205): SmartyModule\View\Renderer\SmartyRenderer->render(Object(Zend\View\Model\ViewModel))
+#1 /private/var/www/stmhub/vendor/zendframework/zend-view/src/View.php(233): Zend\View\View->render(Object(Zend\View\Model\ViewModel))
+#2 /private/var/www/stmhub/vendor/zendframework/zend-view/src/View.php(198): Zend\View\View->renderChildren(Object(Zend\View\Model\ViewModel))
+#3 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/View/Http/DefaultRenderingStrategy.php(103): Zend\View\View->render(Object(Zend\View\Model\ViewModel))
+#4 [internal function]: Zend\Mvc\View\Http\DefaultRenderingStrategy->render(Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('render', Object(Zend\Mvc\MvcEvent), Array)
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(353): Zend\EventManager\EventManager->trigger('render', Object(Zend\Mvc\MvcEvent))
+#8 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(328): Zend\Mvc\Application->completeRequest(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#10 {main}
+</html>
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"3irelecl6rj0ve3nq3petrcj12\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T17:06:32+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Request] => Zend\Uri\Http Object
+                (
+                    [validHostTypes:protected] => 27
+                    [user:protected] => 
+                    [password:protected] => 
+                    [scheme:protected] => http
+                    [userInfo:protected] => 
+                    [host:protected] => smiletomove.local
+                    [port:protected] => 
+                    [path:protected] => /exam/participate
+                    [query:protected] => 
+                    [fragment:protected] => 
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T17:06:32+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Response] => Array
+                (
+                    [statusCode] => 200
+                    [content] => <!DOCTYPE html>
+<!--[if IE 9 ]><html class="ie9"><![endif]-->
+
+<head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>SmileToMove - Learning platform</title>
+
+        <!-- Vendor CSS -->
+        <link href="/static/assets/vendors/animate-css/animate.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/noUiSlider/jquery.nouislider.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/farbtastic/farbtastic.css" rel="stylesheet">
+        <link href="/static/assets/vendors/summernote/summernote.css" rel="stylesheet">
+        <link href="/static/assets/vendors/bootstrap-sweet-alert/sweet-alert.css" rel="stylesheet">
+        <link href="/static/assets/vendors/material-icons/material-design-iconic-font.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/socicon/socicon.min.css" rel="stylesheet">
+            
+        <!-- CSS -->
+        <link href="/static/assets/css/app.min.1.css" rel="stylesheet">
+        <link href="/static/assets/css/app.min.2.css" rel="stylesheet">
+        
+        <style type="text/css">
+            .toggle-switch .ts-label {
+                min-width: 130px;
+            }
+            form div {
+  				padding: 50px 0 50px 0;
+  				margin: 50px 0 50px 0;
+			}
+        </style>
+
+		
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <style>
+  		.margins { margin: 10px; }
+  		#sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+  		#sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+  		#sortable li span { position: absolute; margin-left: -1.3em; }
+  </style>
+  
+
+
+    </head>
+    
+    <body>
+    
+    	
+  			<header id="header">
+	<ul class="header-inner">
+    	<li id="menu-trigger">
+			<!-- menu se serve -->
+		</li>
+
+		<li class="logo hidden-xs">
+			<a href="."><img src="/static/assets/img/logo.png" alt="Smile to Move"/></a>
+		</li>
+	</ul>
+</header>
+      	
+      	
+      	
+	<section id="content">
+	    <div class="container">
+	    	
+            <div class="col-sm-9">
+            	<!-- Content of questions -->
+	        		        	<div class="card">
+	        		<div class="card-header">
+	        			<div class="col-sm-6 pull-left">
+	        			</div>
+	        			<div class="col-sm-6 pull-right">
+	        					        				<div class="pull-left" id="countmesg">
+	        				</div><br><br>
+	          				<div class="media">
+                             	<div class="media-body">
+                                	<div class="progress">
+                                    	<div id="timerbar" class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="" style="width: %">
+                                        </div>
+									</div>
+                                </div>
+                            </div>
+	        					        			</div>
+	        		</div>
+	        		<br>
+	        		<div class="card-body card-padding">
+	        			<div class="row">
+	        				<div class="col-sm-12">
+	        					<div><img src="/static/media/2/2/8/08.png" alt="" style="width:100%;"/></div><br>
+		        				<hr>
+		        				<br>
+		        				<br>
+		        				<center>
+		        					<h2>Â“AlcantaraÂ” Ã¨ un tipo di vestito da donna di origine orientale.</h2>
+		        				</center>
+		        				<hr>
+		        			</div>
+		        		</div>
+		        		<div class="row">
+		        			<center>
+		        			
+		        		 	<form method="POST" name="multisubmit_question" id="multisubmit_question"><input type="submit" name="submit_14" id="14" class="btn&#x20;btn-primary&#x20;btn-lg&#x20;margins" value="VERO"><input type="submit" name="submit_15" id="15" class="btn&#x20;btn-primary&#x20;btn-lg&#x20;margins" value="FALSO"></form>
+		        		 	</center>
+	        			</div>
+	        		</div>
+	        	</div>
+			</div>
+			<div class="col-sm-3">
+				<!-- Profile view -->
+                <div class="card profile-view">
+                	<div class="pv-header">
+                    	<img src="/static/assets/img/profile-pics/profile-pic.gif" class="pv-main" alt="">
+                   	</div>
+                            
+                    <div class="pv-body">
+                        <h2>DEBORA OLIOSI</h2>
+                        <small></small>
+                    
+                        
+                    </div>
+                </div>
+                <!-- Chart pies -->
+                <div class="mini-charts-item bgm-cyan">
+					<div class="clearfix">
+	                    <div class="chart chart-pie stats-pie"></div>
+	                    <div class="count">
+	                        <small>Completato sessione</small>
+	                        <h2>/ - </h2>
+	                    </div>
+	                </div>
+				</div>
+                <div class="mini-charts-item bgm-cyan">
+	                <div class="clearfix">
+	                    <div class="chart chart-pie stats-pie"></div>
+	                    <div class="count">
+	                        <small>Completato esame</small>
+	                        <h2>/ - </h2>
+	                    </div>
+	                </div>
+                </div>
+            </div>
+            
+        </section>
+
+      	
+        <!-- Javascript Libraries -->
+        <script src="/static/assets/js/jquery-2.1.1.min.js"></script>
+        <script src="/static/assets/js/bootstrap.min.js"></script>
+        
+        <script src="/static/assets/vendors/moment/moment.min.js"></script>
+        <script src="/static/assets/vendors/nicescroll/jquery.nicescroll.min.js"></script>
+        <script src="/static/assets/vendors/auto-size/jquery.autosize.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-select/bootstrap-select.min.js"></script>
+        <script src="/static/assets/vendors/chosen/chosen.jquery.min.js"></script>
+        <script src="/static/assets/vendors/noUiSlider/jquery.nouislider.all.min.js"></script>
+        <script src="/static/assets/vendors/input-mask/input-mask.min.js"></script>
+        <script src="/static/assets/vendors/farbtastic/farbtastic.min.js"></script>
+        <script src="/static/assets/vendors/summernote/summernote.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+        <script src="/static/assets/vendors/fileinput/fileinput.min.js"></script>
+        <script src="/static/assets/vendors/waves/waves.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-sweet-alert/sweet-alert.js"></script>
+        
+        <script src="/static/assets/js/demo.js"></script>
+        
+        
+	<script src="/static/assets/js/jquery.sortable.min.js"></script>  
+	<script type="text/javascript">
+		
+		var selectedOption = "";
+		
+			$(document).ready(function() {
+				$('.scrambled').sortable();
+				selectedOption = $('select :selected').val();
+				if (selectedOption == "") {
+					// Disabilitare il pulsante submit
+				    $("input[type=submit]").attr("disabled", "disabled");
+    			} else {
+    			    $("input[type=submit]").removeAttr("disabled", "disabled");
+    			}
+					
+				// Gestione cambio di valore select
+				$('select').change(function() {   
+    				selectedOption = $('select :selected').val();
+					if (selectedOption == "") {
+						// Disabilitare il pulsante submit
+					    $("input[type=submit]").attr("disabled", "disabled");
+    				} else {
+    				    $("input[type=submit]").removeAttr("disabled", "disabled");
+    				}
+				});
+					
+				// Gestione submit (pre pre-check)
+				$(":submit").click(function()
+				{
+					var form_id = $(this).closest("form").attr('id');
+					var ajax_post_data_value = "";
+					var postdata = [];
+						
+					// Se la domanda è nulla, nessun check. Si va direttamente al submit
+					if (form_id == "null_question") {
+						ajax_post_data_value = "-1";
+					// Se la domanda è di un multisubmit, si deve inviare il submit premuto
+					} else if (form_id == "multisubmit_question") {
+						ajax_post_data_value = $(this).attr("id");
+					// D&D
+					} else if (form_id == "dnd_question") {
+						ajax_post_data_value = "";
+					// Inserimento manuale
+					} else if (form_id == "input_question") {
+						ajax_post_data_value = $(this).closest(":input").val();
+					// Selezione tendina
+					} else {
+						ajax_post_data_value = selectedOption;
+					}
+					$.ajax({
+						type: "GET",
+  						url: "/exam/ajcheckanswer/"+ajax_post_data_value,
+  						data: ajax_post_data_value,
+  							success: function(data) {
+  							var checkResult = jQuery.parseJSON(data).result;
+  							var earnedPoints = jQuery.parseJSON(data).points;
+  							var itemAnswer = jQuery.parseJSON(data).answer;
+  							var tryagain = jQuery.parseJSON(data).tryagain;
+  							
+  							switch(checkResult) {
+  								// Sbagliato
+  								case 0:
+  									if (tryagain == 1) {
+  										swal({
+  											title: "Errato, puoi riprovare",
+  											text: "Puoi modificare la tua risposta",
+  											type: "warning",
+  											html: true,
+  											showCancelButton: false,
+  											confirmButtonClass: "btn-lg btn-warning",
+  											confirmButtonText: "OK",
+  											closeOnConfirm: true,
+  										});
+  									} else {
+  										swal({
+ 											title: "Errato",
+ 											text: itemAnswer,
+  											type: "error",
+  											html: true,
+  											showCancelButton: false,
+  											confirmButtonClass: "btn-lg btn-danger",
+  											confirmButtonText: "CONTINUA",
+  											closeOnConfirm: false,
+										},
+										function(isConfirm) {
+  											if (isConfirm) {
+    											window.location = "/exam/saveanswer/"+ajax_post_data_value;
+  											}
+										});
+  										break;
+  									}
+  									break;
+  								// Corretto:
+  								case 1:
+  									if (itemAnswer == "") {
+  										window.location = "/exam/saveanswer/"+ajax_post_data_value;
+  									} else {
+  										swal({
+  											title: "Corretto",
+  											text: itemAnswer,
+  											type: "success",
+  											html: true,
+  											showCancelButton: false,
+  											confirmButtonClass: "btn-lg btn-success",
+  											confirmButtonText: "CONTINUA",
+  											closeOnConfirm: false,
+										},
+										function(isConfirm) {
+  											if (isConfirm) {
+    											window.location = "/exam/saveanswer/"+ajax_post_data_value;
+  											}
+										});
+									}
+  									break;
+  								// Null question:
+  								case 2:
+  									swal({
+  										title: "Lo sapevi?",
+  										text: itemAnswer,
+  										type: "info",
+  										showCancelButton: false,
+  										confirmButtonClass: "btn-lg btn-info",
+  										confirmButtonText: "CONTINUA",
+  										closeOnConfirm: false,
+  									},
+  									function(isConfirm) {
+  										if (isConfirm) {
+  											window.location = "/exam/timeout";
+  										}
+  									});
+  							}
+  						},
+					});
+					return false;
+				});
+		
+								});
+		
+	</script>
+
+       
+    </body>
+</html>
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"3irelecl6rj0ve3nq3petrcj12\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T17:06:32+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Response] => Array
+                (
+                    [statusCode] => 404
+                    [content] => <!DOCTYPE html>
+<!--[if IE 9 ]><html class="ie9"><![endif]-->
+
+ --> Smarty: Unable to read template file '../../_common/base.tpl' <-- 
+</html>
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T17:06:36+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Request] => Zend\Uri\Http Object
+                (
+                    [validHostTypes:protected] => 27
+                    [user:protected] => 
+                    [password:protected] => 
+                    [scheme:protected] => http
+                    [userInfo:protected] => 
+                    [host:protected] => smiletomove.local
+                    [port:protected] => 
+                    [path:protected] => /exam/ajcheckanswer/14
+                    [query:protected] => 14
+                    [fragment:protected] => 
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T17:06:38+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Request] => Zend\Uri\Http Object
+                (
+                    [validHostTypes:protected] => 27
+                    [user:protected] => 
+                    [password:protected] => 
+                    [scheme:protected] => http
+                    [userInfo:protected] => 
+                    [host:protected] => smiletomove.local
+                    [port:protected] => 
+                    [path:protected] => /exam/saveanswer/14
+                    [query:protected] => 
+                    [fragment:protected] => 
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T17:06:38+02:00 NOTICE (5): Undefined variable: retval {"errno":8,"file":"/private/var/www/stmhub/module/Application/src/Application/Service/ExamService.php","line":540,"Zf2Logger":"{\"sessionId\":\"3irelecl6rj0ve3nq3petrcj12\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T17:06:38+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Response] => Array
+                (
+                    [statusCode] => 302
+                    [content] => <!DOCTYPE html>
+<!--[if IE 9 ]><html class="ie9"><![endif]-->
+
+exception 'Zend\View\Exception\RuntimeException' with message 'SmartyModule\View\Renderer\SmartyRenderer::render: Unable to render template "application/exam/saveanswer"; resolver could not resolve to a file' in /private/var/www/stmhub/vendor/murganikolay/smarty-module/src/SmartyModule/View/Renderer/SmartyRenderer.php:137
+Stack trace:
+#0 /private/var/www/stmhub/vendor/zendframework/zend-view/src/View.php(205): SmartyModule\View\Renderer\SmartyRenderer->render(Object(Zend\View\Model\ViewModel))
+#1 /private/var/www/stmhub/vendor/zendframework/zend-view/src/View.php(233): Zend\View\View->render(Object(Zend\View\Model\ViewModel))
+#2 /private/var/www/stmhub/vendor/zendframework/zend-view/src/View.php(198): Zend\View\View->renderChildren(Object(Zend\View\Model\ViewModel))
+#3 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/View/Http/DefaultRenderingStrategy.php(103): Zend\View\View->render(Object(Zend\View\Model\ViewModel))
+#4 [internal function]: Zend\Mvc\View\Http\DefaultRenderingStrategy->render(Object(Zend\Mvc\MvcEvent))
+#5 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(444): call_user_func(Array, Object(Zend\Mvc\MvcEvent))
+#6 /private/var/www/stmhub/vendor/zendframework/zend-eventmanager/src/EventManager.php(205): Zend\EventManager\EventManager->triggerListeners('render', Object(Zend\Mvc\MvcEvent), Array)
+#7 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(353): Zend\EventManager\EventManager->trigger('render', Object(Zend\Mvc\MvcEvent))
+#8 /private/var/www/stmhub/vendor/zendframework/zend-mvc/src/Application.php(328): Zend\Mvc\Application->completeRequest(Object(Zend\Mvc\MvcEvent))
+#9 /private/var/www/stmhub/public/index.php(40): Zend\Mvc\Application->run()
+#10 {main}
+</html>
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"3irelecl6rj0ve3nq3petrcj12\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T17:06:38+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Request] => Zend\Uri\Http Object
+                (
+                    [validHostTypes:protected] => 27
+                    [user:protected] => 
+                    [password:protected] => 
+                    [scheme:protected] => http
+                    [userInfo:protected] => 
+                    [host:protected] => smiletomove.local
+                    [port:protected] => 
+                    [path:protected] => /exam/participate
+                    [query:protected] => 
+                    [fragment:protected] => 
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T17:06:38+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Response] => Array
+                (
+                    [statusCode] => 200
+                    [content] => <!DOCTYPE html>
+<!--[if IE 9 ]><html class="ie9"><![endif]-->
+
+<head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>SmileToMove - Learning platform</title>
+
+        <!-- Vendor CSS -->
+        <link href="/static/assets/vendors/animate-css/animate.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/noUiSlider/jquery.nouislider.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/farbtastic/farbtastic.css" rel="stylesheet">
+        <link href="/static/assets/vendors/summernote/summernote.css" rel="stylesheet">
+        <link href="/static/assets/vendors/bootstrap-sweet-alert/sweet-alert.css" rel="stylesheet">
+        <link href="/static/assets/vendors/material-icons/material-design-iconic-font.min.css" rel="stylesheet">
+        <link href="/static/assets/vendors/socicon/socicon.min.css" rel="stylesheet">
+            
+        <!-- CSS -->
+        <link href="/static/assets/css/app.min.1.css" rel="stylesheet">
+        <link href="/static/assets/css/app.min.2.css" rel="stylesheet">
+        
+        <style type="text/css">
+            .toggle-switch .ts-label {
+                min-width: 130px;
+            }
+            form div {
+  				padding: 50px 0 50px 0;
+  				margin: 50px 0 50px 0;
+			}
+        </style>
+
+		
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <style>
+  		.margins { margin: 10px; }
+  		#sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+  		#sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+  		#sortable li span { position: absolute; margin-left: -1.3em; }
+  </style>
+  
+
+
+    </head>
+    
+    <body>
+    
+    	
+  			<header id="header">
+	<ul class="header-inner">
+    	<li id="menu-trigger">
+			<!-- menu se serve -->
+		</li>
+
+		<li class="logo hidden-xs">
+			<a href="."><img src="/static/assets/img/logo.png" alt="Smile to Move"/></a>
+		</li>
+	</ul>
+</header>
+      	
+      	
+      	
+	<section id="content">
+	    <div class="container">
+	    	
+            <div class="col-sm-9">
+            	<!-- Content of questions -->
+	        		        	<div class="card">
+	        		<div class="card-header">
+	        			<div class="col-sm-6 pull-left">
+	        			</div>
+	        			<div class="col-sm-6 pull-right">
+	        					        				<div class="pull-left" id="countmesg">
+	        				</div><br><br>
+	          				<div class="media">
+                             	<div class="media-body">
+                                	<div class="progress">
+                                    	<div id="timerbar" class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="" style="width: %">
+                                        </div>
+									</div>
+                                </div>
+                            </div>
+	        					        			</div>
+	        		</div>
+	        		<br>
+	        		<div class="card-body card-padding">
+	        			<div class="row">
+	        				<div class="col-sm-12">
+	        					<div><img src="/static/media/2/2/9/09.png" alt="" style="width:100%;"/></div><br>
+		        				<hr>
+		        				<br>
+		        				<br>
+		        				<center>
+		        					<h2>Quando presento un prodotto a un cliente, proponiamo Â“an articleÂ”.</h2>
+		        				</center>
+		        				<hr>
+		        			</div>
+		        		</div>
+		        		<div class="row">
+		        			<center>
+		        			
+		        		 	<form method="POST" name="multisubmit_question" id="multisubmit_question"><input type="submit" name="submit_16" id="16" class="btn&#x20;btn-primary&#x20;btn-lg&#x20;margins" value="VERO"><input type="submit" name="submit_17" id="17" class="btn&#x20;btn-primary&#x20;btn-lg&#x20;margins" value="FALSO"></form>
+		        		 	</center>
+	        			</div>
+	        		</div>
+	        	</div>
+			</div>
+			<div class="col-sm-3">
+				<!-- Profile view -->
+                <div class="card profile-view">
+                	<div class="pv-header">
+                    	<img src="/static/assets/img/profile-pics/profile-pic.gif" class="pv-main" alt="">
+                   	</div>
+                            
+                    <div class="pv-body">
+                        <h2>DEBORA OLIOSI</h2>
+                        <small></small>
+                    
+                        
+                    </div>
+                </div>
+                <!-- Chart pies -->
+                <div class="mini-charts-item bgm-cyan">
+					<div class="clearfix">
+	                    <div class="chart chart-pie stats-pie"></div>
+	                    <div class="count">
+	                        <small>Completato sessione</small>
+	                        <h2>/ - </h2>
+	                    </div>
+	                </div>
+				</div>
+                <div class="mini-charts-item bgm-cyan">
+	                <div class="clearfix">
+	                    <div class="chart chart-pie stats-pie"></div>
+	                    <div class="count">
+	                        <small>Completato esame</small>
+	                        <h2>/ - </h2>
+	                    </div>
+	                </div>
+                </div>
+            </div>
+            
+        </section>
+
+      	
+        <!-- Javascript Libraries -->
+        <script src="/static/assets/js/jquery-2.1.1.min.js"></script>
+        <script src="/static/assets/js/bootstrap.min.js"></script>
+        
+        <script src="/static/assets/vendors/moment/moment.min.js"></script>
+        <script src="/static/assets/vendors/nicescroll/jquery.nicescroll.min.js"></script>
+        <script src="/static/assets/vendors/auto-size/jquery.autosize.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-select/bootstrap-select.min.js"></script>
+        <script src="/static/assets/vendors/chosen/chosen.jquery.min.js"></script>
+        <script src="/static/assets/vendors/noUiSlider/jquery.nouislider.all.min.js"></script>
+        <script src="/static/assets/vendors/input-mask/input-mask.min.js"></script>
+        <script src="/static/assets/vendors/farbtastic/farbtastic.min.js"></script>
+        <script src="/static/assets/vendors/summernote/summernote.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+        <script src="/static/assets/vendors/fileinput/fileinput.min.js"></script>
+        <script src="/static/assets/vendors/waves/waves.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
+        <script src="/static/assets/vendors/bootstrap-sweet-alert/sweet-alert.js"></script>
+        
+        <script src="/static/assets/js/demo.js"></script>
+        
+        
+	<script src="/static/assets/js/jquery.sortable.min.js"></script>  
+	<script type="text/javascript">
+		
+		var selectedOption = "";
+		
+			$(document).ready(function() {
+				$('.scrambled').sortable();
+				selectedOption = $('select :selected').val();
+				if (selectedOption == "") {
+					// Disabilitare il pulsante submit
+				    $("input[type=submit]").attr("disabled", "disabled");
+    			} else {
+    			    $("input[type=submit]").removeAttr("disabled", "disabled");
+    			}
+					
+				// Gestione cambio di valore select
+				$('select').change(function() {   
+    				selectedOption = $('select :selected').val();
+					if (selectedOption == "") {
+						// Disabilitare il pulsante submit
+					    $("input[type=submit]").attr("disabled", "disabled");
+    				} else {
+    				    $("input[type=submit]").removeAttr("disabled", "disabled");
+    				}
+				});
+					
+				// Gestione submit (pre pre-check)
+				$(":submit").click(function()
+				{
+					var form_id = $(this).closest("form").attr('id');
+					var ajax_post_data_value = "";
+					var postdata = [];
+						
+					// Se la domanda è nulla, nessun check. Si va direttamente al submit
+					if (form_id == "null_question") {
+						ajax_post_data_value = "-1";
+					// Se la domanda è di un multisubmit, si deve inviare il submit premuto
+					} else if (form_id == "multisubmit_question") {
+						ajax_post_data_value = $(this).attr("id");
+					// D&D
+					} else if (form_id == "dnd_question") {
+						ajax_post_data_value = "";
+					// Inserimento manuale
+					} else if (form_id == "input_question") {
+						ajax_post_data_value = $(this).closest(":input").val();
+					// Selezione tendina
+					} else {
+						ajax_post_data_value = selectedOption;
+					}
+					$.ajax({
+						type: "GET",
+  						url: "/exam/ajcheckanswer/"+ajax_post_data_value,
+  						data: ajax_post_data_value,
+  							success: function(data) {
+  							var checkResult = jQuery.parseJSON(data).result;
+  							var earnedPoints = jQuery.parseJSON(data).points;
+  							var itemAnswer = jQuery.parseJSON(data).answer;
+  							var tryagain = jQuery.parseJSON(data).tryagain;
+  							
+  							switch(checkResult) {
+  								// Sbagliato
+  								case 0:
+  									if (tryagain == 1) {
+  										swal({
+  											title: "Errato, puoi riprovare",
+  											text: "Puoi modificare la tua risposta",
+  											type: "warning",
+  											html: true,
+  											showCancelButton: false,
+  											confirmButtonClass: "btn-lg btn-warning",
+  											confirmButtonText: "OK",
+  											closeOnConfirm: true,
+  										});
+  									} else {
+  										swal({
+ 											title: "Errato",
+ 											text: itemAnswer,
+  											type: "error",
+  											html: true,
+  											showCancelButton: false,
+  											confirmButtonClass: "btn-lg btn-danger",
+  											confirmButtonText: "CONTINUA",
+  											closeOnConfirm: false,
+										},
+										function(isConfirm) {
+  											if (isConfirm) {
+    											window.location = "/exam/saveanswer/"+ajax_post_data_value;
+  											}
+										});
+  										break;
+  									}
+  									break;
+  								// Corretto:
+  								case 1:
+  									if (itemAnswer == "") {
+  										window.location = "/exam/saveanswer/"+ajax_post_data_value;
+  									} else {
+  										swal({
+  											title: "Corretto",
+  											text: itemAnswer,
+  											type: "success",
+  											html: true,
+  											showCancelButton: false,
+  											confirmButtonClass: "btn-lg btn-success",
+  											confirmButtonText: "CONTINUA",
+  											closeOnConfirm: false,
+										},
+										function(isConfirm) {
+  											if (isConfirm) {
+    											window.location = "/exam/saveanswer/"+ajax_post_data_value;
+  											}
+										});
+									}
+  									break;
+  								// Null question:
+  								case 2:
+  									swal({
+  										title: "Lo sapevi?",
+  										text: itemAnswer,
+  										type: "info",
+  										showCancelButton: false,
+  										confirmButtonClass: "btn-lg btn-info",
+  										confirmButtonText: "CONTINUA",
+  										closeOnConfirm: false,
+  									},
+  									function(isConfirm) {
+  										if (isConfirm) {
+  											window.location = "/exam/timeout";
+  										}
+  									});
+  							}
+  						},
+					});
+					return false;
+				});
+		
+								});
+		
+	</script>
+
+       
+    </body>
+</html>
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"3irelecl6rj0ve3nq3petrcj12\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}
+2015-10-16T17:06:38+02:00 DEBUG (7): Array
+(
+    [smiletomove.local] => Array
+        (
+            [Response] => Array
+                (
+                    [statusCode] => 404
+                    [content] => <!DOCTYPE html>
+<!--[if IE 9 ]><html class="ie9"><![endif]-->
+
+ --> Smarty: Unable to read template file '../../_common/base.tpl' <-- 
+</html>
+                )
+
+        )
+
+)
+ {"Zf2Logger":"{\"sessionId\":\"\",\"host\":\"smiletomove.local\",\"ip\":\"127.0.0.1\"}"}

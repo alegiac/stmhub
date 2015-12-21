@@ -36,33 +36,36 @@ final class ExamService extends BaseService
 	 * @param Course $course
 	 * @return array
 	 */
-	private function getExamsForCourse(Course $course)
+	private function getExamsForCourse(StudentHasCourseHasExam $session)
 	{
 		// Initialize the retval: exams and challenges are under an associative array
 		// that use the keys as labels in the view.
+		$sessRepo = $this->getStudentHasCourseHasExamRepo();
+		
 		$retval = array();
 		$retval['Esami'] = array();
 		$retval['Sfide'] = array();
 		
+		$course = $session->getStudentHasCourse()->getCourse();
 		$exams = $this->getExamRepo()->findMandatoriesByCourse($course);
 		
-		// Got all exams. Need to cycle over the list, find all the sessions available and check if the exam is completed 
+		// Got all exams. Need to cycle over the list, find all the sessions 
+		// available and check if the exam is completed by the current user
 		foreach ($exams as $exam) {
 			/* @var $exam Exam */
 			$name = $exam->getName();
-			$sessRepo = $this->getStudentHasCourseHasExamRepo();
 			$examStarted = false;
 			$examCompleted = true;
 			
 			// Got all the sessions. 
-			$sessionsExam = $sessRepo->findByExam($exam);
+			$sessionsExam = $sessRepo->findByExam($session->getStudentHasCourse(),$exam);
 			foreach ($sessionsExam as $sesEx) {
 				/* @var $sesEx StudentHasCourseHasExam */
 				if ($sesEx->getRealStartDate() != null) {
 					// At least one session has been started. The exam is started!
 					$examStarted = true;
 				}
-				if ($sesEx->getEndDate() == null) {
+				if ($sesEx->getCompleted() == 0) {
 					$examCompleted = false;
 					break;
 				}
@@ -85,25 +88,26 @@ final class ExamService extends BaseService
 			$challengeCompleted = true;
 			
 			// Got all the sessions.
-			$sessionsChallenge = $sessRepo->findByExam($challenge);
-			foreach ($sessionsChallenge as $sesCh) {
+			$sessionsChallenge = $sessRepo->findByExam($session->getStudentHasCourse(),$challenge);
 			
+			foreach ($sessionsChallenge as $sesCh) {
 				/* @var $sesCh StudentHasCourseHasExam */
 				if ($sesCh->getRealStartDate() != null) {
 					// At least one session has been started. The challenge is started!
 					$challengeStarted = true;
 				}
-				if ($sesCh->getEndDate() == null) {
+				if ($sesCh->getCompleted() == 0) {
 					$challengeCompleted = false;
 					break;
 				}
 			}
-				
+			
 			$rv = array('name' => $name);
 			$rv['started'] = $challengeStarted;
 			$rv['completed'] = $challengeCompleted;
-			
+				
 			$retval['Sfide'][] = $rv;
+				
 		}
 		
 		return $retval;
@@ -333,7 +337,8 @@ final class ExamService extends BaseService
     				'description' => $session->getExam()->getDescription(),
     				'totalitems' => $session->getExam()->getTotalitems(),
     		);
-    		$retval['allexams'] = $this->getExamsForCourse($session->getStudentHasCourse()->getCourse());
+    		//$retval['allexams'] = $this->getExamsForCourse($session->getStudentHasCourse()->getCourse());
+    		$retval['allexams'] = $this->getExamsForCourse($session);
     		$retval['student'] = array(
     				'id' => $session->getStudentHasCourse()->getStudent()->getId(),
     				'firstname' => $session->getStudentHasCourse()->getStudent()->getFirstname(),
@@ -674,6 +679,11 @@ final class ExamService extends BaseService
     	
     	// No propedeutical challenge mechanism. Is it a challenge? Then compose the resulting session data
     	if ($isChallenge === true) {
+    		if ($session->getRealStartDate() == null) {
+    			$session->setRealStartDate(new \DateTime());
+    			$this->getEntityManager()->persist($session);
+    			$this->getEntityManager()->flush();
+    		}
     		return $this->composeAnswer($session,false,"");
     	}
     	

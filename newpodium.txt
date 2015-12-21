@@ -1,0 +1,288 @@
+HTML
+
+<a href="#" class="btn btn-default" id="openBtn">Open modal</a>
+
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+<div class="modal-content">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3 id="myModalLabel">Modal header</h3>
+	</div>
+	<div class="modal-body">
+      <center>
+      <div class="competition-podium">
+  					<div class="podium-block bronze">	
+						<div class="name">
+							<center>
+								<img style="max-width:150px;" src="http://wpitalyplugin.com/wp-content/plugins/InstaBuilder/images/unavailable-200x145.png"/>
+							</center>
+							<br>
+						</div>
+                      	<div class="podium">
+                        	<span class="position">3</span>
+	                        <span>Federico<br>70 pt.</span>
+	                    </div>
+					</div>
+					<div class="podium-block gold">	
+						<div class="name">
+							<center>
+								<img style="max-width:150px;" src="http://wpitalyplugin.com/wp-content/plugins/InstaBuilder/images/unavailable-200x145.png"/>
+							</center>
+							<br>
+						</div>
+						<div class="podium">
+							<span class="position">1</span>
+	                        <span>Debora<br>125 pt.</span>
+                        </div>
+					</div>
+					<div class="podium-block silver">	
+						<div class="name">
+							<center>
+								<img style="max-width:150px;" src="http://wpitalyplugin.com/wp-content/plugins/InstaBuilder/images/unavailable-200x145.png"/>
+							</center>
+							<br>
+						</div>
+						<div class="podium">
+							<span class="position">2</span>
+	                        <span>Alessandro<br>80 pt.</span>
+	                    </div>
+					</div>
+				</div>
+      </center>
+      <hr>
+      <center>
+      <div class="col-xs-8 col-xs-offset-2">
+    	<div class="col-xs-4">
+			<center>
+              	<br>4° premio<br>
+              <div style="max-width:130px; background-color:white;">
+				<img style="max-width:120px;" src="http://wpitalyplugin.com/wp-content/plugins/InstaBuilder/images/unavailable-200x145.png"/>
+              </div>
+              	<br>
+				Francesco - 320pt.
+			</center>
+        </div>
+        <div class="col-xs-4">
+			<center>
+              	<br>4° premio<br>
+              <div style="max-width:130px; background-color:white;">
+				<img style="max-width:120px;" src="http://wpitalyplugin.com/wp-content/plugins/InstaBuilder/images/unavailable-200x145.png"/>
+              </div>
+              	<br>
+				Francesco - 320pt.
+			</center>
+        </div>
+        <div class="col-xs-4">
+			<center>
+              	<br>4° premio<br>
+              <div style="max-width:130px; background-color:white;">
+				<img style="max-width:120px;" src="http://wpitalyplugin.com/wp-content/plugins/InstaBuilder/images/unavailable-200x145.png"/>
+              </div>
+              	<br>
+				Francesco - 320pt.
+			</center>
+        </div>
+        <div class="col-xs-4">
+			<center>
+              <br><span style="color:blue;">4° premio</span><br>
+              <div style="max-width:130px; background-color:blue;">
+				<img style="max-width:120px;" src="http://wpitalyplugin.com/wp-content/plugins/InstaBuilder/images/unavailable-200x145.png"/>
+              </div>
+              	<br>
+              <span style="color:blue;">Francesco - 320pt.</span>
+			</center>
+        </div>
+        <div class="col-xs-4">
+			<center>
+              	<br>4° premio<br>
+              <div style="max-width:130px; background-color:white;">
+				<img style="max-width:120px;" src="http://wpitalyplugin.com/wp-content/plugins/InstaBuilder/images/unavailable-200x145.png"/>
+              </div>
+              	<br>
+				Francesco - 320pt.
+			</center>
+        </div>
+        <div class="col-xs-4">
+			<center>
+				<br>4° premio<br>
+              <div style="max-width:130px; background-color:white;">
+				<img style="max-width:120px;" src="http://wpitalyplugin.com/wp-content/plugins/InstaBuilder/images/unavailable-200x145.png"/>
+              </div>
+              	<br>
+              Francesco - 320pt.
+			</center>
+        </div>
+      	
+      </div>
+  </center>
+	<div class="modal-footer">
+	</div>
+</div>
+</div>
+</div>
+
+
+-------
+CSS
+------
+.modal {
+	width:800px;
+}
+
+.modal-body {
+	width:800px;
+}
+.modal-content {
+    width:100%;
+  }
+.modal-dialog {
+      width:100%;
+    }
+span.position {
+  font-size: 800%;
+  color: white;
+  vertical-align: middle;
+}
+
+.competition-podium {
+  height: 320px;
+  position: relative;
+  width: 600px;
+  margin:50px;
+  display: inline-block;
+  background:#FFFFFF;
+}
+
+.competition-podium .podium-block {
+  width: 200px;
+	text-align: left;
+	display: inline-block;
+	position: absolute;
+	bottom: 0;
+}
+
+.competition-podium .podium-block .place {
+  font-size: 1em;
+	font-weight: bold;
+	font-family: Roboto;
+	line-height: 15px;
+}
+		.competition-podium .podium-block .sum {
+		    font-size: 1.2em;
+		    font-weight: bold;
+		    font-family: Arial, Helvetica, sans-serif;
+		    line-height: 70px;
+		}
+		
+		.competition-podium .podium-block.bronze {
+		    color: #e6d6bf;
+		    left: 0px;
+		}
+		.competition-podium .podium-block.bronze .podium {
+		    background: #e6d6bf;
+		    height: 0px;
+		}
+		.competition-podium .podium-block.bronze .name {
+		    color: #856e4e;
+		}
+		
+		.competition-podium .podium-block.gold {
+		    color: #E87E04;
+		    left: 200px;
+		}
+		.competition-podium .podium-block.gold .podium {
+		    background: #ead679;
+		    height: 0px;
+		}
+		.competition-podium .podium-block.gold .name {
+		    color: #856e4e;
+		    text-align:center
+		}
+		
+		.competition-podium .podium-block.silver {
+		    color: #cbd9de;
+		    left: 400px;
+		}
+		.competition-podium .podium-block.silver .podium {
+		    background: #cbd9de;
+		    height: 0px;
+		}
+		.competition-podium .podium-block.silver .name {
+		    color: #856e4e;
+		  text-align:center
+		}
+		.podium {
+		    display: table;
+		    width: 100%;
+		    border-top-left-radius: 4px;
+		    border-top-right-radius: 4px;
+		}
+		.podium > * {
+		    display: table-cell;
+		    vertical-align: middle;
+		    text-align: center;
+		    color: #4D4D4D;
+		    font-size: 1.5em;
+		}
+    
+.in {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+.red{
+    background-color: red;
+}
+.green{
+    background-color: green;
+}
+.yellow{
+    background-color: yellow;
+}
+.blue{
+    background-color: blue;
+}
+.gray{
+    background-color: gray;
+}
+.magenta{
+    background-color: magenta;
+}
+
+----------
+JS
+---------
+$('#openBtn').click(function(){
+  
+     function podiumAnimate() {
+        $('.bronze .podium').animate({
+            "height": "110px"
+        }, 1500);
+        $('.gold .podium').animate({
+            "height": "200px"
+        }, 1500);
+        $('.silver .podium').animate({
+            "height": "140px"
+        }, 1500);
+        $('.competition-container .name').delay(1000).animate({
+            "opacity": "1"
+        }, 500);
+    }
+    podiumAnimate();
+  
+  
+	$('#myModal').modal({show:true})
+});
+
+------------------
+BOOTPLY
+-----------------
+http://www.bootply.com/WAwE3QyUdb#
+
+
+
+
+
