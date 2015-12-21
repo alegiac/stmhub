@@ -199,7 +199,7 @@
       								<hr>
       								<center>
       									<div class="col-xs-10 col-xs-offset-1">
-      										{$otherPrices}
+      										
       									</div>
   									</center>
   								</div>
