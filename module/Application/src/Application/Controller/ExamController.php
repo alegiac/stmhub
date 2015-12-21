@@ -453,7 +453,7 @@ class ExamController extends AbstractActionController
 			foreach ($mediaArr as $media) {
 				switch ($media['type']) {
 					case MediaType::TYPE_IMAGE:
-						$retval .= '<div style="text-align: center;"><img src="'.$media['url'].'" alt="" style="max-width: 100%;height: auto;"/></div><br>';
+						$retval .= '<div style="text-align: center;"><img src="'.$media['url'].'" alt="" style="min-width: 80%; max-width: 100%;height: auto;"/></div><br>';
 						break;
 					case MediaType::TYPE_VIDEO:
 						$retval .= '<div class="tv-body"><div class="embed-responsive embed-responsive-16by9 m-b-20"><iframe class="embed-responsive-item" src="'.$media['url'].'"></iframe></div></div><br>';
