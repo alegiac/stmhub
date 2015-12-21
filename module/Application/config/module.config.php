@@ -245,6 +245,20 @@ return array(
         		),
         		'may_terminate' => true,
         	),
+        	'index' => array(
+        		'type'    => 'segment',
+        		'options' => array(
+        			'route'    => '/',
+        			'defaults' => array(
+        				'__NAMESPACE__' => 'Application\Controller',
+        				'controller' => 'Index',
+        				'action'     => 'index',
+        			),
+        		),
+        		'may_terminate' => true,
+        		'child_routes' => array(
+        		),
+        	),
         ),
     ),
     'service_manager' => array(

@@ -41,7 +41,8 @@
 		  height: 320px;
 		  max-width: 450px;
 		  min-width: 200px;
-		  margin:20px;
+		  position: relative;
+		  margin:-10px;
 		  background:#FFFFFF;
 		}
 		.competition-podium .podium-block {
@@ -120,7 +121,22 @@
 {block name="main"}
 	<section id="content">
 		<div class="container">
-		
+		<!-- Modal EXAMLIST -->
+		<div id="myModal2" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+						<h3 id="myModalLabel2">{$courseName}</h3>
+					</div>
+					<div class="modal-body">
+						{$examList}
+					</div>
+					<div class="modal-footer">
+					</div>
+				</div>
+			</div>
+		</div>
 		<!-- Modal RANKING -->
 					<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 						<div class="modal-dialog">
@@ -131,6 +147,13 @@
 								</div>
 								<div class="modal-body">
       								<center>
+      									{if $hasPrize eq 1}
+	        								<h4>Complimenti! Sei alla posizione <strong>{$position}</strong></h4>
+      									{else}
+											<h4>Il tuo punteggio: <strong>{$points}</strong></h4>
+											<h4>La tua posizione: <strong>{$position}</strong></h4>
+										{/if}
+      									<hr>
 								    	<div class="competition-podium">
 								  			<div class="podium-block bronze">	
 												<div class="name">
@@ -236,7 +259,9 @@
 								<p>
 									<h4>{$firstName} {$lastName}</h4>
 									<span style="color:light-grey;">{$courseName}</span><br>
-									<span style="color:light-grey;">{$examName}</span><br>
+									<a href="#myModal2" role="button" data-toggle="modal">
+										<span style="color:light-grey;">{$examName}</span><br>
+									</a>
 								</p>
 							</div>
 						</div>
