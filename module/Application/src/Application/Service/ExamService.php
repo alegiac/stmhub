@@ -334,6 +334,8 @@ final class ExamService extends BaseService
     		$retval['course'] = array(
     				'name' => $session->getStudentHasCourse()->getCourse()->getName(),
     		);
+    		$clientCourse = $this->getClientHasCourseRepo()->findByCourse($session->getStudentHasCourse()->getCourse());
+    		$retval['course']['logo'] = $clientCourse[0]->getLogoFilename();
     
     		$retval['classification'] = $this->getCurrentPositionAndPrizeForStudentInCourse($session->getStudentHasCourse());
     		$retval['prizes'] = $this->getClassificationAndPrizes($session->getStudentHasCourse());

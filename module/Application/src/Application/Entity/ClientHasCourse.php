@@ -71,6 +71,13 @@ class ClientHasCourse
     private $durationweek;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="logo_filename", type="text", length=65535, nullable=true)
+     */
+    private $logoFilename;
+
+    /**
      * @var \Application\Entity\Activationstatus
      *
      * @ORM\ManyToOne(targetEntity="Application\Entity\Activationstatus")
@@ -288,6 +295,30 @@ class ClientHasCourse
     public function getDurationweek()
     {
         return $this->durationweek;
+    }
+
+    /**
+     * Set logoFilename
+     *
+     * @param string $logoFilename
+     *
+     * @return ClientHasCourse
+     */
+    public function setLogoFilename($logoFilename)
+    {
+        $this->logoFilename = $logoFilename;
+
+        return $this;
+    }
+
+    /**
+     * Get logoFilename
+     *
+     * @return string
+     */
+    public function getLogoFilename()
+    {
+        return $this->logoFilename;
     }
 
     /**

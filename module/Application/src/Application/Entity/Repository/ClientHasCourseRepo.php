@@ -2,6 +2,7 @@
 
 namespace Application\Entity\Repository;
 
+use Application\Entity\Course;
 /**
  * ClientHasCourseRepo
  *
@@ -10,4 +11,20 @@ namespace Application\Entity\Repository;
  */
 class ClientHasCourseRepo extends \Doctrine\ORM\EntityRepository
 {
+	public function findByCourse(Course $course)
+	{
+		$result = $this->createQueryBuilder('p')
+		->select('p')
+		->getQuery()
+		->getResult();
+		
+		return $result;
+		
+		
+		$q = $this->createQueryBuilder('cc')->select('cc')->where('course = :course')->getQuery();
+		$q->setParameter('course', $course);
+		
+		return $q->getResult();
+		
+	}
 }

@@ -315,9 +315,10 @@
 			<div class="col-sm-3 .visible-xs-block, hidden-xs">
 				<!-- Profile view -->
 				<div class="card profile-view">
-					<div class="pv-header">
+					<div style="position: relative;height: 145px;width: 100%;background-repeat: no-repeat;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;background-position: center;">
+						<img src="{$clientCourseLogoPath}" style="max-width: 100%"/>
 					</div>
-					<div class="pv-body" style="margin-top: 30px;">
+					<div class="pv-body" style="margin-top: 0px;">
 						<h2>{$firstName} {$lastName}</h2>
 						<div class="row">
 							<div class="col-xs-12 col-md-4"><center><br><small>Scadenza</small><br><h4>{$expectedEndDate}</h4><br></center></div>
