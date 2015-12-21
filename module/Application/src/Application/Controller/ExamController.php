@@ -652,7 +652,7 @@ class ExamController extends AbstractActionController
 					}
 				}
 				
-				$vm->otherPrices = $others;
+				$vm->otherPrices = "";
 				
 				
 			} else {
