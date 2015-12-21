@@ -188,7 +188,8 @@
 						<div class="col-xs-6">
 							<div class="pv-body">
 								<p>
-									<h4>{$firstName} {$lastName}</h4>
+									<br>
+									<span style="color:light-grey;">{$firstName} {$lastName}</span><br>
 									<span style="color:light-grey;">{$courseName}</span><br>
 									<span style="color:light-grey;">{$examName}</span><br>
 								</p>
@@ -196,9 +197,7 @@
 						</div>
 						<div class="col-xs-6" style="text-align:right;">
 							<div class="pv-body">
-								<br>
 								<p>
-									<br>
 									<br>
 									<small style="color:light-grey;">Punti</small>:  <strong style="color:black;">{$points}</strong><br>
 									<small style="color:light-grey;">Classifica</small>:  <strong style="color:black;">{$position}</strong><br>

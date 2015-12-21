@@ -257,7 +257,8 @@
 						<div class="col-xs-4">
 							<div class="pv-body">
 								<p>
-									<h4>{$firstName} {$lastName}</h4>
+									<br>
+									<span style="color:light-grey;">{$firstName} {$lastName}</span><br>
 									<span style="color:light-grey;">{$courseName}</span><br>
 									<a href="#myModal2" role="button" data-toggle="modal">
 										<span style="color:light-grey;">{$examName}</span><br>
@@ -267,7 +268,6 @@
 						</div>
 						<div class="col-xs-4" style="text-align:center;">
 							<div class="pv-body">
-								<br>
 								<p>
 									<br>
 									<small style="color:light-grey;">Sessione</small>:  <strong style="color:black;">{$sessionIndex}</strong><br>
@@ -278,7 +278,6 @@
 						</div>
 						<div class="col-xs-4" style="text-align:right;">
 							<div class="pv-body">
-								<br>
 								<p>
 									<br>
 									<small style="color:light-grey;">Tempo</small>: <strong style="color:black;">{$minInSession}</strong><br>
