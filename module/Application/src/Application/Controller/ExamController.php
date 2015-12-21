@@ -582,7 +582,6 @@ class ExamController extends AbstractActionController
 		$vm = new ViewModel();
 
 		if (isset($this->session->exam)) {
-		
 			// Dati studente
 			$vm->firstName = $this->session->exam['student']['firstname'];
 			$vm->lastName = $this->session->exam['student']['lastname'];
@@ -646,7 +645,7 @@ class ExamController extends AbstractActionController
 						
 						$others.='<div style="max-width:130px; background-color:'.$prizeBorderColor.';">';
 						$others.='<img style="max-width:120px;" src="'.$prizeUrl.'"/>';
-						$others.='</div><br><span style="color:'.$prizeText.';>'.$prize['student']['firstname'].'</span></center></div>';
+						$others.='</div><br><span style="color:'.$prizeText.';>'.$prizes[$i]['student']['firstname'].'</span></center></div>';
 					}
 					
 					$vm->otherPrices = $others;
