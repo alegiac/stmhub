@@ -3,6 +3,19 @@
 {block name="custom_css"}
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 	<style type="text/css">
+	
+	@media screen and (min-width: 200px) and (max-width: 1024px) {
+			img {
+				max-width: 70%;
+			}
+	}
+	
+	@media screen and (min-width: 1025px) {
+		img {
+			max-width: 100%;
+		}
+	}
+	
 		.foot {
 			position : absolute;
 			bottom : 0;
@@ -235,7 +248,7 @@
 					<br>
 					<div class="card-body card-padding">
 						<div class="row">
-							<div class="col-md-12 col-sm-8 offset-sm-2">
+							<div class="col-md-12">
 								{$media}
 								<hr>
 								<center>
