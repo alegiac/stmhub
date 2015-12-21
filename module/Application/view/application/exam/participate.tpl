@@ -299,7 +299,7 @@
 							<div class="pv-body">
 								<p>
 									<br>
-									<small style="color:light-grey;">Tempo</small>: <strong style="color:black;">{$minInSession}</strong><br>
+									<strong style="color:black;">{$minInSession}</strong><br>
 									<small style="color:light-grey;">Punti</small>:  <strong style="color:black;">{$points}</strong><br>
 									{if $showClassification eq 1}
 										<a href="#myModal" role="button" data-toggle="modal">
@@ -327,16 +327,16 @@
 						<div class="row" style="background-color: #64c8ff;">
 							<br>
 							<div class="row">
-								<div class="col-xs-12 col-md-4">
+								<div class="col-xs-12 col-md-6">
 									<small style="color: white;">Punti</small><h4 style="color: white;">{$points}</h4>
 								</div>
-								<div class="col-xs-12 col-md-4">
+								<div class="col-xs-12 col-md-6">
 									{if $showClassification eq 1}
 										<a href="#myModal" role="button" data-toggle="modal">
 										<small style="color: white;">Classifica</small><h4 style="color: white;">{$position}°</h4></a>
 									{/if}
 								</div>
-								<div class="col-xs-12 col-md-4">
+								<div class="col-xs-12 col-md-12">
 									<small style="color: white;">Tempo</small><h4 style="color: white;">{$minInSession}</h4>
 								</div>
 							</div>

@@ -49,7 +49,7 @@
 							<div class="pv-body">
 								<p>
 									<br>
-									<small style="color:light-grey;">Tempo</small>: <strong style="color:black;">{$minInSession}</strong><br>
+									<strong style="color:black;">{$minInSession}</strong><br>
 									<small style="color:light-grey;">Punti</small>:  <strong style="color:black;">{$points}</strong><br>
 									<small style="color:light-grey;">Classifica</small>:  <strong style="color:black;">{$position}</strong><br>
 								</p>
