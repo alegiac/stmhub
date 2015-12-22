@@ -61,9 +61,9 @@
 			<div class="col-sm-3 .visible-xs-block, hidden-xs">
 				<!-- Profile view -->
                 <div class="card profile-view">
-                	<div class="pv-header">
-                   	</div>
-                            
+                	<div style="position: relative;height: 145px;width: 100%;background-repeat: no-repeat;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;background-position: center;">
+						<img src="{$clientCourseLogoPath}" style="max-width: 100%"/>
+					</div>
                     <div class="pv-body" style="margin-top: 30px;">
                         <h2>{$firstName} {$lastName}</h2>
                         <br>

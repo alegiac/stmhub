@@ -666,7 +666,6 @@ class ExamController extends AbstractActionController
 			$vm->courseName = $this->session->exam['course']['name'];
 			$vm->clientCourseLogoPath  = "/static/media/clientcourse/".$this->session->exam['course']['logo'];
 			
-
 			// Esami (o sfida)
 			$vm->examList = $this->composeExamList($this->session->exam['allexams']);
 			$vm->examListShort = $this->composeExamList($this->session->exam['allexams'],true);

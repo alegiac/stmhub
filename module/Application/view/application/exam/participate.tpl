@@ -331,15 +331,19 @@
 								<div class="col-xs-12 col-md-6">
 									<small style="color: white;">Punti</small><h4 style="color: white;">{$points}</h4>
 								</div>
+							{if $showClassification eq 1}
 								<div class="col-xs-12 col-md-6">
-									{if $showClassification eq 1}
-										<a href="#myModal" role="button" data-toggle="modal">
-										<small style="color: white;">Classifica</small><h4 style="color: white;">{$position}°</h4></a>
-									{/if}
+									<a href="#myModal" role="button" data-toggle="modal">
+									<small style="color: white;">Classifica</small><h4 style="color: white;">{$position}°</h4></a>
 								</div>
 								<div class="col-xs-12 col-md-12">
 									<small style="color: white;">Tempo</small><h4 style="color: white;">{$minInSession}</h4>
 								</div>
+							{else}
+								<div class="col-xs-12 col-md-6">
+									<small style="color: white;">Tempo</small><h4 style="color: white;">{$minInSession}</h4>
+								</div>
+							{/if}
 							</div>
 							<br>
 						</div>
