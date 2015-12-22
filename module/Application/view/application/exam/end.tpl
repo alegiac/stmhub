@@ -109,8 +109,7 @@
 	        					<hr>
 	        					<h4>Hai accumulato {$points} punti, continua a seguirci!</h4>
 	                   		</center>
-	                   		<br><br>
-	                   		<center><a href="/exam/challenges" class="btn btn-lg btn-primary">RACCOGLI SFIDA</a></center>
+	                   		{$challengeBtn}
 	        			</div>
 	        			{if $showClassification eq 1}
 	        			<div class="row">

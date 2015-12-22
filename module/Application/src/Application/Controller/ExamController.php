@@ -280,7 +280,6 @@ class ExamController extends AbstractActionController
 	 */
 	public function endAction()
 	{
-		
 		$this->initExam();
 		$terminationValue = $this->session->offsetGet('session_termination');
 		
@@ -299,6 +298,15 @@ class ExamController extends AbstractActionController
 				$vm->message = "Complimenti ".$this->session->exam['student']['firstname'].", hai completato il corso ".$this->session->exam['course']['name'];
 				break;
 		}
+		
+		// Evaluates if the go-to-challenges button must be shown
+		$res = $this->getExamService()->getAvailableChallenges($this->session->exam['session']['id']);
+		if (is_array($res) && count($res) > 0) {
+			$vm->challengeBtn = '<br><br><center><a href="/exam/challenges" class="btn btn-lg btn-primary">RACCOGLI SFIDA</a></center>';
+		} else {
+			$vm->challengeBtn;
+		}
+		
 		
 		// Inizializza variabili d'ambiente
 		$this->session->offsetUnset('startedTime');
@@ -548,26 +556,28 @@ class ExamController extends AbstractActionController
 		
 		foreach ($list as $type=>$exams) {
 		
-			$tag .= '<strong style="margin-left:10px;">'.$type."</strong><br><br>";
+			if (count($exams) > 0) {
+				$tag .= '<strong style="margin-left:10px;">'.$type."</strong><br><br>";
 		
-			if ($doShort === true) {
-				$tag .= "<ul style=\"list-style-type: none;margin-top:5px;\">";
-			} else {
-				$tag .= "<ul style=\"list-style-type: none;margin-top:-20px;\">";
-			}
-			
-			foreach ($exams as $exam) {
-				if ($exam['started'] === false) {
-					$tag .='<li style="color: lightgrey; font-size:'.$fontSize.'; margin-left: -20px;"><i class="fa fa-clock-o fa-fw"></i>&nbsp;&nbsp;'.$exam['name'].'</li>';
+				if ($doShort === true) {
+					$tag .= "<ul style=\"list-style-type: none;margin-top:5px;\">";
 				} else {
-					if ($exam['completed'] === true) {
-						$tag .='<li style="color: green; font-size:'.$fontSize.'; margin-left: -20px;"><i class="fa fa-check-circle-o fa-fw"></i>&nbsp;&nbsp;<s>'.$exam['name'].'</s></li>';
+					$tag .= "<ul style=\"list-style-type: none;margin-top:-20px;\">";
+				}
+				
+				foreach ($exams as $exam) {
+					if ($exam['started'] === false) {
+						$tag .='<li style="color: lightgrey; font-size:'.$fontSize.'; margin-left: -20px;"><i class="fa fa-clock-o fa-fw"></i>&nbsp;&nbsp;'.$exam['name'].'</li>';
 					} else {
-						$tag .='<li style="color: black; font-size:'.$fontSize.'; margin-left: -20px;"><i class="fa fa-eye fa-fw"></i>&nbsp;&nbsp;'.$exam['name'].'</li>';
+						if ($exam['completed'] === true) {
+							$tag .='<li style="color: green; font-size:'.$fontSize.'; margin-left: -20px;"><i class="fa fa-check-circle-o fa-fw"></i>&nbsp;&nbsp;<s>'.$exam['name'].'</s></li>';
+						} else {
+							$tag .='<li style="color: black; font-size:'.$fontSize.'; margin-left: -20px;"><i class="fa fa-eye fa-fw"></i>&nbsp;&nbsp;'.$exam['name'].'</li>';
+						}
 					}
 				}
 			}
-			
+				
 			$tag .= "</ul>";
 		}
 		

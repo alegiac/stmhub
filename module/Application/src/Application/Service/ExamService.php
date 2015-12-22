@@ -91,23 +91,27 @@ final class ExamService extends BaseService
 			$sessionsChallenge = $sessRepo->findByExam($session->getStudentHasCourse(),$challenge);
 			
 			foreach ($sessionsChallenge as $sesCh) {
+				
+				// Only started challenges can be seen
 				/* @var $sesCh StudentHasCourseHasExam */
-				if ($sesCh->getRealStartDate() != null) {
-					// At least one session has been started. The challenge is started!
-					$challengeStarted = true;
-				}
-				if ($sesCh->getCompleted() == 0) {
-					$challengeCompleted = false;
-					break;
+				print_r($sesCh->getStartDate());print_r(new \DateTime());
+				if ($sesCh->getStartDate() <= new \DateTime()) {
+					echo "sdsdsd";
+					if ($sesCh->getRealStartDate() != null) {
+						// At least one session has been started. The challenge is started!
+						$challengeStarted = true;
+					}
+					if ($sesCh->getCompleted() == 0) {
+						$challengeCompleted = false;
+						break;
+					}
+					$rv = array('name' => $name);
+					$rv['started'] = $challengeStarted;
+					$rv['completed'] = $challengeCompleted;
+					
+					$retval['Sfide'][] = $rv;
 				}
 			}
-			
-			$rv = array('name' => $name);
-			$rv['started'] = $challengeStarted;
-			$rv['completed'] = $challengeCompleted;
-				
-			$retval['Sfide'][] = $rv;
-				
 		}
 		
 		return $retval;
