@@ -109,8 +109,7 @@
 	        					<hr>
 	        					<h4>Hai accumulato {$points} punti, continua a seguirci!</h4>
 	                   		</center>
-	                   		<br><br>
-	                   		<center><a href="/exam/challenges" class="btn btn-lg btn-primary">RACCOGLI SFIDA</a></center>
+	                   		{$challengeBtn}
 	        			</div>
 	        			{if $showClassification eq 1}
 	        			<div class="row">
@@ -138,8 +137,7 @@
 										</div>
 						                <div class="podium">
 						                	<span class="position">3</span>
-							                <span>{$bronzeFirstName}<br>{$bronzePoints}</span>
-							            </div>
+							                <span>{$bronzeFirstName}<br>{$bronzePoints}<br>{$bronzeTiming}</span>
 									</div>
 									<div class="podium-block gold">	
 										<div class="name">
@@ -151,7 +149,7 @@
 										</div>
 										<div class="podium">
 											<span class="position">1</span>
-                    						<span>{$goldFirstName}<br>{$goldPoints}</span>
+                    						<span>{$goldFirstName}<br>{$goldPoints}<br>{$goldTiming}</span>
                 						</div>
 									</div>
 									<div class="podium-block silver">	
@@ -164,7 +162,7 @@
 										</div>
 										<div class="podium">
 											<span class="position">2</span>
-                    						<span>{$silverFirstName}<br>{$silverPoints}</span>
+											<span>{$silverFirstName}<br>{$silverPoints}<br>{$silverTiming}</span>
                 						</div>
 									</div>
 								</div>
@@ -182,7 +180,8 @@
 						<div class="col-xs-6">
 							<div class="pv-body">
 								<p>
-									<h4>{$firstName} {$lastName}</h4>
+									<br>
+									<span style="color:light-grey;">{$firstName} {$lastName}</span><br>
 									<span style="color:light-grey;">{$courseName}</span><br>
 									<span style="color:light-grey;">{$examName}</span><br>
 								</p>
@@ -190,9 +189,7 @@
 						</div>
 						<div class="col-xs-6" style="text-align:right;">
 							<div class="pv-body">
-								<br>
 								<p>
-									<br>
 									<br>
 									<small style="color:light-grey;">Punti</small>:  <strong style="color:black;">{$points}</strong><br>
 									<small style="color:light-grey;">Classifica</small>:  <strong style="color:black;">{$position}</strong><br>
@@ -205,7 +202,9 @@
 			<div class="col-sm-3 .visible-xs-block, hidden-xs">
 				<!-- Profile view -->
 				<div class="card profile-view">
-					<div class="pv-header"></div>
+					<div style="position: relative;height: 145px;width: 100%;background-repeat: no-repeat;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;background-position: center;">
+						<img src="{$clientCourseLogoPath}" style="max-width: 100%"/>
+					</div>
 					<div class="pv-body" style="margin-top: 30px;">
 						<h2>{$firstName} {$lastName}</h2>
 						<br>

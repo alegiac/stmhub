@@ -280,7 +280,6 @@ class ExamController extends AbstractActionController
 	 */
 	public function endAction()
 	{
-		
 		$this->initExam();
 		$terminationValue = $this->session->offsetGet('session_termination');
 		
@@ -299,6 +298,15 @@ class ExamController extends AbstractActionController
 				$vm->message = "Complimenti ".$this->session->exam['student']['firstname'].", hai completato il corso ".$this->session->exam['course']['name'];
 				break;
 		}
+		
+		// Evaluates if the go-to-challenges button must be shown
+		$res = $this->getExamService()->getAvailableChallenges($this->session->exam['session']['id']);
+		if (is_array($res) && count($res) > 0) {
+			$vm->challengeBtn = '<br><br><center><a href="/exam/challenges" class="btn btn-lg btn-primary">RACCOGLI SFIDA</a></center>';
+		} else {
+			$vm->challengeBtn;
+		}
+		
 		
 		// Inizializza variabili d'ambiente
 		$this->session->offsetUnset('startedTime');
@@ -395,11 +403,13 @@ class ExamController extends AbstractActionController
 		$this->initExam();
 		
 		$vm = $this->composeParticipationVM();
+		
 		$form = $this->composeForm();
 		if ($form instanceof ExamDragDrop) {
 			$vm->scramble = $form->getUlReorderOptions();
 		}
 		$vm->form = $form;
+		
 		return $vm;
 	}
 	
@@ -451,7 +461,7 @@ class ExamController extends AbstractActionController
 			foreach ($mediaArr as $media) {
 				switch ($media['type']) {
 					case MediaType::TYPE_IMAGE:
-						$retval .= '<div style="text-align: center;"><img src="'.$media['url'].'" alt="" style="max-width: 100%;height: auto;"/></div><br>';
+						$retval .= '<div style="text-align: center;"><img src="'.$media['url'].'" alt="" style="height: auto;"/></div><br>';
 						break;
 					case MediaType::TYPE_VIDEO:
 						$retval .= '<div class="tv-body"><div class="embed-responsive embed-responsive-16by9 m-b-20"><iframe class="embed-responsive-item" src="'.$media['url'].'"></iframe></div></div><br>';
@@ -546,26 +556,28 @@ class ExamController extends AbstractActionController
 		
 		foreach ($list as $type=>$exams) {
 		
-			$tag .= "<center><strong>".$type."</strong></center><br><br>";
+			if (count($exams) > 0) {
+				$tag .= '<strong style="margin-left:10px;">'.$type."</strong><br><br>";
 		
-			if ($doShort === true) {
-				$tag .= "<ul style=\"list-style-type: none;margin-top:5px;\">";
-			} else {
-				$tag .= "<ul style=\"list-style-type: none;margin-top:-20px;\">";
-			}
-			
-			foreach ($exams as $exam) {
-				if ($exam['started'] === false) {
-					$tag .='<li style="color: lightgrey; font-size:'.$fontSize.';"><i class="fa fa-clock-o fa-fw"></i>&nbsp;&nbsp;'.$exam['name'].'</li>';
+				if ($doShort === true) {
+					$tag .= "<ul style=\"list-style-type: none;margin-top:5px;\">";
 				} else {
-					if ($exam['completed'] === true) {
-						$tag .='<li style="color: green; font-size:'.$fontSize.';"><i class="fa fa-check-circle-o fa-fw"></i>&nbsp;&nbsp;<s>'.$exam['name'].'</s></li>';
+					$tag .= "<ul style=\"list-style-type: none;margin-top:-20px;\">";
+				}
+				
+				foreach ($exams as $exam) {
+					if ($exam['started'] === false) {
+						$tag .='<li style="color: lightgrey; font-size:'.$fontSize.'; margin-left: -20px;"><i class="fa fa-clock-o fa-fw"></i>&nbsp;&nbsp;'.$exam['name'].'</li>';
 					} else {
-						$tag .='<li style="color: black; font-size:'.$fontSize.';"><i class="fa fa-eye fa-fw"></i>&nbsp;&nbsp;'.$exam['name'].'</li>';
+						if ($exam['completed'] === true) {
+							$tag .='<li style="color: green; font-size:'.$fontSize.'; margin-left: -20px;"><i class="fa fa-check-circle-o fa-fw"></i>&nbsp;&nbsp;<s>'.$exam['name'].'</s></li>';
+						} else {
+							$tag .='<li style="color: black; font-size:'.$fontSize.'; margin-left: -20px;"><i class="fa fa-eye fa-fw"></i>&nbsp;&nbsp;'.$exam['name'].'</li>';
+						}
 					}
 				}
 			}
-			
+				
 			$tag .= "</ul>";
 		}
 		
@@ -580,9 +592,9 @@ class ExamController extends AbstractActionController
 	{
 		$tmpMedia = "";
 		$vm = new ViewModel();
-
-		if (isset($this->session->exam)) {
+		$others ="";
 		
+		if (isset($this->session->exam)) {
 			// Dati studente
 			$vm->firstName = $this->session->exam['student']['firstname'];
 			$vm->lastName = $this->session->exam['student']['lastname'];
@@ -592,7 +604,7 @@ class ExamController extends AbstractActionController
 			$vm->position = $this->session->exam['classification']['position'];
 			$vm->hasPrize = $this->session->exam['classification']['has_prize'];
 			$vm->prizeName = $this->session->exam['classification']['prizename'];
-			
+
 			// Premi e classifica
 			$vm->goldFirstName = ""; $vm->silverFirstName = ""; $vm->bronzeFirstName = "";
 			$vm->goldPrizeUrl = ""; $vm->silverPrizeUrl = ""; $vm->bronzePrizeUrl = "";
@@ -607,50 +619,54 @@ class ExamController extends AbstractActionController
 				if (strlen($prizes[1]['prize']['url']) > 0) {
 					$vm->goldPrizeUrl = $prizes[1]['prize']['url'];
 				} else {
-					$vm->goldPrizeUrl = "http://wpitalyplugin.com/wp-content/plugins/InstaBuilder/images/unavailable-200x145.png";
+					$vm->goldPrizeUrl = "";
 				}
 				$vm->goldPrizeTitle = $prizes[1]['prize']['name'];
 				$vm->goldPoints = $prizes[1]['student']['points']." p.ti";
+				$vm->goldTiming = $this->seconds_to_hms($prizes[1]['student']['timing']);
 				
 				if (array_key_exists(2, $prizes)) {
 					$vm->silverFirstName = $prizes[2]['student']['firstname'];
 					if (strlen($prizes[2]['prize']['url']) > 0) {
 						$vm->silverPrizeUrl = $prizes[2]['prize']['url'];
 					} else {
-						$vm->silverPrizeUrl = "http://wpitalyplugin.com/wp-content/plugins/InstaBuilder/images/unavailable-200x145.png";
+						$vm->silverPrizeUrl = "";
 					}
 					$vm->silverPrizeTitle = $prizes[2]['prize']['name'];
 					$vm->silverPoints = $prizes[2]['student']['points']." p.ti";
+					$vm->silverTiming = $this->seconds_to_hms($prizes[2]['student']['timing']);
 				}
 				
 				if (array_key_exists(3, $prizes)) {
 					$vm->bronzeFirstName = $prizes[3]['student']['firstname'];
-					$vm->bronzePrizeUrl = "http://wpitalyplugin.com/wp-content/plugins/InstaBuilder/images/unavailable-200x145.png";
+					$vm->bronzePrizeUrl = "";
 					if (strlen($prizes[3]['prize']['url']) > 0) {
 						$vm->bronzePrizeUrl = $prizes[3]['prize']['url'];
 					}
 					$vm->bronzePrizeTitle = $prizes[3]['prize']['name'];
 					$vm->bronzePoints = $prizes[3]['student']['points']." p.ti";
+					$vm->bronzeTiming = $this->seconds_to_hms($prizes[3]['student']['timing']);
 				}
 				
-				$others ="";
 				if (count($prizes) > 3) {
+					
 					for ($i=4;$i<=count($prizes);$i++) {
 						$others.= '<div class="col-xs-4"><center><br>'.$i.'° premio<br>';
 						$prizeBorderColor = "white"; $prizeText = "black";
 						if ($this->session->exam['classification']['position'] == $i) {
 							$prizeBorderColor = "blue";$prizeText = "blue";
 						}
-						$prizeUrl = "http://wpitalyplugin.com/wp-content/plugins/InstaBuilder/images/unavailable-200x145.png";
+						$prizeUrl = "";
 						if (strlen($prizes[$i]['url'] > 0)) $prizeUrl = $prizes[$i]['url'];
 						
 						$others.='<div style="max-width:130px; background-color:'.$prizeBorderColor.';">';
 						$others.='<img style="max-width:120px;" src="'.$prizeUrl.'"/>';
-						$others.='</div><br><span style="color:'.$prizeText.';>'.$prize['student']['firstname'].'</span></center></div>';
+						$others.='</div><br><span style="color:'.$prizeText.';>'.$prizes[$i]['student']['firstname'].'</span></center></div>';
 					}
-					
-					$vm->otherPrices = $others;
 				}
+				
+				$vm->otherPrices = "";
+				
 				
 			} else {
 				$vm->showClassification = 0;
@@ -658,14 +674,15 @@ class ExamController extends AbstractActionController
 			
 			// Dati corso
 			$vm->courseName = $this->session->exam['course']['name'];
+			$vm->clientCourseLogoPath  = "/static/media/clientcourse/".$this->session->exam['course']['logo'];
 			
 			// Esami (o sfida)
 			$vm->examList = $this->composeExamList($this->session->exam['allexams']);
 			$vm->examListShort = $this->composeExamList($this->session->exam['allexams'],true);
 			
 			// Dati sessione
-			$vm->expectedEndDate = $this->session->exam['session']['expectedenddate']->format('m/Y');
-			$vm->expectedEndDateShort = $this->session->exam['session']['expectedenddate']->format('m/Y');
+			$vm->expectedEndDate = $this->session->exam['session']['expectedenddate']->format('d/m');
+			$vm->expectedEndDateShort = $this->session->exam['session']['expectedenddate']->format('d/m');
 	
 			$vm->points = $this->session->exam['session']['points'];
 			
@@ -718,9 +735,65 @@ class ExamController extends AbstractActionController
 			// Gestione elementi multimediali
 			$vm->media = $this->composeMedia($item['media']);
 		}
-		
 		return $vm;
 	}
+	
+	private function hms_conversion($hours,$minutes,$seconds,$precision=0) {
+	$hours = abs($hours);
+	$minutes = abs($minutes);
+	$seconds = abs($seconds);
+	$total_seconds = ($hours * 3600) + ($minutes * 60) + $seconds;
+	if ($precision === 0) { $total_seconds = round($total_seconds); }
+	elseif ($precision !== false) { $total_seconds = round($total_seconds,$precision); }
+
+	//calculate hours, minutes, seconds
+	$hours = floor($total_seconds / 3600);
+	$remaining_seconds = $total_seconds - ($hours * 3600);
+	$minutes = floor($remaining_seconds / 60);
+	$seconds = $remaining_seconds - ($minutes * 60);
+	unset($remaining_seconds);
+
+	$hms = array('total_seconds'=>$total_seconds,'hours'=>$hours,'minutes'=>$minutes,'seconds'=>$seconds);
+
+	//now, format text and longtext
+	$text = '';
+	$longtext = '';
+	if ($hours > 0) {
+		$hh = $hours;
+		$text .= $hours.':' ;
+		if ($hours > 1) { $longtext .= number_format($hours).' h, '; }
+		else { $longtext .= '1 h, '; }
+	} else {
+		$hh = '';
+	}
+	if (($minutes >= 10) || ($hours == 0)) { $mm = $minutes; }
+	elseif ($hours > 0) { $mm = '0'.$minutes; }
+	if (($minutes > 0) || ($hours > 0)) {
+		$text .= $mm.':';
+		if ($minutes != 1) { $longtext .= $minutes.' m, '; }
+		else { $longtext .= '1 m, '; }
+	} else {
+		$mm = '';
+	}
+	if ((($minutes > 0) || ($hours > 0)) && ($seconds == 0)) { $ss = '00 s'; }
+	elseif ($seconds >= 10) { $ss = $seconds; }
+	else { $ss = '0'.$seconds." s";}
+	$text .= $ss;
+	if ($seconds != 1) { $longtext .= $seconds.' s'; }
+	else { $longtext .= '1 s'; }
+	$hms['hh'] = $hh; //blank (instead of "0") if no hours
+	$hms['mm'] = $mm; //includes preceding zero so hh:mm:ss looks right, blank if no hours and no minutes
+	$hms['ss'] = $ss; //includes preceding zero so hh:mm:ss looks right
+	$hms['text'] = $text;
+	$hms['longtext'] = $longtext;
+
+	return $hms;
+}
+
+function seconds_to_hms($seconds) {
+	$hms = $this->hms_conversion(null,null,$seconds,0);
+	return $hms['text'];
+}
 	
 	/**
 	 * @return ExamService

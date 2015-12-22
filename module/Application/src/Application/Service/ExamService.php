@@ -91,23 +91,27 @@ final class ExamService extends BaseService
 			$sessionsChallenge = $sessRepo->findByExam($session->getStudentHasCourse(),$challenge);
 			
 			foreach ($sessionsChallenge as $sesCh) {
+				
+				// Only started challenges can be seen
 				/* @var $sesCh StudentHasCourseHasExam */
-				if ($sesCh->getRealStartDate() != null) {
-					// At least one session has been started. The challenge is started!
-					$challengeStarted = true;
-				}
-				if ($sesCh->getCompleted() == 0) {
-					$challengeCompleted = false;
-					break;
+				print_r($sesCh->getStartDate());print_r(new \DateTime());
+				if ($sesCh->getStartDate() <= new \DateTime()) {
+					echo "sdsdsd";
+					if ($sesCh->getRealStartDate() != null) {
+						// At least one session has been started. The challenge is started!
+						$challengeStarted = true;
+					}
+					if ($sesCh->getCompleted() == 0) {
+						$challengeCompleted = false;
+						break;
+					}
+					$rv = array('name' => $name);
+					$rv['started'] = $challengeStarted;
+					$rv['completed'] = $challengeCompleted;
+					
+					$retval['Sfide'][] = $rv;
 				}
 			}
-			
-			$rv = array('name' => $name);
-			$rv['started'] = $challengeStarted;
-			$rv['completed'] = $challengeCompleted;
-				
-			$retval['Sfide'][] = $rv;
-				
 		}
 		
 		return $retval;
@@ -237,6 +241,11 @@ final class ExamService extends BaseService
     	return $this->getStudentHasCourseHasExamRepo()->sumStudentPoints($studentCourse);
     }
     
+    private function getTotalTimeForStudentInCourse(StudentHasCourse $studentCourse)
+    {
+    	return $this->getStudentHasCourseHasExamRepo()->getTimingForStudent($studentCourse);
+    }
+    
     private function getTotalSessionsForStudentInCourse(StudentHasCourse $studentCourse)
     {
     	return $this->getStudentHasCourseHasExamRepo()->countSessions($studentCourse);
@@ -268,6 +277,7 @@ final class ExamService extends BaseService
     			'lastname' => $lastName,
     			'position' => $index,
     			'points' => $this->getTotalPointsForStudentInCourse($studentCourseFound),
+    			'timing' => $this->getTotalTimeForStudentInCourse($studentCourseFound),
     			'is_current' => (int)$studentCourse->getId() == $element['student_has_course_id'],
     		);
     		
@@ -313,7 +323,8 @@ final class ExamService extends BaseService
     	return array(
     		'position' => $index,
     		'has_prize' => $hasPrize,
-    		'prizename' => $prizename
+    		'prizename' => $prizename,
+    		'totaltime' => $timing,
     	);
     }
     
@@ -327,6 +338,8 @@ final class ExamService extends BaseService
     		$retval['course'] = array(
     				'name' => $session->getStudentHasCourse()->getCourse()->getName(),
     		);
+    		$clientCourse = $this->getClientHasCourseRepo()->findByCourse($session->getStudentHasCourse()->getCourse());
+    		$retval['course']['logo'] = $clientCourse[0]->getLogoFilename();
     
     		$retval['classification'] = $this->getCurrentPositionAndPrizeForStudentInCourse($session->getStudentHasCourse());
     		$retval['prizes'] = $this->getClassificationAndPrizes($session->getStudentHasCourse());

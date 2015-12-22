@@ -3,6 +3,25 @@
 {block name="custom_css"}
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 	<style type="text/css">
+	
+	@media screen and (min-width: 200px) and (max-width: 1024px) {
+			img {
+				max-width: 70%;
+			}
+			h2 {
+				font-size: 20px;
+			}
+	}
+	
+	@media screen and (min-width: 1025px) {
+		img {
+			max-width: 100%;
+		}
+		h2 {
+			font-size: 27px;
+		}
+	}
+	
 		.foot {
 			position : absolute;
 			bottom : 0;
@@ -165,7 +184,7 @@
 												</div>
 								                <div class="podium">
 								                	<span class="position">3</span>
-									                <span>{$bronzeFirstName}<br>{$bronzePoints}</span>
+									                <span>{$bronzeFirstName}<br>{$bronzePoints}<br>{$bronzeTiming}</span>
 									            </div>
 											</div>
 											<div class="podium-block gold">	
@@ -178,7 +197,7 @@
 												</div>
 												<div class="podium">
 													<span class="position">1</span>
-	                        						<span>{$goldFirstName}<br>{$goldPoints}</span>
+	                        						<span>{$goldFirstName}<br>{$goldPoints}<br>{$goldTiming}</span>
                         						</div>
 											</div>
 											<div class="podium-block silver">	
@@ -191,7 +210,7 @@
 												</div>
 												<div class="podium">
 													<span class="position">2</span>
-	                        						<span>{$silverFirstName}<br>{$silverPoints}</span>
+	                        						<span>{$silverFirstName}<br>{$silverPoints}<br>{$silverTiming}</span>
 	                    						</div>
 											</div>
 										</div>
@@ -199,7 +218,7 @@
       								<hr>
       								<center>
       									<div class="col-xs-10 col-xs-offset-1">
-      										{$otherPrices}
+      										
       									</div>
   									</center>
   								</div>
@@ -235,7 +254,7 @@
 					<br>
 					<div class="card-body card-padding">
 						<div class="row">
-							<div class="col-sm-12">
+							<div class="col-md-12">
 								{$media}
 								<hr>
 								<center>
@@ -257,7 +276,8 @@
 						<div class="col-xs-4">
 							<div class="pv-body">
 								<p>
-									<h4>{$firstName} {$lastName}</h4>
+									<br>
+									<span style="color:light-grey;">{$firstName} {$lastName}</span><br>
 									<span style="color:light-grey;">{$courseName}</span><br>
 									<a href="#myModal2" role="button" data-toggle="modal">
 										<span style="color:light-grey;">{$examName}</span><br>
@@ -267,7 +287,6 @@
 						</div>
 						<div class="col-xs-4" style="text-align:center;">
 							<div class="pv-body">
-								<br>
 								<p>
 									<br>
 									<small style="color:light-grey;">Sessione</small>:  <strong style="color:black;">{$sessionIndex}</strong><br>
@@ -278,10 +297,9 @@
 						</div>
 						<div class="col-xs-4" style="text-align:right;">
 							<div class="pv-body">
-								<br>
 								<p>
 									<br>
-									<small style="color:light-grey;">Tempo</small>: <strong style="color:black;">{$minInSession}</strong><br>
+									<strong style="color:black;">{$minInSession}</strong><br>
 									<small style="color:light-grey;">Punti</small>:  <strong style="color:black;">{$points}</strong><br>
 									{if $showClassification eq 1}
 										<a href="#myModal" role="button" data-toggle="modal">
@@ -297,9 +315,10 @@
 			<div class="col-sm-3 .visible-xs-block, hidden-xs">
 				<!-- Profile view -->
 				<div class="card profile-view">
-					<div class="pv-header">
+					<div style="position: relative;height: 145px;width: 100%;background-repeat: no-repeat;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;background-position: center;">
+						<img src="{$clientCourseLogoPath}" style="max-width: 100%"/>
 					</div>
-					<div class="pv-body" style="margin-top: 30px;">
+					<div class="pv-body" style="margin-top: 0px;">
 						<h2>{$firstName} {$lastName}</h2>
 						<div class="row">
 							<div class="col-xs-12 col-md-4"><center><br><small>Scadenza</small><br><h4>{$expectedEndDate}</h4><br></center></div>
@@ -309,18 +328,22 @@
 						<div class="row" style="background-color: #64c8ff;">
 							<br>
 							<div class="row">
-								<div class="col-xs-12 col-md-4">
+								<div class="col-xs-12 col-md-6">
 									<small style="color: white;">Punti</small><h4 style="color: white;">{$points}</h4>
 								</div>
-								<div class="col-xs-12 col-md-4">
-									{if $showClassification eq 1}
-										<a href="#myModal" role="button" data-toggle="modal">
-										<small style="color: white;">Classifica</small><h4 style="color: white;">{$position}°</h4></a>
-									{/if}
+							{if $showClassification eq 1}
+								<div class="col-xs-12 col-md-6">
+									<a href="#myModal" role="button" data-toggle="modal">
+									<small style="color: white;">Classifica</small><h4 style="color: white;">{$position}°</h4></a>
 								</div>
-								<div class="col-xs-12 col-md-4">
+								<div class="col-xs-12 col-md-12">
 									<small style="color: white;">Tempo</small><h4 style="color: white;">{$minInSession}</h4>
 								</div>
+							{else}
+								<div class="col-xs-12 col-md-6">
+									<small style="color: white;">Tempo</small><h4 style="color: white;">{$minInSession}</h4>
+								</div>
+							{/if}
 							</div>
 							<br>
 						</div>
