@@ -192,7 +192,9 @@
 								<p>
 									<br>
 									<small style="color:light-grey;">Punti</small>:  <strong style="color:black;">{$points}</strong><br>
-									<small style="color:light-grey;">Classifica</small>:  <strong style="color:black;">{$position}</strong><br>
+									{if $showClassification eq 1}
+										<small style="color:light-grey;">Classifica</small>:  <strong style="color:black;">{$position}</strong><br>
+									{/if}
 								</p>
 							</div>
 						</div>
@@ -215,7 +217,9 @@
 									<small style="color: white;">Punti</small><h4 style="color: white;">{$points}</h4>
 								</div>
 								<div class="col-xs-12 col-md-6">
+								{if $showClassification eq 1}
 									<small style="color: white;">Classifica</small><h4 style="color: white;">{$position}°</h4>
+								{/if}
 								</div>
 							</div>
 							<br>
