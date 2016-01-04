@@ -59,8 +59,7 @@ class ToolsController extends AbstractActionController
 		set_time_limit(0);
 		$this->init();
 		$course = $this->getCourseService()->findById($this->params()->fromRoute('course'));
-		$delete = $this->params()->fromRoute('delete',0);
-		echo $this->getStudentService()->newAssociateAllStudentsToCourse($course, new \DateTimeImmutable(),$delete);
+		echo $this->getStudentService()->associateAllStudentsToCourse($course, new \DateTimeImmutable());
 		die();
 		
 		
@@ -72,7 +71,7 @@ class ToolsController extends AbstractActionController
 		$courseId = $this->params()->fromRoute('course');
 		$student = $this->getStudentService()->findById($studentId);
 		$course = $this->getCourseService()->findById($courseId);
-		echo $this->getStudentService()->newAssociateStudentToCourse($student, $course, new \DateTimeImmutable());
+		echo $this->getStudentService()->associateStudentToCourse($student, $course, new \DateTimeImmutable());
 		die();
 	}
 	

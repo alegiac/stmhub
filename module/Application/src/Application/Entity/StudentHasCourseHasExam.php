@@ -75,7 +75,7 @@ class StudentHasCourseHasExam
      *
      * @ORM\Column(name="progressive", type="integer", nullable=false)
      */
-    private $progressive = '0';
+    private $progressive;
 
     /**
      * @var \DateTime
