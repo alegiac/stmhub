@@ -61,6 +61,18 @@ return array(
         		),
         		'may_terminate' => true,
         	),
+        		'tools_structureall' => array(
+        				'type' => 'Segment',
+        				'options' => array(
+        						'route' => '/tools/structureall/:course[/:delete]',
+        						'defaults' => array(
+        								'__NAMESPACE__' => 'Application\Controller',
+        								'controller' => 'Tools',
+        								'action' => 'structureall',
+        						),
+        				),
+        				'may_terminate' => true,
+        		),
         	'exam_js' => array(
         		'type' => 'Segment',
         		'options' => array(

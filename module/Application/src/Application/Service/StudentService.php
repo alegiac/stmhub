@@ -8,6 +8,7 @@ use Application\Entity\Course;
 use Application\Entity\StudentHasCourse;
 use Application\Entity\Exam;
 use Application\Entity\StudentHasCourseHasExam;
+use Application\Entity\StudentHasAnsweredToItem;
 use Application\Entity\Item;
 use Application\Entity\ExamHasItem;
 
@@ -228,6 +229,481 @@ final class StudentService extends BaseService
     	
     	return "Completato: studente ".$student->getFirstname()." ".$student->getLastname()." assegnato a corso ".$course->getName();
 	}  
+	
+	public function newAssociateAllStudentsToCourse(Course $course,\DateTimeImmutable $startDate,$deleteAll)
+	{
+		$studs = $this->getStudentRepo()->findAll();
+		foreach ($studs as $stud) {
+			$this->newAssociateStudentToCourse($stud, $course, $startDate);
+		}
+	}
+	
+	public function newAssociateStudentToCourse(Student $student,Course $course,\DateTimeImmutable $startDate)
+	{
+		$this->getEntityManager()->beginTransaction();
+		 
+		// Create association
+		$studentHasCourse = new StudentHasCourse();
+		$studentHasCourse->setStudent($student);
+		$studentHasCourse->setCourse($course);
+		$studentHasCourse->setInsertDate(new \DateTime());
+		$studentHasCourse->setActivationstatus($this->getActivationStatusRecord(ActivationStatus::STATUS_ENABLED));
+		 
+		$this->getEntityManager()->persist($studentHasCourse);
+		$this->getEntityManager()->flush();
+		 
+		// Gets the exam time definition from course
+		$durationWeek = $course->getDurationweek();
+		$periodicityWeek = $course->getPeriodicityweek();
+		 
+		$lastDateStart = $startDate;
+		$lastDateEnd = $lastDateStart->add(new \DateInterval('P'.$periodicityWeek.'W'));
+		$lastDateChallangeEnd = $lastDateStart->add(new \DateInterval('P'.$durationWeek.'W'));
+		 
+		// For challenge logic, only non-mandatory exams will be used
+		$challenges = $this->getExamRepo()->findNotMandatoriesByCourse($course);
+		$sessionsForChallenge = 1;
+		 
+		foreach ($challenges as $challenge) {
+			/* @var $challenge Exam */
+			$itemsForChallenge = $this->getExamHasItemRepo()->findByExam($challenge);
+			shuffle(shuffle(shuffle($itemsForChallenge)));
+			$numItemsForChallenge = count($itemsForChallenge);
+	
+			// Create the universal token
+			$token = $this->generateSessionToken($student->getId(), $challenge->getId(), 1);
+	
+			// Create an entry in the session table
+			$session = new StudentHasCourseHasExam();
+			$session->setCompleted(0);
+			$session->setExam($challenge);
+			$session->setMandatory(0);
+			$session->setExpectedEndDate($lastDateChallangeEnd);
+			$session->setInsertDate(new \DateTime());
+			$session->setPoints(0);
+			$session->setProgressive(0);
+			$session->setStartDate($lastDateStart);
+			$session->setStudentHasCourse($studentHasCourse);
+			$session->setToken($token);
+			$session->setSessionOnCourse(1);
+			$session->setSessionOnExam("1/1");
+	
+			$arrayItemsForSession = array();
+			 
+			for($j=0;$j<$numItemsForChallenge;$j++) {
+				if (count($itemsForChallenge) == 0) break;
+	
+				// Pop an item from the global-exam-items array
+				// Check if it has a parent dependency
+				$theItem = array_pop($itemsForChallenge);
+				 
+				/* @var $theItem ExamHasItem */
+				if ($theItem->getItem()->getItem() != null) {
+					$found = false;
+					foreach ($session->getItem() as $itemIn) {
+						/* @var $itemIn Item */
+						if ($itemIn == $theItem->getItem()->getItem()) {
+							$found = true; break;
+						}
+					}
+					if (!$found) {
+						// Has parent dependency but his parent is not in.
+						array_push($itemsForExam, $theItem);
+						shuffle($itemsForExam);
+					}
+				}
+	
+				$session->addItem($theItem->getItem());
+			}
+	
+			$this->getEntityManager()->persist($session);
+			$this->getEntityManager()->flush();
+		}
+		$ss = 0;
+		 
+		// For session logic, only mandatory exams will be used
+		$examsItemArray = array();
+		$countItems = 0;
+		$exams = $this->getExamRepo()->findMandatoriesByCourse($course);
+		
+		// Loading the total number of items, and creating an array for all the exams (items per exam)
+		for ($i=0;$i<count($exams);$i++) {
+			$countItems += $exams[$i]->getTotalitems();
+			$examsItemArray[$i] = $this->getExamHasItemRepo()->findByExam($exams[$i]);
+			shuffle(shuffle(shuffle($examsItemArray[$i])));
+		}
+		
+		// Session number = duration/periodicity
+		$sessionNumber = ceil($durationWeek/$periodicityWeek);
+		
+		// Average item number per session = total items / sessions
+		$avgItemNumberPerSession = ceil($countItems/$sessionNumber);
+		
+		$lastDateStart = $startDate;
+		$lastDateEnd = $lastDateStart->add(new \DateInterval('P'.$periodicityWeek.'W'));
+		$currentSession = 0;
+		
+		for ($i=1;$i<=$sessionNumber;$i++) {
+			
+			for ($ii=0;$ii<count($exams);$ii++) {
+				// No more items for the current exam.
+				$exam = $exams[$ii];
+				
+				if (count($examsItemArray[$ii]) === 0) {
+					continue;
+				} else {
+					// Create an universal token
+					$token = $this->generateSessionToken($student->getId(), $exam->getId(), $i);
+					
+					// Create an entry in the session-for-the-student table
+					$session = new StudentHasCourseHasExam();
+					$session->setCompleted(0);
+					$session->setExam($exam);
+					$session->setMandatory(1);
+					$session->setExpectedEndDate($lastDateEnd);
+					$session->setInsertDate(new \DateTime());
+					$session->setPoints(0);
+					$session->setProgressive(0);
+					$session->setStartDate($lastDateStart);
+					$session->setStudentHasCourse($studentHasCourse);
+					$session->setToken($token);
+					$session->setSessionOnCourse($i);
+					$session->setSessionOnExam(($i)."/".$sessionNumber);
+					 
+					// Extend dates
+					$next = new \DateInterval('P'.$periodicityWeek.'W');
+					$lastDateStart = $lastDateStart->add($next);
+					$lastDateEnd = $lastDateEnd->add($next);
+					
+					$arrayItemsForSession = array();
+					
+					if (count($examsItemArray[$ii]) < $avgItemNumberPerSession) {
+						$top = count($examsItemArray[$ii]); 
+					} else {
+						$top = $avgItemNumberPerSession;
+					}
+					for ($j=0;$j<$top;$j++) {
+						// Pop an item from the global-exam-items array
+						// Check if it has a parent dependency
+						$theItem = array_pop($examsItemArray[$ii]);
+					
+						/* @var $theItem ExamHasItem */
+						if ($theItem->getItem()->getItem() != null) {
+							$found = false;
+							foreach ($session->getItem() as $itemIn) {
+								/* @var $itemIn Item */
+								if ($itemIn == $theItem->getItem()->getItem()) {
+									$found = true; break;
+								}
+							}
+							if (!$found) {
+								// Has parent dependency but his parent is not in.
+								array_push($examsItemArray[$ii], $theItem);
+								shuffle($examsItemArray[$ii]);
+							}
+						}
+					
+						$session->addItem($theItem->getItem());
+					}
+					if (count($examsItemArray[$ii]) < 13) {
+						$newtop = count($examsItemArray[$ii]);
+					} else {
+						$newtop = 0;
+					}
+					for ($j=0;$j<$newtop;$j++) {
+						// Pop an item from the global-exam-items array
+						// Check if it has a parent dependency
+						$theItem = array_pop($examsItemArray[$ii]);
+							
+						/* @var $theItem ExamHasItem */
+						if ($theItem->getItem()->getItem() != null) {
+							$found = false;
+							foreach ($session->getItem() as $itemIn) {
+								/* @var $itemIn Item */
+								if ($itemIn == $theItem->getItem()->getItem()) {
+									$found = true; break;
+								}
+							}
+							if (!$found) {
+								// Has parent dependency but his parent is not in.
+								array_push($examsItemArray[$ii], $theItem);
+								shuffle($examsItemArray[$ii]);
+							}
+						}
+							
+						$session->addItem($theItem->getItem());
+					}
+						
+					
+					
+					$this->getEntityManager()->persist($session);
+					$this->getEntityManager()->flush();
+				}
+				break;
+			}
+		}
+		
+		$this->getEntityManager()->commit();
+		 
+		return "Completato: studente ".$student->getFirstname()." ".$student->getLastname()." assegnato a corso ".$course->getName();
+	}
+	
+	public function verynewAssociateStudentToCourse(Student $student,Course $course,\DateTimeImmutable $startDate)
+	{
+		$this->getEntityManager()->beginTransaction();
+			
+		// Create association
+		$studentHasCourse = new StudentHasCourse();
+		$studentHasCourse->setStudent($student);
+		$studentHasCourse->setCourse($course);
+		$studentHasCourse->setInsertDate(new \DateTime());
+		$studentHasCourse->setActivationstatus($this->getActivationStatusRecord(ActivationStatus::STATUS_ENABLED));
+			
+		$this->getEntityManager()->persist($studentHasCourse);
+		$this->getEntityManager()->flush();
+			
+		// Gets the exam time definition from course
+		$durationWeek = $course->getDurationweek();
+		$periodicityWeek = $course->getPeriodicityweek();
+			
+		$lastDateStart = $startDate;
+		$lastDateEnd = $lastDateStart->add(new \DateInterval('P'.$periodicityWeek.'W'));
+		$lastDateChallangeEnd = $lastDateStart->add(new \DateInterval('P'.$durationWeek.'W'));
+			
+		// For challenge logic, only non-mandatory exams will be used
+		$challenges = $this->getExamRepo()->findNotMandatoriesByCourse($course);
+		$sessionsForChallenge = 1;
+			
+		foreach ($challenges as $challenge) {
+			/* @var $challenge Exam */
+			$itemsForChallenge = $this->getExamHasItemRepo()->findByExam($challenge);
+			shuffle(shuffle(shuffle($itemsForChallenge)));
+			$numItemsForChallenge = count($itemsForChallenge);
+	
+			// Create the universal token
+			$token = $this->generateSessionToken($student->getId(), $challenge->getId(), 1);
+	
+			// Create an entry in the session table
+			$session = new StudentHasCourseHasExam();
+			$session->setCompleted(0);
+			$session->setExam($challenge);
+			$session->setMandatory(0);
+			$session->setExpectedEndDate($lastDateChallangeEnd);
+			$session->setInsertDate(new \DateTime());
+			$session->setPoints(0);
+			$session->setProgressive(0);
+			$session->setStartDate($lastDateStart);
+			$session->setStudentHasCourse($studentHasCourse);
+			$session->setToken($token);
+			$session->setSessionOnCourse(1);
+			$session->setSessionOnExam("1/1");
+	
+			$arrayItemsForSession = array();
+	
+			for($j=0;$j<$numItemsForChallenge;$j++) {
+				if (count($itemsForChallenge) == 0) break;
+	
+				// Pop an item from the global-exam-items array
+				// Check if it has a parent dependency
+				$theItem = array_pop($itemsForChallenge);
+					
+				/* @var $theItem ExamHasItem */
+				if ($theItem->getItem()->getItem() != null) {
+					$found = false;
+					foreach ($session->getItem() as $itemIn) {
+						/* @var $itemIn Item */
+						if ($itemIn == $theItem->getItem()->getItem()) {
+							$found = true; break;
+						}
+					}
+					if (!$found) {
+						// Has parent dependency but his parent is not in.
+						array_push($itemsForExam, $theItem);
+						shuffle($itemsForExam);
+					}
+				}
+	
+				$session->addItem($theItem->getItem());
+			}
+	
+			$this->getEntityManager()->persist($session);
+			$this->getEntityManager()->flush();
+		}
+		$ss = 0;
+			
+		// For session logic, only mandatory exams will be used
+		$exams = $this->getExamRepo()->findMandatoriesByCourse($course);
+		$numOfSessions = ceil($durationWeek/$periodicityWeek);
+		$totalItems = 0;
+		$assignedReserved = 0;
+		$totalAssignedSessions = 0;
+		$arrSave = array();
+		
+		foreach ($exams as $exam) {
+			$totalItems += $exam->getTotalitems();
+			$arrSave[$exam->getId()] = 0;
+		}
+		
+		$avgItemNumberPerSession = ceil($$totalItems/$numOfSessions);
+		
+		foreach ($exams as $exam) {
+			if (($exam->getTotalitems() <= $avgItemNumberPerSession) || ($exam->getTotalitems() > $avgItemNumberPerSession + 5)) {
+				$arrSave[$exam->getid()] = 1;
+				$assignedReserved++;
+				$totalAssignedSessions++;
+			}
+		}
+		
+		$remainingSessions = $numOfSessions - $assignedReserved;
+		$baseForExam = floor($remainingSessions/(count($items)-$assignedReserved));
+		
+		foreach($exams as $exam) {
+			if ($arrSave[$exam->getId()] == 0) {
+				$arrSave[$exam->getId()] = $baseForExam;
+				$totalAssignedSessions += $baseForExam;
+			}
+		}
+		
+		$remainingSessionsToDistribute = $numOfSessions - $totalAssignedSessions;
+		
+		
+		while ($remainingSessionsToDistribute > 0) {
+		
+			foreach ($arrSave as $value) {
+				if ($value != 1 && $remainingSessionsToDistribute > 0) {
+					$value++;
+					$remainingSessionsToDistribute--;
+				}
+			}
+			
+		}
+		
+		
+		$examsItemArray = array();
+		$countItems = 0;
+		$exams = $this->getExamRepo()->findMandatoriesByCourse($course);
+	
+		// Loading the total number of items, and creating an array for all the exams (items per exam)
+		for ($i=0;$i<count($exams);$i++) {
+			$countItems += $exams[$i]->getTotalitems();
+			$examsItemArray[$i] = $this->getExamHasItemRepo()->findByExam($exams[$i]);
+			shuffle(shuffle(shuffle($examsItemArray[$i])));
+		}
+	
+		// Session number = duration/periodicity
+		$sessionNumber = ceil($durationWeek/$periodicityWeek);
+	
+		// Average item number per session = total items / sessions
+		$avgItemNumberPerSession = ceil($countItems/$sessionNumber);
+	
+		$lastDateStart = $startDate;
+		$lastDateEnd = $lastDateStart->add(new \DateInterval('P'.$periodicityWeek.'W'));
+		$currentSession = 0;
+	
+		for ($i=1;$i<=$sessionNumber;$i++) {
+				
+			for ($ii=0;$ii<count($exams);$ii++) {
+				// No more items for the current exam.
+				$exam = $exams[$ii];
+	
+				if (count($examsItemArray[$ii]) === 0) {
+					continue;
+				} else {
+					// Create an universal token
+					$token = $this->generateSessionToken($student->getId(), $exam->getId(), $i);
+						
+					// Create an entry in the session-for-the-student table
+					$session = new StudentHasCourseHasExam();
+					$session->setCompleted(0);
+					$session->setExam($exam);
+					$session->setMandatory(1);
+					$session->setExpectedEndDate($lastDateEnd);
+					$session->setInsertDate(new \DateTime());
+					$session->setPoints(0);
+					$session->setProgressive(0);
+					$session->setStartDate($lastDateStart);
+					$session->setStudentHasCourse($studentHasCourse);
+					$session->setToken($token);
+					$session->setSessionOnCourse($i);
+					$session->setSessionOnExam(($i)."/".$sessionNumber);
+	
+					// Extend dates
+					$next = new \DateInterval('P'.$periodicityWeek.'W');
+					$lastDateStart = $lastDateStart->add($next);
+					$lastDateEnd = $lastDateEnd->add($next);
+						
+					$arrayItemsForSession = array();
+						
+					if (count($examsItemArray[$ii]) < $avgItemNumberPerSession) {
+						$top = count($examsItemArray[$ii]);
+					} else {
+						$top = $avgItemNumberPerSession;
+					}
+					for ($j=0;$j<$top;$j++) {
+						// Pop an item from the global-exam-items array
+						// Check if it has a parent dependency
+						$theItem = array_pop($examsItemArray[$ii]);
+							
+						/* @var $theItem ExamHasItem */
+						if ($theItem->getItem()->getItem() != null) {
+							$found = false;
+							foreach ($session->getItem() as $itemIn) {
+								/* @var $itemIn Item */
+								if ($itemIn == $theItem->getItem()->getItem()) {
+									$found = true; break;
+								}
+							}
+							if (!$found) {
+								// Has parent dependency but his parent is not in.
+								array_push($examsItemArray[$ii], $theItem);
+								shuffle($examsItemArray[$ii]);
+							}
+						}
+							
+						$session->addItem($theItem->getItem());
+					}
+					if (count($examsItemArray[$ii]) < 13) {
+						$newtop = count($examsItemArray[$ii]);
+					} else {
+						$newtop = 0;
+					}
+					for ($j=0;$j<$newtop;$j++) {
+						// Pop an item from the global-exam-items array
+						// Check if it has a parent dependency
+						$theItem = array_pop($examsItemArray[$ii]);
+							
+						/* @var $theItem ExamHasItem */
+						if ($theItem->getItem()->getItem() != null) {
+							$found = false;
+							foreach ($session->getItem() as $itemIn) {
+								/* @var $itemIn Item */
+								if ($itemIn == $theItem->getItem()->getItem()) {
+									$found = true; break;
+								}
+							}
+							if (!$found) {
+								// Has parent dependency but his parent is not in.
+								array_push($examsItemArray[$ii], $theItem);
+								shuffle($examsItemArray[$ii]);
+							}
+						}
+							
+						$session->addItem($theItem->getItem());
+					}
+	
+						
+						
+					$this->getEntityManager()->persist($session);
+					$this->getEntityManager()->flush();
+				}
+				break;
+			}
+		}
+	
+		$this->getEntityManager()->commit();
+			
+		return "Completato: studente ".$student->getFirstname()." ".$student->getLastname()." assegnato a corso ".$course->getName();
+	}
 	
 	/**
 	 * The purpose of this function is to cycle for incoming sessions

@@ -54,6 +54,17 @@ class ToolsController extends AbstractActionController
 		echo "Done";die();
 	}
 	
+	public function structureallAction()
+	{
+		set_time_limit(0);
+		$this->init();
+		$course = $this->getCourseService()->findById($this->params()->fromRoute('course'));
+		$delete = $this->params()->fromRoute('delete',0);
+		echo $this->getStudentService()->newAssociateAllStudentsToCourse($course, new \DateTimeImmutable(),$delete);
+		die();
+		
+		
+	}
 	public function structureAction()
 	{
 		$this->init();
@@ -61,7 +72,7 @@ class ToolsController extends AbstractActionController
 		$courseId = $this->params()->fromRoute('course');
 		$student = $this->getStudentService()->findById($studentId);
 		$course = $this->getCourseService()->findById($courseId);
-		echo $this->getStudentService()->associateStudentToCourse($student, $course, new \DateTimeImmutable());
+		echo $this->getStudentService()->newAssociateStudentToCourse($student, $course, new \DateTimeImmutable());
 		die();
 	}
 	
