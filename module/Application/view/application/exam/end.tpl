@@ -107,7 +107,7 @@
 	        				<center>
 	        					<h3>{$message}</h3>
 	        					<hr>
-	        					<h4>Hai accumulato {$points} punti, continua a seguirci!</h4>
+	        					<h4>Hai accumulato {$points} punti!</h4>
 	                   		</center>
 	                   		{$challengeBtn}
 	        			</div>
