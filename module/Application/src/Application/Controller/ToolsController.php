@@ -19,6 +19,7 @@ use Application\Form\ExamMultisubmit;
 use Application\Form\ExamDragDrop;
 use Application\Service\StudentService;
 use Application\Service\CourseService;
+use Application\Service\ClientService;
 
 class ToolsController extends AbstractActionController
 {
@@ -69,9 +70,11 @@ class ToolsController extends AbstractActionController
 		$this->init();
 		$studentId = $this->params()->fromRoute('user');
 		$courseId = $this->params()->fromRoute('course');
+		$clientId = $this->params()->fromRoute('client');
 		$student = $this->getStudentService()->findById($studentId);
 		$course = $this->getCourseService()->findById($courseId);
-		echo $this->getStudentService()->associateStudentToCourse($student, $course, new \DateTimeImmutable());
+		$client = $this->getClientService()->findById($clientId);
+		echo $this->getStudentService()->associateStudentToCourse($student, $course, $client);
 		die();
 	}
 	
@@ -87,6 +90,14 @@ class ToolsController extends AbstractActionController
 		$this->session = new Container('exam');
 		$this->config = $this->getServiceLocator()->get('Config');
 		$this->logger = $this->getServiceLocator()->get('Logger');
+	}
+	
+	/**
+	 * @return ClientService
+	 */
+	private function getClientService()
+	{
+		return $this->getServiceLocator()->get('ClientService');
 	}
 	
 	/**

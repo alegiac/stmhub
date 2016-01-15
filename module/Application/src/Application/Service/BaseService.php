@@ -19,6 +19,7 @@ use Application\Entity\Repository\StudentHasCourseHasExamRepo;
 use Application\Entity\Repository\StudentRepo;
 use Application\Entity\Repository\PrizeRepo;
 use Application\Entity\Repository\ClientHasCourseRepo;
+use Application\Entity\Repository\ClientRepo;
 
 abstract class BaseService implements ServiceLocatorAwareInterface
 {
@@ -50,6 +51,15 @@ abstract class BaseService implements ServiceLocatorAwareInterface
     protected function getActivationstatusRepo()
     {
     	return $this->getEntityManager()->getRepository('Application\Entity\Activationstatus');
+    }
+    
+    /**
+     * Gets repository for client table
+     * @return ClientRepo
+     */
+    protected function getClientRepo()
+    {
+    	return $this->getEntityManager()->getRepository('Application\Entity\Client');
     }
     
     /**

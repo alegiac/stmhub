@@ -52,7 +52,7 @@ return array(
         	'tools_structure' => array(
         		'type' => 'Segment',
         		'options' => array(
-        			'route' => '/tools/structure/:user/:course',
+        			'route' => '/tools/structure/:user/:course/:client',
         			'defaults' => array(
         					'__NAMESPACE__' => 'Application\Controller',
         					'controller' => 'Tools',
@@ -285,6 +285,7 @@ return array(
     		'ExamService' => 'Application\\Service\\ExamServiceFactory',
     		'StudentService' => 'Application\\Service\\StudentServiceFactory',
     		'CourseService' => 'Application\\Service\\CourseServiceFactory',
+    		'ClientService' => 'Application\\Service\\ClientServiceFactory',
     	),
     ),
     'translator' => array(

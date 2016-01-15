@@ -3,6 +3,8 @@
 namespace Application\Entity\Repository;
 
 use Application\Entity\Course;
+use Application\Entity\Client;
+use Doctrine\Common\Collections\Criteria;
 /**
  * ClientHasCourseRepo
  *
@@ -11,20 +13,19 @@ use Application\Entity\Course;
  */
 class ClientHasCourseRepo extends \Doctrine\ORM\EntityRepository
 {
+	public function findByCourseAndClient(Course $course, Client $client)
+	{
+		
+		$criteria = Criteria::create()->where(Criteria::expr()->eq('course',$course))->andWhere(Criteria::expr()->eq('client',$client));
+		$result = $this->matching($criteria);
+		if ($result->count()) return $result->getValues()[0];
+		return null;
+	}
+	
 	public function findByCourse(Course $course)
 	{
-		$result = $this->createQueryBuilder('p')
-		->select('p')
-		->getQuery()
-		->getResult();
-		
-		return $result;
-		
-		
 		$q = $this->createQueryBuilder('cc')->select('cc')->where('course = :course')->getQuery();
 		$q->setParameter('course', $course);
-		
 		return $q->getResult();
-		
 	}
 }

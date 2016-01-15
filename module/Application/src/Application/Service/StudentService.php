@@ -15,6 +15,8 @@ use Application\Entity\ExamHasItem;
 use Zend\Mail\Message;
 use Zend\Mime\Message as MimeMessage;
 use Zend\Mime\Part as MimePart;
+use Application\Entity\Client;
+use Doctrine\Common\Util\Debug;
 
 final class StudentService extends BaseService
 {
@@ -88,8 +90,13 @@ final class StudentService extends BaseService
 		}
 	}
 	
-	public function associateStudentToCourse(Student $student,Course $course,\DateTimeImmutable $startDate)
+	public function associateStudentToCourse(Student $student,Course $course,Client $client)
 	{	
+		// Determine date start
+		$clientCourse = $this->getClientHasCourseRepo()->findByCourseAndClient($course, $client);
+		$startDate = $clientCourse->getStartDate();
+		
+		if (is_null($startDate)) $startDate = new \DateTimeImmutable();
 		
 		// Create association
 		$studentHasCourse = new StudentHasCourse();
@@ -104,7 +111,7 @@ final class StudentService extends BaseService
 		// Gets the exam time definition from course
 		$durationWeek = $course->getDurationweek();
 		$periodicityWeek = $course->getPeriodicityweek();
-			
+		
 		$lastDateStart = $startDate;
 		$lastDateEnd = $lastDateStart->add(new \DateInterval('P'.$periodicityWeek.'W'));
 		$lastDateChallangeEnd = $lastDateStart->add(new \DateInterval('P'.$durationWeek.'W'));
