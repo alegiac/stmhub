@@ -8,7 +8,6 @@ use Application\Entity\Course;
 use Application\Entity\StudentHasCourse;
 use Application\Entity\Exam;
 use Application\Entity\StudentHasCourseHasExam;
-use Application\Entity\StudentHasAnsweredToItem;
 use Application\Entity\Item;
 use Application\Entity\ExamHasItem;
 
@@ -16,7 +15,6 @@ use Zend\Mail\Message;
 use Zend\Mime\Message as MimeMessage;
 use Zend\Mime\Part as MimePart;
 use Application\Entity\Client;
-use Doctrine\Common\Util\Debug;
 
 final class StudentService extends BaseService
 {
@@ -94,9 +92,12 @@ final class StudentService extends BaseService
 	{	
 		// Determine date start
 		$clientCourse = $this->getClientHasCourseRepo()->findByCourseAndClient($course, $client);
-		$startDate = $clientCourse->getStartDate();
-		
-		if (is_null($startDate)) $startDate = new \DateTimeImmutable();
+		if (is_null($clientCourse->getStartDate())) {
+			$startDate = new \DateTimeImmutable();
+		} else {
+			$sdformatted = $clientCourse->getStartDate()->format('Y-m-d H:i:s');
+			$startDate = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $sdformatted);
+		}
 		
 		// Create association
 		$studentHasCourse = new StudentHasCourse();
@@ -178,6 +179,15 @@ final class StudentService extends BaseService
 		$ss = 0;
 		
 		// For session logic, only mandatory exams will be used
+		
+		
+		if (is_null($clientCourse->getStartDate())) {
+			$startDate = new \DateTimeImmutable();
+		} else {
+			$sdformatted = $clientCourse->getStartDate()->format('Y-m-d H:i:s');
+			$startDate = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $sdformatted);
+		}
+		
 		$exams = $this->getExamRepo()->findMandatoriesByCourse($course);
 		$numOfSessions = ceil($durationWeek/$periodicityWeek);
 		
@@ -227,7 +237,7 @@ final class StudentService extends BaseService
 		}
 		
 		// Determined the final number of sessions for each exam, cycle for creating the records
-		$lastDateStart = $startDate;
+		$lastDateStart = clone($startDate);
 		$lastDateEnd = $lastDateStart->add(new \DateInterval('P'.$periodicityWeek.'W'));
 		
 		$currentSession = 0;
