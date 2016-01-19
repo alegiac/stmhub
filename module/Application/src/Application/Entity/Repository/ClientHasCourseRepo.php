@@ -21,11 +21,21 @@ class ClientHasCourseRepo extends \Doctrine\ORM\EntityRepository
 		if ($result->count()) return $result->getValues()[0];
 		return null;
 	}
-	
+
+	public function findByCourse(Course $course)
+	{
+		$criteria = Criteria::create()->where(Criteria::expr()->eq('course',$course));
+		$result = $this->matching($criteria);
+		return $result->getValues();
+	}	
+
+/*
 	public function findByCourse(Course $course)
 	{
 		$q = $this->createQueryBuilder('cc')->select('cc')->where('course = :course')->getQuery();
 		$q->setParameter('course', $course);
 		return $q->getResult();
 	}
+
+*/
 }
