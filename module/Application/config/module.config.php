@@ -48,7 +48,19 @@ return array(
         			),
         		),
        			'may_terminate' => true,
-       		),        		
+       		),        	
+        	'tools_testemail' => array(
+        		'type'	=> 'Segment',
+        		'options' => array(
+        			'route' => '/tools/testdem/:email/:idsession',
+        			'defaults' => array(
+        				'__NAMESPACE__' => 'Application\Controller',
+        				'controller' => 'Tools',
+        				'action' => 'testdem',
+        			),
+        		),
+        		'may_terminate' => true,
+        	),
         	'tools_structure' => array(
         		'type' => 'Segment',
         		'options' => array(

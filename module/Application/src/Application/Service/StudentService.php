@@ -315,6 +315,96 @@ final class StudentService extends BaseService
 	}
 	
 	/**
+	 * The purpose of this function is to send a test email to the given email
+	 * address, leaving intact the notification value
+	 * 
+	 * @param integer $sessionId
+	 * @param string $email
+	 */
+	public function rollEmailForSessionAndEmail($sessionId,$email)
+	{
+		$session = $this->getStudentHasCourseHasExamRepo()->find($sessionId);
+		/* @var $session StudentHasCourseHasExam */
+		
+		// Get student info
+		$student = $session->getStudentHasCourse()->getStudent();
+		$course = $session->getStudentHasCourse()->getCourse();
+		
+		$firstname = $student->getFirstname();
+		$lastname = $student->getLastname();
+		//$email = $student->getEmail();
+		$reference = $student->getIdentifier();
+		$studentSessions = $this->getStudentHasCourseHasExamRepo()->findByStudentOnCourse($session->getStudentHasCourse(),false);
+		$points = 0;
+		foreach ($studentSessions as $ssession) {
+			$points += $ssession->getPoints();
+		}
+		
+		// Get session/exam/course info
+		$coursename = $course->getName();
+		$coursetotexams = $course->getTotalexams();
+		$examName = $session->getExam()->getName();
+		$examProg = $session->getExam()->getProgOnCourse();
+		$sessionEnd = $session->getExpectedEndDate()->format('d M');
+		
+		// Get config params
+		$cfg = $this->getServiceLocator()->get("Config")['app_output']['email'];
+		$smtpServer = $cfg['smtp_server'];
+		$smtpUser = $cfg['smtp_username'];
+		$smtpPassword = $cfg['smtp_password'];
+		$from = $cfg['from'];
+		$subject = $cfg['subject'];
+		$bccs = $cfg['bccs'];
+		
+		// Compose session link
+		$link = $_SERVER['HTTP_HOST']."/exam/token/".$reference.".".$session->getToken();
+		
+		// Load template
+		$template = file_get_contents($course->getEmailtemplateurl());
+		$template = str_replace('%%FIRSTNAME%%', $firstname, $template);
+		$template = str_replace('%%LASTNAME%%', $lastname, $template);
+		$template = str_replace('%%COURSENAME%%', $coursename, $template);
+		$template = str_replace('%%EXAMNAME%%', $examName, $template);
+		$template = str_replace('%%PROG%%', $examProg, $template);
+		$template = str_replace('%%TOT%%', $coursetotexams, $template);
+		$template = str_replace('%%LINK%%', $link, $template);
+		$template = str_replace('%%POINTS%%', $points, $template);
+		$template = str_replace('%%DUEDATE%%', $sessionEnd, $template);
+		
+		$html = new MimePart($template);
+		$html->type = "text/html";
+		
+		$body = new MimeMessage();
+		$body->setParts(array($html));
+		
+		$message = new Message();
+		$message->setBody($body);
+		$message->setSender($from,"SmileToMove");
+		$message->addTo($email);
+		$message->setBcc($bccs);
+		$message->setSubject($subject);
+		
+		$smtpOptions = new \Zend\Mail\Transport\SmtpOptions();
+		$smtpOptions->setHost($smtpServer)
+		->setPort('465')
+		->setConnectionClass('login')
+		->setName("smiletomove.it")
+		->setConnectionConfig(array(
+				'username' => $smtpUser,
+				'password' => $smtpPassword,
+				'ssl' => 'ssl',
+		));
+		
+		$transport = new \Zend\Mail\Transport\Smtp($smtpOptions);
+		//$transport = new \Zend\Mail\Transport\Sendmail();
+		$transport->send($message);
+		
+		//$session->setNotifiedDate(new \DateTime());
+		//$this->getEntityManager()->persist($session);
+		//$this->getEntityManager()->flush();
+	}
+	
+	/**
 	 * The purpose of this function is to cycle for incoming sessions
 	 * and send an email to each student involved, with the link to start the session 
 	 */

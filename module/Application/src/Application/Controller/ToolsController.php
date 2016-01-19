@@ -55,6 +55,15 @@ class ToolsController extends AbstractActionController
 		echo "Done";die();
 	}
 	
+	public function testdemAction()
+	{
+		$this->init();
+		$email = $this->params()->fromRoute('email');
+		$idsession = $this->params()->fromRoute('idsession');
+		$this->getStudentService()->rollEmailForSessionAndEmail($idsession,$email);
+		echo "Done";die();
+	}
+	
 	public function structureallAction()
 	{
 		set_time_limit(0);
