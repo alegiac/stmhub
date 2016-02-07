@@ -3,3 +3,4 @@
 /data/logs/*.log
 /data/*.bak
 /data/SmartyModule/
+/nbproject/private/

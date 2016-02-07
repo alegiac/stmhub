@@ -15,6 +15,8 @@ use Zend\Mail\Message;
 use Zend\Mime\Message as MimeMessage;
 use Zend\Mime\Part as MimePart;
 use Application\Entity\Client;
+use Mandrill;
+
 
 final class StudentService extends BaseService
 {
@@ -349,12 +351,10 @@ final class StudentService extends BaseService
 		
 		// Get config params
 		$cfg = $this->getServiceLocator()->get("Config")['app_output']['email'];
-		$smtpServer = $cfg['smtp_server'];
-		$smtpUser = $cfg['smtp_username'];
-		$smtpPassword = $cfg['smtp_password'];
+		$apikey = $cfg['smtp_password'];
 		$from = $cfg['from'];
 		$subject = $cfg['subject'];
-		$bccs = $cfg['bccs'];
+		$bcc = $cfg['bcc'];
 		
 		// Compose session link
 		$link = $_SERVER['HTTP_HOST']."/exam/token/".$reference.".".$session->getToken();
@@ -371,34 +371,24 @@ final class StudentService extends BaseService
 		$template = str_replace('%%POINTS%%', $points, $template);
 		$template = str_replace('%%DUEDATE%%', $sessionEnd, $template);
 		
-		$html = new MimePart($template);
-		$html->type = "text/html";
-		
-		$body = new MimeMessage();
-		$body->setParts(array($html));
-		
-		$message = new Message();
-		$message->setBody($body);
-		$message->setSender($from,"SmileToMove");
-		$message->addTo($email);
-		$message->setBcc($bccs);
-		$message->setSubject($subject);
-		
-		$smtpOptions = new \Zend\Mail\Transport\SmtpOptions();
-		$smtpOptions->setHost($smtpServer)
-		->setPort('465')
-		->setConnectionClass('login')
-		->setName("smiletomove.it")
-		->setConnectionConfig(array(
-				'username' => $smtpUser,
-				'password' => $smtpPassword,
-				'ssl' => 'ssl',
-		));
-		
-		$transport = new \Zend\Mail\Transport\Smtp($smtpOptions);
-		//$transport = new \Zend\Mail\Transport\Sendmail();
-		$transport->send($message);
-		
+	        $mandrill = new Mandrill($apikey);
+                $message = array(
+                    'html' => $template,
+                    'text' => 'Train to Action',
+                    'subject' => $subject,
+                    'from_name' => 'TrainToAction',
+                    'from_email' => $from,
+                    'to' => array(
+                        array(
+                            'email' => $email,
+                            'type' => 'to'
+                        )
+                    ),
+                    'bcc_address' => $bcc,
+                );
+                
+                $result = $mandrill->messages->send($message,false);
+                print_r($result);
 		//$session->setNotifiedDate(new \DateTime());
 		//$this->getEntityManager()->persist($session);
 		//$this->getEntityManager()->flush();
@@ -440,12 +430,11 @@ final class StudentService extends BaseService
 				
 				// Get config params
 				$cfg = $this->getServiceLocator()->get("Config")['app_output']['email'];
-				$smtpServer = $cfg['smtp_server'];
-				$smtpUser = $cfg['smtp_username'];
-				$smtpPassword = $cfg['smtp_password'];
+				$apikey = $cfg['smtp_password'];
+                                
 				$from = $cfg['from'];
 				$subject = $cfg['subject'];
-				$bccs = $cfg['bccs'];
+				$bcc = $cfg['bcc'];
 				
 				// Compose session link
 				$link = $_SERVER['HTTP_HOST']."/exam/token/".$reference.".".$session->getToken();
@@ -462,34 +451,22 @@ final class StudentService extends BaseService
 				$template = str_replace('%%POINTS%%', $points, $template);
 				$template = str_replace('%%DUEDATE%%', $sessionEnd, $template);
 				
-				$html = new MimePart($template);
-				$html->type = "text/html";
-				
-				$body = new MimeMessage();
-				$body->setParts(array($html));
-				
-				$message = new Message();
-				$message->setBody($body);
-				$message->setSender($from,"SmileToMove");
-				$message->addTo('alessandro.giacomella@gmail.com');
-				$message->setBcc($bccs);
-				$message->setSubject($subject);
-				
-				$smtpOptions = new \Zend\Mail\Transport\SmtpOptions();
-				$smtpOptions->setHost($smtpServer)
-				->setPort('465')
-				->setConnectionClass('login')
-				->setName("smiletomove.it")
-				->setConnectionConfig(array(
-						'username' => $smtpUser,
-						'password' => $smtpPassword,
-						'ssl' => 'ssl',
-				));
-				
-				$transport = new \Zend\Mail\Transport\Smtp($smtpOptions);
-				//$transport = new \Zend\Mail\Transport\Sendmail();
-				$transport->send($message);
-				
+                                $mandrill = new Mandrill($apikey);
+                                $message = array(
+                                    'html' => $template,
+                                    'text' => 'Train to Action',
+                                    'subject' => $subject,
+                                    'from_name' => 'TrainToAction',
+                                    'from_email' => $from,
+                                    'to' => array(
+                                        array(
+                                            'email' => $email,
+                                            'type' => 'to'
+                                        )
+                                    ),
+                                    'bcc_address' => $bcc,
+                                );
+                                
 				$session->setNotifiedDate(new \DateTime());
 				$this->getEntityManager()->persist($session);
 				$this->getEntityManager()->flush();

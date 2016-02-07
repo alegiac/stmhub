@@ -28,7 +28,8 @@ return array(
 		'Application',
 		'Core',
 		'ZF\Apigility\Admin',
-		'ZF\Configuration'
+		'ZF\Configuration',
+		'MailMan',
 	),
 	'module_listener_options' => array(
 		'module_paths' => array(

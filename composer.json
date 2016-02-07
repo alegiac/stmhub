@@ -21,7 +21,9 @@
         "san/san-session-toolbar": "0.*",
         "bushbaby/zf2-module-phing-service":"~2.0",
         "zfcampus/zf-console": "~1.0",
-        "zfr/zfr-cors": "1.*"
+        "zfr/zfr-cors": "1.*",
+        "mandrill/mandrill": "1.0.*",
+        "ripaclub/zf2-mailman": "0.*"
     },
     "require-dev": {
         "zfcampus/zf-apigility-admin": "~1.0",

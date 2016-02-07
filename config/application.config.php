@@ -27,6 +27,7 @@ return array(
     	'SmartyModule',
     	'Application',
         'Core',
+    	'MailMan',
     ),
     'module_listener_options' => array(
         'module_paths' => array(
