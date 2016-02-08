@@ -714,9 +714,7 @@ class ExamController extends AbstractActionController
                             $item = $this->session->exam['current_item'];
                             $vm->itemProgressive = $itemProg;
                             $vm->itemQuestion = utf8_encode($item['question']);
-                        }
-			
-			// Calcolo di tempo rimanente e tentativi rimanenti basandosi su eventuali dati di sessione
+                            // Calcolo di tempo rimanente e tentativi rimanenti basandosi su eventuali dati di sessione
 			if ($this->session->startedTime) {
 				$now = new \DateTime();
 				$diffInSeconds = $now->getTimestamp() - $this->session->startedTime->getTimestamp();
@@ -737,6 +735,8 @@ class ExamController extends AbstractActionController
 			
 			// Gestione elementi multimediali
 			$vm->media = $this->composeMedia($item['media']);
+                        }
+			
 		}
 		return $vm;
 	}
