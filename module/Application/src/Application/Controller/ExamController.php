@@ -710,31 +710,31 @@ class ExamController extends AbstractActionController
 			
 			// Domanda corrente (in base a progressivo)
 			$itemProg = (int)$this->session->exam['session']['progressive'];
-                        if (!is_null($this->session->exam['current_item'])) {
+                        if (isset($this->session->exam['current_item'])) {
                             $item = $this->session->exam['current_item'];
                             $vm->itemProgressive = $itemProg;
                             $vm->itemQuestion = utf8_encode($item['question']);
                             // Calcolo di tempo rimanente e tentativi rimanenti basandosi su eventuali dati di sessione
-			if ($this->session->startedTime) {
+                            if ($this->session->startedTime) {
 				$now = new \DateTime();
 				$diffInSeconds = $now->getTimestamp() - $this->session->startedTime->getTimestamp();
 				$vm->remainingTime = $item['maxsecs']-$diffInSeconds;
-			} else {
+                            } else {
 				$vm->remainingTime = $item['maxsecs'];
 				$this->session->startedTime = new \DateTime();
-			}
+                            }
 			
-			if ($this->session->usedTries) {
+                            if ($this->session->usedTries) {
 				$vm->maxTries = $item['maxtries']-$this->session->usedTries;
 				$vm->usedTries = $this->session->usedTries;
-			} else {
+                            } else {
 				$vm->maxTries = $item['maxtries'];
 				$this->session->usedTries = 0;
 				$vm->usedTries = $this->session->usedTries;
-			}
+                            }
 			
-			// Gestione elementi multimediali
-			$vm->media = $this->composeMedia($item['media']);
+                            // Gestione elementi multimediali
+                            $vm->media = $this->composeMedia($item['media']);
                         }
 			
 		}
