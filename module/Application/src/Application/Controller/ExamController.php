@@ -137,9 +137,8 @@ class ExamController extends AbstractActionController
 		$this->initExam();
 		$res = $this->getExamService()->getAvailableChallenges($this->session->exam['session']['id']);
 		$vm = $this->composeParticipationVM();
-		
+		$btn = "";
 		if (is_array($res) && count($res) > 0) {
-			$btn = "";
 			foreach ($res as $ch) {
 				$token = $ch['token'];
 				$name = $ch['name'];
@@ -349,47 +348,47 @@ class ExamController extends AbstractActionController
 		return;
 	}
 	
-	/**
-	 * Save answer action
-	 * The answer needs to be stored in the database.  
-	 * 
-	 * @return \Zend\View\Helper\ViewModel
-	 */
-	public function saveanswerAction()
-	{
-		$this->initExam();
-		
-		$optionValue = $this->params('optionValue');
-		
-		$sessionId = $this->session->exam['session']['id'];
-		$examId = $this->session->exam['exam']['id'];
-		$itemId = $this->session->exam['current_item']['id'];
-		
-		if ($this->session->exam['current_item']['type'] === ItemType::TYPE_REORDER) {
-			$optionId = $this->session->exam['current_item']['options'][0]['id'];
-			$retval = $this->getExamService()->responseReorder($sessionId, $examId, $itemId, $optionId, $optionValue);
-		} else {
-			$optionId = $optionValue;
-			$retval = $this->getExamService()->responseWithAnOption($sessionId, $examId, $itemId, $optionId);
-		}
-		
-		$this->session->offsetUnset('currentSelectedOption');
-		$this->session->offsetUnset('startedTime');
-		$this->session->offsetUnset('usedTries');
-		
-		// The session is now terminated: redirect to exam_end
-		if ($retval !== 0) {
-			$this->session->offsetSet('session_termination', $retval);
-			$this->redirect()->toRoute('exam_end');
-			return;
-		}
-		
-		// The session goes on
-		$res = $this->getExamService()->getCurrentExamSessionItemByToken($this->session->token,$this->session->exam['session']['challenge']);
-		$this->session->exam = $res;
-		$this->redirect()->toRoute('exam_participate');
-		return;
-	}
+    /**
+     * Save answer action
+     * The answer needs to be stored in the database.  
+     * 
+     * @return \Zend\View\Helper\ViewModel
+     */
+    public function saveanswerAction()
+    {
+        $this->initExam();
+
+        $optionValue = $this->params('optionValue');
+
+        $sessionId = $this->session->exam['session']['id'];
+        $examId = $this->session->exam['exam']['id'];
+        $itemId = $this->session->exam['current_item']['id'];
+
+        if ($this->session->exam['current_item']['type'] === ItemType::TYPE_REORDER) {
+            $optionId = $this->session->exam['current_item']['options'][0]['id'];
+            $retval = $this->getExamService()->responseReorder($sessionId, $examId, $itemId, $optionId, $optionValue);
+        } else {
+            $optionId = $optionValue;
+            $retval = $this->getExamService()->responseWithAnOption($sessionId, $examId, $itemId, $optionId);
+        }
+
+        $this->session->offsetUnset('currentSelectedOption');
+        $this->session->offsetUnset('startedTime');
+        $this->session->offsetUnset('usedTries');
+
+        // The session is now terminated: redirect to exam_end
+        if ($retval !== 0) {
+            $this->session->offsetSet('session_termination', $retval);
+            $this->redirect()->toRoute('exam_end');
+            return;
+        }
+
+        // The session goes on
+        $res = $this->getExamService()->getCurrentExamSessionItemByToken($this->session->token,$this->session->exam['session']['challenge']);
+        $this->session->exam = $res;
+        $this->redirect()->toRoute('exam_participate');
+        return;
+    }
 	
 	/**
 	 * Question/answer generic page. 
