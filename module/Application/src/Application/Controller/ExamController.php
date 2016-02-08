@@ -685,9 +685,12 @@ class ExamController extends AbstractActionController
 	
 			$vm->points = $this->session->exam['session']['points'];
 			
-			$vm->sessionIndex = $this->session->exam['session']['index'];
-			$vm->actualQuestion = $this->session->exam['current_item']['question_number'];
-			$vm->totalQuestion = $this->session->exam['current_item']['question_total'];
+                        $vm->sessionIndex = $this->session->exam['session']['index'];
+			
+                        if (!is_null($this->session->exam['current_item'])) {
+                            $vm->actualQuestion = $this->session->exam['current_item']['question_number'];
+                            $vm->totalQuestion = $this->session->exam['current_item']['question_total'];
+                        }
 
 			$since_start = $this->session->exam['session']['realstartdate']->diff(new \DateTime());
 			
@@ -707,10 +710,11 @@ class ExamController extends AbstractActionController
 			
 			// Domanda corrente (in base a progressivo)
 			$itemProg = (int)$this->session->exam['session']['progressive'];
-			$item = $this->session->exam['current_item'];
-			
-			$vm->itemProgressive = $itemProg;
-			$vm->itemQuestion = utf8_encode($item['question']);
+                        if (!is_null($this->session->exam['current_item'])) {
+                            $item = $this->session->exam['current_item'];
+                            $vm->itemProgressive = $itemProg;
+                            $vm->itemQuestion = utf8_encode($item['question']);
+                        }
 			
 			// Calcolo di tempo rimanente e tentativi rimanenti basandosi su eventuali dati di sessione
 			if ($this->session->startedTime) {
