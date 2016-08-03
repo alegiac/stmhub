@@ -4,6 +4,7 @@
 ini_set('display_errors', true);
 ini_set('date.timezone','Europe/Rome');
 
+set_time_limit(0);
 
 /**
  * This makes our life easier when dealing with paths. Everything is relative

@@ -401,6 +401,7 @@ final class StudentService extends BaseService
 	public function rollEmailForSessions()
 	{
 		$sessions = $this->getStudentHasCourseHasExamRepo()->findStartedNotNotified();
+
 		if ($sessions) {
 		
 			foreach($sessions as $session) {
@@ -435,12 +436,13 @@ final class StudentService extends BaseService
 				$from = $cfg['from'];
 				$subject = $cfg['subject'];
 				$bcc = $cfg['bcc'];
-				
+			
 				// Compose session link
 				$link = $_SERVER['HTTP_HOST']."/exam/token/".$reference.".".$session->getToken();
-				
+			
 				// Load template 
 				$template = file_get_contents($course->getEmailtemplateurl());
+				
 				$template = str_replace('%%FIRSTNAME%%', $firstname, $template);
 				$template = str_replace('%%LASTNAME%%', $lastname, $template);
 				$template = str_replace('%%COURSENAME%%', $coursename, $template);
@@ -466,7 +468,9 @@ final class StudentService extends BaseService
                                     ),
                                     'bcc_address' => $bcc,
                                 );
-                                
+				
+
+				$result = $mandrill->messages->send($message,false);
 				$session->setNotifiedDate(new \DateTime());
 				$this->getEntityManager()->persist($session);
 				$this->getEntityManager()->flush();
@@ -474,4 +478,4 @@ final class StudentService extends BaseService
 			}
 		}
 	}
-}
+} 

@@ -56,6 +56,7 @@ return array (
 		'from' => 'info@smiletomove.it',
 		'subject' => 'Notifica sessione di esame',
 		'bcc' => 'd.oliosi@smiletomove.it',
+		//'bcc' => 'alessandro.giacomella@gmail.com',
             )
 	)
 );
