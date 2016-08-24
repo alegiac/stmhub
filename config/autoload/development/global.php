@@ -15,6 +15,8 @@ return array (
 					'host'     => '127.0.0.1',
 					'port'     => '3306',
 					'dbname'   => 'smiletomove_learning',
+					'user' => 'root',
+					'password' => 'pilotv5',
 				)
 			)
 		),

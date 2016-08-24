@@ -21,7 +21,7 @@ return array(
 		'ZF\\Versioning',
 		'ZF\\DevelopmentMode',
 		'ZendDeveloperTools',
-		'AssetManager',
+//		'AssetManager',
 		'EddieJaoude\\Zf2Logger',
 		'BsbPhingService',
 		'SmartyModule',

@@ -72,6 +72,8 @@ class ExamController extends AbstractActionController
 				'points' => 0,
 				'answer' => utf8_encode($this->session->exam['current_item']['answer']),
 			);
+			
+			
 			echo json_encode($result);die();
 		} else if ($this->session->exam['current_item']['type'] === ItemType::TYPE_REORDER) {
 			$checkAgainstValue = true;
