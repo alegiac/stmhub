@@ -5,7 +5,7 @@ namespace Application\Service;
 use Application\Constants\ActivationStatus;
 
 use Application\Entity\Student;
-use Application\Entity\StudentHasClientHasCourseHasExam;
+use Application\Entity\StudentHasCourseHasExam;
 use Application\Entity\ExamHasItem;
 use Application\Entity\Item;
 use Application\Entity\Image;
@@ -36,18 +36,17 @@ final class ExamService extends BaseService
 	 * @param Course $course
 	 * @return array
 	 */
-	private function getExamsForCourse(StudentHasClientHasCourseHasExam $session)
+	private function getExamsForCourse(StudentHasCourseHasExam $session)
 	{
 		// Initialize the retval: exams and challenges are under an associative array
 		// that use the keys as labels in the view.
-		$sessRepo = $this->getStudentHasClientHasCourseHasExamRepo();
-		//$sessRepo = $this->getStudentHasCourseHasExamRepo();
+		$sessRepo = $this->getStudentHasCourseHasExamRepo();
 		
 		$retval = array();
 		$retval['Esami'] = array();
 		$retval['Sfide'] = array();
 		
-		$course = $session->getStudentHasClientHasCourse()->getClientHasCourse()->getCourse();
+		$course = $session->getStudentHasCourse()->getCourse();
 		$exams = $this->getExamRepo()->findMandatoriesByCourse($course);
 		
 		// Got all exams. Need to cycle over the list, find all the sessions 
@@ -59,7 +58,7 @@ final class ExamService extends BaseService
 			$examCompleted = true;
 			
 			// Got all the sessions. 
-			$sessionsExam = $sessRepo->findByExam($session->getStudentHasClientHasCourse(),$exam);
+			$sessionsExam = $sessRepo->findByExam($session->getStudentHasCourse(),$exam);
 			foreach ($sessionsExam as $sesEx) {
 				/* @var $sesEx StudentHasCourseHasExam */
 				if ($sesEx->getRealStartDate() != null) {
@@ -84,19 +83,20 @@ final class ExamService extends BaseService
 		foreach ($challenges as $challenge) {
 			/* @var $challenge Exam */
 			$name = $challenge->getName();
-			$sessRepo = $this->getStudentHasClientHasCourseHasExamRepo();
+			$sessRepo = $this->getStudentHasCourseHasExamRepo();
 			$challengeStarted = false;
 			$challengeCompleted = true;
 			
 			// Got all the sessions.
-			$sessionsChallenge = $sessRepo->findByExam($session->getStudentHasClientHasCourse(),$challenge);
+			$sessionsChallenge = $sessRepo->findByExam($session->getStudentHasCourse(),$challenge);
 			
 			foreach ($sessionsChallenge as $sesCh) {
 				
 				// Only started challenges can be seen
-				/* @var $sesCh StudentHasClientHasCourseHasExam */
-				
+				/* @var $sesCh StudentHasCourseHasExam */
+				print_r($sesCh->getStartDate());print_r(new \DateTime());
 				if ($sesCh->getStartDate() <= new \DateTime()) {
+					echo "sdsdsd";
 					if ($sesCh->getRealStartDate() != null) {
 						// At least one session has been started. The challenge is started!
 						$challengeStarted = true;
@@ -116,6 +116,32 @@ final class ExamService extends BaseService
 		
 		return $retval;
 	}
+	
+    /**
+     * Acquisizione di tutti gli item per un esame
+     * @param Exam $exam
+     * @return array
+     */
+//     private function getExamItems(StudentHasCourseHasExam $session) 
+//     {
+//     	$retval = array();
+    	
+//     	// Acquisizione items
+//     	foreach ($session->getItem() as $examHasItem) {
+//     		/* @var $examHasItem ExamHasItem */
+//     		$retval[] = array(
+//     			'id' => $examHasItem->getItem()->getId(),
+//     			'question' => $examHasItem->getItem()->getQuestion(),
+//     			'media' => $examHasItem->getItem()->getImage(),
+//     			'maxsecs' => $examHasItem->getItem()->getMaxsecs(),
+//     			'maxtries' => $examHasItem->getItem()->getMaxtries(),
+//     			'type' => $examHasItem->getItem()->getItemtype()->getId(),
+//     			'media' => $this->getExamItemMedia($examHasItem->getItem()),
+//     			'options' => $this->getExamItemOptions($examHasItem->getItem()),
+//     		);
+//     	}
+//     	return $retval;
+//     }
 
     /**
      * Return all the media related to an item, for display
@@ -194,10 +220,10 @@ final class ExamService extends BaseService
     
     /**
      * Max possible points for a session
-     * @param StudentHasClientHasCourseHasExam $session
+     * @param StudentHasCourseHasExam $session
      * @return number
      */
-    private function getSessionMaxPoints(StudentHasClientHasCourseHasExam $session)
+    private function getSessionMaxPoints(StudentHasCourseHasExam $session)
     {
     	$totPoints = 0;
     	
@@ -210,14 +236,14 @@ final class ExamService extends BaseService
     	return $totPoints;
     }
     
-    private function getTotalPointsForStudentInCourse(StudentHasClientHasCourse $studentCourse)
+    private function getTotalPointsForStudentInCourse(StudentHasCourse $studentCourse)
     {
-    	return $this->getStudentHasClientHasCourseHasExamRepo()->sumStudentPoints($studentCourse);
+    	return $this->getStudentHasCourseHasExamRepo()->sumStudentPoints($studentCourse);
     }
     
-    private function getTotalTimeForStudentInCourse(StudentHasClientCourse $studentCourse)
+    private function getTotalTimeForStudentInCourse(StudentHasCourse $studentCourse)
     {
-    	return $this->getStudentHasClientHasCourseHasExamRepo()->getTimingForStudent($studentCourse);
+    	return $this->getStudentHasCourseHasExamRepo()->getTimingForStudent($studentCourse);
     }
     
     private function getTotalSessionsForStudentInCourse(StudentHasCourse $studentCourse)

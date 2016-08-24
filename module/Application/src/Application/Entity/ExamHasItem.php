@@ -55,20 +55,6 @@ class ExamHasItem
      */
     private $item;
 
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
-     * @ORM\ManyToMany(targetEntity="Application\Entity\StudentHasClientHasCourseHasExam", mappedBy="examHasItem")
-     */
-    private $studentHasClientHasCourseHasExam;
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->studentHasClientHasCourseHasExam = new \Doctrine\Common\Collections\ArrayCollection();
-    }
 
 
     /**
@@ -175,39 +161,5 @@ class ExamHasItem
     public function getItem()
     {
         return $this->item;
-    }
-
-    /**
-     * Add studentHasClientHasCourseHasExam
-     *
-     * @param \Application\Entity\StudentHasClientHasCourseHasExam $studentHasClientHasCourseHasExam
-     *
-     * @return ExamHasItem
-     */
-    public function addStudentHasClientHasCourseHasExam(\Application\Entity\StudentHasClientHasCourseHasExam $studentHasClientHasCourseHasExam)
-    {
-        $this->studentHasClientHasCourseHasExam[] = $studentHasClientHasCourseHasExam;
-
-        return $this;
-    }
-
-    /**
-     * Remove studentHasClientHasCourseHasExam
-     *
-     * @param \Application\Entity\StudentHasClientHasCourseHasExam $studentHasClientHasCourseHasExam
-     */
-    public function removeStudentHasClientHasCourseHasExam(\Application\Entity\StudentHasClientHasCourseHasExam $studentHasClientHasCourseHasExam)
-    {
-        $this->studentHasClientHasCourseHasExam->removeElement($studentHasClientHasCourseHasExam);
-    }
-
-    /**
-     * Get studentHasClientHasCourseHasExam
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getStudentHasClientHasCourseHasExam()
-    {
-        return $this->studentHasClientHasCourseHasExam;
     }
 }

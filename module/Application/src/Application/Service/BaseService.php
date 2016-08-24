@@ -5,17 +5,16 @@ namespace Application\Service;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\ServiceManager;
 
 use Application\Entity\Repository\StudentHasCourseRepo;
-use Application\Entity\Student;
-use Application\Entity\StudentHasCourse;
+use Application\Entity\Repository\StudentHasClientHasCourseRepo;
 use Application\Entity\Repository\ActivationstatusRepo;
 use Application\Entity\Activationstatus;
 use Application\Entity\Repository\ExamRepo;
 use Application\Entity\Repository\ExamHasItemRepo;
 use Application\Entity\Repository\CourseRepo;
 use Application\Entity\Repository\StudentHasCourseHasExamRepo;
+use Application\Entity\Repository\StudentHasClientHasCourseHasExamRepo;
 use Application\Entity\Repository\StudentRepo;
 use Application\Entity\Repository\PrizeRepo;
 use Application\Entity\Repository\ClientHasCourseRepo;
@@ -81,6 +80,7 @@ abstract class BaseService implements ServiceLocatorAwareInterface
     }
     /**
      * Acquisizione repository student_has_course_has_exam
+	 * @deprecated since version 1.1
      * @return StudentHasCourseHasExamRepo
      */
     protected function getStudentHasCourseHasExamRepo()
@@ -88,13 +88,32 @@ abstract class BaseService implements ServiceLocatorAwareInterface
     	return $this->getEntityManager()->getRepository('Application\Entity\StudentHasCourseHasExam');
     }
     
+	/**
+	 * Nuovo repository student_has_client_has_course_has_exam
+	 * @return StudentHasClientHasCourseHasExamRepo
+	 */
+	protected function getStudentHasClientHasCourseHasExamRepo()
+	{
+		return $this->getEntityManager()->getRepository('Application\Entity\StudentHasClientHasCourseHasExam');
+	}
+	
     /**
      * Get repository for student_has_course
+	 * @deprecated since version 1.1
      * @return StudentHasCourseRepo
      */
     protected function getStudentHasCourseRepo()
     {
     	return $this->getEntityManager()->getRepository('Application\Entity\StudentHasCourse');
+    }
+	
+	/**
+     * Get repository for student_has_client_has_course
+     * @return StudentHasClientHasCourseRepo
+     */
+    protected function getStudentHasClientHasCourseRepo()
+    {
+    	return $this->getEntityManager()->getRepository('Application\Entity\StudentHasClientHasCourse');
     }
     
     /**

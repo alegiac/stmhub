@@ -743,62 +743,85 @@ class ExamController extends AbstractActionController
 		return $vm;
 	}
 	
-	private function hms_conversion($hours,$minutes,$seconds,$precision=0) {
-	$hours = abs($hours);
-	$minutes = abs($minutes);
-	$seconds = abs($seconds);
-	$total_seconds = ($hours * 3600) + ($minutes * 60) + $seconds;
-	if ($precision === 0) { $total_seconds = round($total_seconds); }
-	elseif ($precision !== false) { $total_seconds = round($total_seconds,$precision); }
+	private function hms_conversion($hours,$minutes,$seconds,$precision=0) 
+	{
+		$hours = abs($hours);
+		$minutes = abs($minutes);
+		$seconds = abs($seconds);
+		$total_seconds = ($hours * 3600) + ($minutes * 60) + $seconds;
+		if ($precision === 0) { 
+			$total_seconds = round($total_seconds); 
+		} elseif ($precision !== false) { 
+			$total_seconds = round($total_seconds,$precision); 
+		}
 
-	//calculate hours, minutes, seconds
-	$hours = floor($total_seconds / 3600);
-	$remaining_seconds = $total_seconds - ($hours * 3600);
-	$minutes = floor($remaining_seconds / 60);
-	$seconds = $remaining_seconds - ($minutes * 60);
-	unset($remaining_seconds);
+		//calculate hours, minutes, seconds
+		$hours = floor($total_seconds / 3600);
+		$remaining_seconds = $total_seconds - ($hours * 3600);
+		$minutes = floor($remaining_seconds / 60);
+		$seconds = $remaining_seconds - ($minutes * 60);
+		unset($remaining_seconds);
 
-	$hms = array('total_seconds'=>$total_seconds,'hours'=>$hours,'minutes'=>$minutes,'seconds'=>$seconds);
+		$hms = array('total_seconds'=>$total_seconds,'hours'=>$hours,'minutes'=>$minutes,'seconds'=>$seconds);
 
-	//now, format text and longtext
-	$text = '';
-	$longtext = '';
-	if ($hours > 0) {
-		$hh = $hours;
-		$text .= $hours.':' ;
-		if ($hours > 1) { $longtext .= number_format($hours).' h, '; }
-		else { $longtext .= '1 h, '; }
-	} else {
-		$hh = '';
+		//now, format text and longtext
+		$text = '';
+		$longtext = '';
+		if ($hours > 0) {
+			$hh = $hours;
+			$text .= $hours.':' ;
+			if ($hours > 1) { 
+				$longtext .= number_format($hours).' h, '; 
+			} else { 
+				$longtext .= '1 h, '; 
+			}
+		} else {
+			$hh = '';
+		}
+		if (($minutes >= 10) || ($hours == 0)) { 
+			$mm = $minutes; 
+		} elseif ($hours > 0) {
+			$mm = '0'.$minutes; 
+		}
+		if (($minutes > 0) || ($hours > 0)) {
+			$text .= $mm.':';
+			if ($minutes != 1) { 
+				$longtext .= $minutes.' m, '; 
+			} else { 
+				$longtext .= '1 m, '; 
+			}
+		} else {
+			$mm = '';
+		}
+		if ((($minutes > 0) || ($hours > 0)) && ($seconds == 0)) { 
+			$ss = '00 s'; 
+			
+		} elseif ($seconds >= 10) { 
+			$ss = $seconds; 
+		} else { 
+			$ss = '0'.$seconds." s";
+		}
+		$text .= $ss;
+		if ($seconds != 1) { 
+			$longtext .= $seconds.' s'; 
+		} else { 
+			$longtext .= '1 s'; 
+		}
+		
+		$hms['hh'] = $hh; //blank (instead of "0") if no hours
+		$hms['mm'] = $mm; //includes preceding zero so hh:mm:ss looks right, blank if no hours and no minutes
+		$hms['ss'] = $ss; //includes preceding zero so hh:mm:ss looks right
+		$hms['text'] = $text;
+		$hms['longtext'] = $longtext;
+
+		return $hms;
 	}
-	if (($minutes >= 10) || ($hours == 0)) { $mm = $minutes; }
-	elseif ($hours > 0) { $mm = '0'.$minutes; }
-	if (($minutes > 0) || ($hours > 0)) {
-		$text .= $mm.':';
-		if ($minutes != 1) { $longtext .= $minutes.' m, '; }
-		else { $longtext .= '1 m, '; }
-	} else {
-		$mm = '';
+
+	function seconds_to_hms($seconds) 
+	{
+		$hms = $this->hms_conversion(null,null,$seconds,0);
+		return $hms['text'];
 	}
-	if ((($minutes > 0) || ($hours > 0)) && ($seconds == 0)) { $ss = '00 s'; }
-	elseif ($seconds >= 10) { $ss = $seconds; }
-	else { $ss = '0'.$seconds." s";}
-	$text .= $ss;
-	if ($seconds != 1) { $longtext .= $seconds.' s'; }
-	else { $longtext .= '1 s'; }
-	$hms['hh'] = $hh; //blank (instead of "0") if no hours
-	$hms['mm'] = $mm; //includes preceding zero so hh:mm:ss looks right, blank if no hours and no minutes
-	$hms['ss'] = $ss; //includes preceding zero so hh:mm:ss looks right
-	$hms['text'] = $text;
-	$hms['longtext'] = $longtext;
-
-	return $hms;
-}
-
-function seconds_to_hms($seconds) {
-	$hms = $this->hms_conversion(null,null,$seconds,0);
-	return $hms['text'];
-}
 	
 	/**
 	 * @return ExamService

@@ -142,24 +142,24 @@ class StudentHasClientHasCourseHasExam
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\ManyToMany(targetEntity="Application\Entity\ExamHasItem", inversedBy="studentHasClientHasCourseHasExam")
-     * @ORM\JoinTable(name="student_has_client_has_course_has_exam_has_exam_has_item",
+     * @ORM\ManyToMany(targetEntity="Application\Entity\Item", inversedBy="studentHasClientHasCourseHasExam")
+     * @ORM\JoinTable(name="student_has_client_has_course_has_exam_has_item",
      *   joinColumns={
      *     @ORM\JoinColumn(name="student_has_client_has_course_has_exam_id", referencedColumnName="id")
      *   },
      *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="exam_has_item_id", referencedColumnName="id")
+     *     @ORM\JoinColumn(name="item_id", referencedColumnName="id")
      *   }
      * )
      */
-    private $examHasItem;
+    private $item;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->examHasItem = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->item = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
 
@@ -558,36 +558,36 @@ class StudentHasClientHasCourseHasExam
     }
 
     /**
-     * Add examHasItem
+     * Add item
      *
-     * @param \Application\Entity\ExamHasItem $examHasItem
+     * @param \Application\Entity\Item $item
      *
      * @return StudentHasClientHasCourseHasExam
      */
-    public function addExamHasItem(\Application\Entity\ExamHasItem $examHasItem)
+    public function addItem(\Application\Entity\Item $item)
     {
-        $this->examHasItem[] = $examHasItem;
+        $this->item[] = $item;
 
         return $this;
     }
 
     /**
-     * Remove examHasItem
+     * Remove item
      *
-     * @param \Application\Entity\ExamHasItem $examHasItem
+     * @param \Application\Entity\Item $item
      */
-    public function removeExamHasItem(\Application\Entity\ExamHasItem $examHasItem)
+    public function removeItem(\Application\Entity\Item $item)
     {
-        $this->examHasItem->removeElement($examHasItem);
+        $this->item->removeElement($item);
     }
 
     /**
-     * Get examHasItem
+     * Get item
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getExamHasItem()
+    public function getItem()
     {
-        return $this->examHasItem;
+        return $this->item;
     }
 }

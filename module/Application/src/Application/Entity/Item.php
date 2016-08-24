@@ -94,6 +94,13 @@ class Item
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
+     * @ORM\ManyToMany(targetEntity="Application\Entity\StudentHasClientHasCourseHasExam", mappedBy="item")
+     */
+    private $studentHasClientHasCourseHasExam;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
      * @ORM\ManyToMany(targetEntity="Application\Entity\StudentHasCourseHasExam", mappedBy="item")
      */
     private $studentHasCourseHasExam;
@@ -104,6 +111,7 @@ class Item
     public function __construct()
     {
         $this->image = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->studentHasClientHasCourseHasExam = new \Doctrine\Common\Collections\ArrayCollection();
         $this->studentHasCourseHasExam = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -318,6 +326,40 @@ class Item
     public function getImage()
     {
         return $this->image;
+    }
+
+    /**
+     * Add studentHasClientHasCourseHasExam
+     *
+     * @param \Application\Entity\StudentHasClientHasCourseHasExam $studentHasClientHasCourseHasExam
+     *
+     * @return Item
+     */
+    public function addStudentHasClientHasCourseHasExam(\Application\Entity\StudentHasClientHasCourseHasExam $studentHasClientHasCourseHasExam)
+    {
+        $this->studentHasClientHasCourseHasExam[] = $studentHasClientHasCourseHasExam;
+
+        return $this;
+    }
+
+    /**
+     * Remove studentHasClientHasCourseHasExam
+     *
+     * @param \Application\Entity\StudentHasClientHasCourseHasExam $studentHasClientHasCourseHasExam
+     */
+    public function removeStudentHasClientHasCourseHasExam(\Application\Entity\StudentHasClientHasCourseHasExam $studentHasClientHasCourseHasExam)
+    {
+        $this->studentHasClientHasCourseHasExam->removeElement($studentHasClientHasCourseHasExam);
+    }
+
+    /**
+     * Get studentHasClientHasCourseHasExam
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getStudentHasClientHasCourseHasExam()
+    {
+        return $this->studentHasClientHasCourseHasExam;
     }
 
     /**

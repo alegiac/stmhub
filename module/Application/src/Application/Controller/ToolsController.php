@@ -3,20 +3,8 @@
 namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
 use Zend\Session\Container;
-use Application\Constants\MediaType;
-use Application\Constants\ItemType;
-use Application\Form\ExamSelect;
-use Application\Form\ExamInput;
-use Application\Service\ExamService;
 use EddieJaoude\Zf2Logger\Log\Logger;
-use Core\Exception\MalformedRequest;
-use Core\Exception\InconsistentContent;
-use Application\Form\ExamEmpty;
-use Zend\Form\Form;
-use Application\Form\ExamMultisubmit;
-use Application\Form\ExamDragDrop;
 use Application\Service\StudentService;
 use Application\Service\CourseService;
 use Application\Service\ClientService;
@@ -68,22 +56,36 @@ class ToolsController extends AbstractActionController
 	{
 		set_time_limit(0);
 		$this->init();
-		$course = $this->getCourseService()->findById($this->params()->fromRoute('course'));
-		echo $this->getStudentService()->associateAllStudentsToCourse($course, new \DateTimeImmutable());
+		$clientCourse = $this->getCourseService()->findById($this->params()->fromRoute('course_client'));
+		echo $this->getStudentService()->associateAllStudentsToClientCourse($clientCourse);
+		//$course = $this->getCourseService()->findById($this->params()->fromRoute('course'));
+		//echo $this->getStudentService()->associateAllStudentsToCourse($course, new \DateTimeImmutable());
 		die();
-		
-		
 	}
+	
+//	public function structureAction()
+//	{
+//		$this->init();
+//		$studentId = $this->params()->fromRoute('user');
+//		$courseId = $this->params()->fromRoute('course');
+//		$clientId = $this->params()->fromRoute('client');
+//		$student = $this->getStudentService()->findById($studentId);
+//		$course = $this->getCourseService()->findById($courseId);
+//		$client = $this->getClientService()->findById($clientId);
+//		echo $this->getStudentService()->associateStudentToCourse($student, $course, $client);
+//		die();
+//	}
+//	
 	public function structureAction()
 	{
 		$this->init();
+		
 		$studentId = $this->params()->fromRoute('user');
-		$courseId = $this->params()->fromRoute('course');
-		$clientId = $this->params()->fromRoute('client');
+		$courseClientId = $this->params()->fromRoute('course_client');
+		
 		$student = $this->getStudentService()->findById($studentId);
-		$course = $this->getCourseService()->findById($courseId);
-		$client = $this->getClientService()->findById($clientId);
-		echo $this->getStudentService()->associateStudentToCourse($student, $course, $client);
+		$clientCourse = $this->getCourseService()->findAssociation($courseClientId);
+		echo $this->getStudentService()->associateStudentToClientCourse($student, $clientCourse);
 		die();
 	}
 	
@@ -104,10 +106,10 @@ class ToolsController extends AbstractActionController
 	/**
 	 * @return ClientService
 	 */
-	private function getClientService()
-	{
-		return $this->getServiceLocator()->get('ClientService');
-	}
+//	private function getClientService()
+//	{
+//		return $this->getServiceLocator()->get('ClientService');
+//	}
 	
 	/**
 	 * @return CourseService

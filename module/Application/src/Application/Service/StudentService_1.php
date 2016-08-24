@@ -69,6 +69,33 @@ final class StudentService extends BaseService
     	$this->getEntityManager()->flush();
     }
 	
+	/**
+	 * @deprecated since version 1.1
+	 * @param Course $course
+	 * @param \DateTimeImmutable $startDate
+	 */
+//	public function associateAllStudentsToCourse(Course $course,\DateTimeImmutable $startDate)
+//	{
+//		$em = $this->getEntityManager();
+//		$connection = $em->getConnection();
+//		
+//		try {
+//			$connection->query('SET FOREIGN_KEY_CHECKS=0');
+//			$connection->query('DELETE FROM student_has_answered_to_item');
+//			$connection->query('DELETE FROM student_has_course_has_exam_has_item');
+//			$connection->query('DELETE FROM student_has_course_has_exam');
+//			$connection->query('DELETE FROM student_has_course');
+//			$connection->query('SET FOREIGN_KEY_CHECKS=1');
+//		} catch (\Exception $e) {
+//			print_r($e);die();
+//		}
+//		
+//		$studs = $this->getStudentRepo()->findAll();
+//		foreach ($studs as $stud) {
+//			$this->associateStudentToCourse($stud, $course, $startDate);
+//		}
+//	}
+	
 	public function associateAllStudentsToClientCourse(ClientHasCourse $clientCourse)
 	{
 		$em = $this->getEntityManager();
@@ -311,6 +338,239 @@ final class StudentService extends BaseService
 		
 		return "Completato: studente ".$student->getFirstname()." ".$student->getLastname()." assegnato a corso ".$clientCourse->getCourse()->getName();
 	}
+	
+	/**
+	 * @deprecated since version 1.1
+	 * @param Student $student
+	 * @param Course $course
+	 * @param Client $client
+	 * @return type
+	 */
+//	public function associateStudentToCourse(Student $student,Course $course,Client $client)
+//	{	
+//		// Determine date start
+//		$clientCourse = $this->getClientHasCourseRepo()->findByCourseAndClient($course, $client);
+//		if (is_null($clientCourse->getStartDate())) {
+//			$startDate = new \DateTimeImmutable();
+//		} else {
+//			$sdformatted = $clientCourse->getStartDate()->format('Y-m-d H:i:s');
+//			$startDate = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $sdformatted);
+//		}
+//		
+//		// Create association
+//		$studentHasCourse = new StudentHasCourse();
+//		$studentHasCourse->setStudent($student);
+//		$studentHasCourse->setCourse($course);
+//		$studentHasCourse->setInsertDate(new \DateTime());
+//		$studentHasCourse->setActivationstatus($this->getActivationStatusRecord(ActivationStatus::STATUS_ENABLED));
+//			
+//		$this->getEntityManager()->persist($studentHasCourse);
+//		$this->getEntityManager()->flush();
+//			
+//		// Gets the exam time definition from course
+//		$durationWeek = $course->getDurationweek();
+//		$periodicityWeek = $course->getPeriodicityweek();
+//		
+//		$lastDateStart = $startDate;
+//		$lastDateEnd = $lastDateStart->add(new \DateInterval('P'.$periodicityWeek.'W'));
+//		$lastDateChallangeEnd = $lastDateStart->add(new \DateInterval('P'.$durationWeek.'W'));
+//			
+//		// For challenge logic, only non-mandatory exams will be used
+//		$challenges = $this->getExamRepo()->findNotMandatoriesByCourse($course);
+//		$sessionsForChallenge = 1;
+//			
+//		foreach ($challenges as $challenge) {
+//			/* @var $challenge Exam */
+//			$itemsForChallenge = $this->getExamHasItemRepo()->findByExam($challenge);
+//			shuffle($itemsForChallenge);
+//			$numItemsForChallenge = count($itemsForChallenge);
+//			
+//			// Create the universal token
+//			$token = $this->generateSessionToken($student->getId(), $challenge->getId(), 1);
+//			
+//			// Create an entry in the session table
+//			$session = new StudentHasCourseHasExam();
+//			$session->setCompleted(0);
+//			$session->setExam($challenge);
+//			$session->setMandatory(0);
+//			$session->setExpectedEndDate($lastDateChallangeEnd);
+//			$session->setInsertDate(new \DateTime());
+//			$session->setPoints(0);
+//			$session->setProgressive(0);
+//			$session->setStartDate($lastDateStart);
+//			$session->setStudentHasCourse($studentHasCourse);
+//			$session->setToken($token);
+//			$session->setSessionOnCourse(1);
+//			$session->setSessionOnExam("1/1");
+//		
+//			$this->getEntityManager()->persist($session);
+//			
+//			$arrayItemsForSession = array();
+//	
+//			for($j=0;$j<$numItemsForChallenge;$j++) {
+//				if (count($itemsForChallenge) == 0) break;
+//	
+//				// Pop an item from the global-exam-items array
+//				// Check if it has a parent dependency
+//				$theItem = array_pop($itemsForChallenge);
+//				/* @var $theItem ExamHasItem */
+//				if ($theItem->getItem()->getItem() != null) {
+//					$found = false;
+//					foreach ($session->getItem() as $itemIn) {
+//						/* @var $itemIn Item */
+//						if ($itemIn == $theItem->getItem()->getItem()) {
+//							$found = true; break;
+//						}
+//					}
+//					if (!$found) {
+//						// Has parent dependency but his parent is not in.
+//						array_push($itemsForExam, $theItem);
+//						shuffle($itemsForExam);
+//					}
+//				}
+//				$session->addItem($theItem->getItem());
+//			}
+//			
+//			$this->getEntityManager()->flush();
+//			$this->getEntityManager()->detach($session);
+//		}
+//		$ss = 0;
+//		
+//		// For session logic, only mandatory exams will be used
+//		
+//		
+//		if (is_null($clientCourse->getStartDate())) {
+//			$startDate = new \DateTimeImmutable();
+//		} else {
+//			$sdformatted = $clientCourse->getStartDate()->format('Y-m-d H:i:s');
+//			$startDate = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $sdformatted);
+//		}
+//		
+//		$exams = $this->getExamRepo()->findMandatoriesByCourse($course);
+//		$numOfSessions = ceil($durationWeek/$periodicityWeek);
+//		
+//		$totalItems = 0;
+//		$assignedReserved = 0;
+//		$totalAssignedSessions = 0;
+//		$arrSave = array();
+//		
+//		// Calculate the total item number and initialize the reserved sessions array
+//		foreach ($exams as $exam) {
+//			$totalItems += $exam->getTotalitems();
+//			$arrSave[$exam->getId()] = 0;
+//		}
+//
+//		$avgItemNumberPerSession = ceil($totalItems/$numOfSessions);
+//
+//		// Reserve a session for each short exam
+//		foreach ($exams as $exam) {
+//			if ($exam->getTotalitems() <= $avgItemNumberPerSession + 5) {
+//				$arrSave[$exam->getid()] = 1;
+//				$assignedReserved = $assignedReserved + 1;
+//				$totalAssignedSessions = $totalAssignedSessions + 1;
+//			}
+//		}
+//		
+//		$remainingSessions = $numOfSessions - $assignedReserved;
+//		$baseForExam = floor($remainingSessions/(count($exams)-$assignedReserved));
+//		
+//		// Assign the minimum sessions for each non-reserved exam
+//		foreach($exams as $exam) {
+//			if ($arrSave[$exam->getId()] == 0) {
+//				$arrSave[$exam->getId()] = $baseForExam;
+//				$totalAssignedSessions += $baseForExam;
+//			}
+//		}
+//		
+//		// Now, remaining session should be 0 or a value <= to the non-reserved exam number
+//		$remainingSessions = $numOfSessions - $totalAssignedSessions;
+//		
+//		while ($remainingSessions > 0) {
+//			foreach ($arrSave as $k=>$value) {
+//				if ($value != 1 && $remainingSessions > 0) {
+//					$arrSave[$k] = $value + 1;
+//					$remainingSessions--;
+//				}
+//			}
+//		}
+//		
+//		// Determined the final number of sessions for each exam, cycle for creating the records
+//		$lastDateStart = clone($startDate);
+//		$lastDateEnd = $lastDateStart->add(new \DateInterval('P'.$periodicityWeek.'W'));
+//		
+//		$currentSession = 0;
+//		
+//		foreach ($exams as $exam) {
+//			
+//			$sessionsForExam = $arrSave[$exam->getId()];
+//			
+//			// All the items connected to an exam. Pick up and randomize
+//			$itemsForExam = $this->getExamHasItemRepo()->findByExam($exam);
+//			shuffle($itemsForExam);
+//		
+//			$numItemsForSession = ceil(count($itemsForExam)/$sessionsForExam);
+//			$upto = count($itemsForExam);
+//			
+//			for($i=0;$i<$sessionsForExam;$i++) {
+//				$currentSession += 1;
+//				// Create an universal token
+//				$token = $this->generateSessionToken($student->getId(), $exam->getId(), $i);
+//				 
+//				// Create an entry in the session-for-the-student table
+//				$session = new StudentHasCourseHasExam();
+//				$session->setCompleted(0);
+//				$session->setExam($exam);
+//				$session->setMandatory(1);
+//				$session->setExpectedEndDate($lastDateEnd);
+//				$session->setInsertDate(new \DateTime());
+//				$session->setPoints(0);
+//				$session->setProgressive(0);
+//				$session->setStartDate($lastDateStart);
+//				$session->setStudentHasCourse($studentHasCourse);
+//				$session->setToken($token);
+//				$session->setSessionOnCourse($currentSession);
+//				$session->setSessionOnExam(($i+1)."/".$sessionsForExam);
+//				
+//				// Extend dates
+//				$next = new \DateInterval('P'.$periodicityWeek.'W');
+//				$lastDateStart = $lastDateStart->add($next);
+//				$lastDateEnd = $lastDateEnd->add($next);
+//				 
+//				$arrayItemsForSession = array();
+//				 
+//				for($j=0;$j<$numItemsForSession;$j++) {
+//					if (count($itemsForExam) == 0) break;
+//					 
+//					// Pop an item from the global-exam-items array
+//					// Check if it has a parent dependency
+//					$theItem = array_pop($itemsForExam);
+//		
+//					/* @var $theItem ExamHasItem */
+//					if ($theItem->getItem()->getItem() != null) {
+//						$found = false;
+//						foreach ($session->getItem() as $itemIn) {
+//							/* @var $itemIn Item */
+//							if ($itemIn == $theItem->getItem()->getItem()) {
+//								$found = true; break;
+//							}
+//						}
+//						if (!$found) {
+//							// Has parent dependency but his parent is not in.
+//							array_push($itemsForExam, $theItem);
+//							shuffle($itemsForExam);
+//						}
+//					}
+//		
+//					$session->addItem($theItem->getItem());
+//				}
+//		
+//				$this->getEntityManager()->persist($session);
+//				$this->getEntityManager()->flush();
+//			}
+//		}
+//		
+//		return "Completato: studente ".$student->getFirstname()." ".$student->getLastname()." assegnato a corso ".$course->getName();
+//	}
 	
 	/**
 	 * The purpose of this function is to send a test email to the given email
