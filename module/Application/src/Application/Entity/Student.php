@@ -73,6 +73,12 @@ class Student
      */
     private $activationstatus;
 
+    /**
+     * @var string
+     * 
+     * @ORM\Column(name="extrafields", type="string", length=65535, nullable=true)
+     */
+    private $extrafields;
 
 
     /**
@@ -251,5 +257,28 @@ class Student
     public function getActivationstatus()
     {
         return $this->activationstatus;
+    }
+    
+    /**
+     * Set extrafields
+     * 
+     * @param string $extrafields
+     * @return \Application\Entity\Student
+     */
+    public function setExtrafields($extrafields)
+    {
+        $this->extrafields = $extrafields;
+        
+        return $this;
+    }
+    
+    /**
+     * Get extrafields
+     * 
+     * @return string
+     */
+    public function getExtrafields()
+    {
+        return $this->extrafields;
     }
 }

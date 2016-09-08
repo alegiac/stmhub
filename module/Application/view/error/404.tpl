@@ -1,9 +1,9 @@
-{extends "../../_common/base.tpl"}
+{extends "../_common/base.tpl"}
 
 {block name="main"}
 	<div class="four-zero">
-    	<h2>Not Found!</h2>
-        <small>Yes, it's the 404 page!</small>
+    	<h2>404</h2>
+        <small>Page not found</small>
         <footer>
             <a href="/"><i class="md md-arrow-back"></i></a>
             <a href="/"><i class="md md-home"></i></a>

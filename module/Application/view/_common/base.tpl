@@ -23,9 +23,9 @@
                 min-width: 130px;
             }
             form div {
-  				padding: 50px 0 50px 0;
-  				margin: 50px 0 50px 0;
-			}
+  		padding: 50px 0 50px 0;
+  		margin: 50px 0 50px 0;
+            }
         </style>
 
 		{block name="custom_css"}{/block}

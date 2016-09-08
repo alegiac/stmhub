@@ -2,6 +2,9 @@
 
 namespace Application\Entity\Repository;
 
+use Application\Entity\Student;
+use Application\Entity\ClientHasCourse;
+use Application\Entity\StudentHasCourse;
 /**
  * StudentHasCourseRepo
  *
@@ -10,5 +13,31 @@ namespace Application\Entity\Repository;
  */
 class StudentHasClientHasCourseRepo extends \Doctrine\ORM\EntityRepository
 {
-	
+    public function findByStudent(Student $student) 
+    {
+        $qb = $this->createQueryBuilder("c");
+        $qb->where('c.student = :student');
+        $query = $qb->getQuery()->setParameter('student', $student);
+	return $query->getResult();
+    }
+    
+    public function findByStudentAndClientCourse(Student $student, ClientHasCourse $clientCourse)
+    {
+        $qb = $this->createQueryBuilder("c");
+        $qb->where("c.student = :student");
+        $qb->andWhere("c.clientHasCourse = :clientCourse");
+        $query = $qb->getQuery()->setParameter('student', $student)->setParameter('clientCourse', $clientCourse);
+        $retval = $query->getResult();
+        
+        if (count($retval) > 0) return $retval[0];
+        return null;
+    }
+    
+    public function findByStudentCourse(StudentHasCourse $studentHasCourse)
+    {
+        $qb = $this->createQueryBuilder("c");
+        $qb->where('c.studentHasCourse = :shc');
+        $query = $qb->getQuery()->setParameter('shc', $studentHasCourse);
+        return $query->getResult()[0];
+    }
 }

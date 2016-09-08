@@ -32,7 +32,6 @@ class ToolsController extends AbstractActionController
 	 */
 	private $logger;
 	
-	
 	public function indexAction() 
 	{}
 	
@@ -51,6 +50,16 @@ class ToolsController extends AbstractActionController
 		$this->getStudentService()->rollEmailForSessionAndEmail($idsession,$email);
 		echo "Done";die();
 	}
+        
+        public function migrateAction()
+        {
+            $this->getStudentService()->migrateStudentCourse();
+            $this->getStudentService()->migrateSessions();
+            $this->getStudentService()->migrateAnswers();
+            echo "Done";die();
+            
+            
+        }
 	
 	public function structureallAction()
 	{

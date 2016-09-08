@@ -18,6 +18,7 @@ use Application\Entity\Repository\StudentHasClientHasCourseHasExamRepo;
 use Application\Entity\Repository\StudentRepo;
 use Application\Entity\Repository\PrizeRepo;
 use Application\Entity\Repository\ClientHasCourseRepo;
+use Application\Entity\Repository\ClientHasStudentRepo;
 use Application\Entity\Repository\ClientRepo;
 
 abstract class BaseService implements ServiceLocatorAwareInterface
@@ -106,8 +107,26 @@ abstract class BaseService implements ServiceLocatorAwareInterface
     {
     	return $this->getEntityManager()->getRepository('Application\Entity\StudentHasCourse');
     }
-	
-	/**
+    
+    /**
+     * Get repository for weekday
+     * @return \Application\Entity\Weekday
+     */
+    protected function getWeekdayRepo()
+    {
+        return $this->getEntityManager()->getRepository('Application\Entity\Weekday');
+    }
+    
+    /**
+     * Get repository for client_has_student
+     * @return ClientHasStudentRepo
+     */
+    protected function getClientHasStudentRepo()
+    {
+        return $this->getEntityManager()->getRepository('Application\Entity\ClientHasStudent');
+    }
+
+    /**
      * Get repository for student_has_client_has_course
      * @return StudentHasClientHasCourseRepo
      */

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * StudentHasClientHasCourse
  *
- * @ORM\Table(name="student_has_client_has_course", indexes={@ORM\Index(name="fk_student_has_client_has_course_client_has_course1_idx", columns={"client_has_course_id"}), @ORM\Index(name="fk_student_has_client_has_course_student1_idx", columns={"student_id"}), @ORM\Index(name="fk_student_has_client_has_course_activationstatus1_idx", columns={"activationstatus_id"})})
+ * @ORM\Table(name="student_has_client_has_course", indexes={@ORM\Index(name="fk_student_has_client_has_course_client_has_course1_idx", columns={"client_has_course_id"}), @ORM\Index(name="fk_student_has_client_has_course_student1_idx", columns={"student_id"}), @ORM\Index(name="fk_student_has_client_has_course_activationstatus1_idx", columns={"activationstatus_id"}), @ORM\Index(name="fk_student_has_client_has_course_student_has_course1_idx", columns={"student_has_course_id"})})
  * @ORM\Entity(repositoryClass="Application\Entity\Repository\StudentHasClientHasCourseRepo")
  */
 class StudentHasClientHasCourse
@@ -57,6 +57,16 @@ class StudentHasClientHasCourse
      * })
      */
     private $student;
+
+    /**
+     * @var \Application\Entity\StudentHasCourse
+     *
+     * @ORM\ManyToOne(targetEntity="Application\Entity\StudentHasCourse")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="student_has_course_id", referencedColumnName="id")
+     * })
+     */
+    private $studentHasCourse;
 
 
 
@@ -164,5 +174,29 @@ class StudentHasClientHasCourse
     public function getStudent()
     {
         return $this->student;
+    }
+
+    /**
+     * Set studentHasCourse
+     *
+     * @param \Application\Entity\StudentHasCourse $studentHasCourse
+     *
+     * @return StudentHasClientHasCourse
+     */
+    public function setStudentHasCourse(\Application\Entity\StudentHasCourse $studentHasCourse = null)
+    {
+        $this->studentHasCourse = $studentHasCourse;
+
+        return $this;
+    }
+
+    /**
+     * Get studentHasCourse
+     *
+     * @return \Application\Entity\StudentHasCourse
+     */
+    public function getStudentHasCourse()
+    {
+        return $this->studentHasCourse;
     }
 }

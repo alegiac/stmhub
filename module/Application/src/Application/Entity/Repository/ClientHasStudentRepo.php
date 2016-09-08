@@ -2,6 +2,8 @@
 
 namespace Application\Entity\Repository;
 
+use Application\Entity\Client;
+use Application\Entity\Student;
 /**
  * ClientHasStudentRepo
  *
@@ -10,4 +12,26 @@ namespace Application\Entity\Repository;
  */
 class ClientHasStudentRepo extends \Doctrine\ORM\EntityRepository
 {
+    
+    public function findByStudentAndClient(Student $student, Client $client)
+    {
+        $qb = $this->createQueryBuilder("c");
+        $qb->where('c.student = :student')->andWhere('c.client = :client');
+        $query = $qb->getQuery();
+        $query->setParameter('student', $student);
+        $query->setParameter('client', $client);
+        $result = $query->getResult();
+        if (count($result) > 0) {
+            return $result[0];
+        }
+        return null;
+    }
+    
+    public function findByStudent(Student $student)
+    {
+        $qb = $this->createQueryBuilder("c");
+        $qb->where('c.student = :student');
+        $query = $qb->getQuery()->setParameter('student', $student);
+        return $query->getResult()[0];
+    }
 }

@@ -4,9 +4,7 @@ namespace Application\Service;
 
 use Application\Constants\ActivationStatus;
 
-use Application\Entity\Student;
 use Application\Entity\StudentHasClientHasCourseHasExam;
-use Application\Entity\ExamHasItem;
 use Application\Entity\Item;
 use Application\Entity\Image;
 use Application\Entity\Itemoption;

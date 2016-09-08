@@ -2,7 +2,6 @@
 
 namespace Application\Entity\Repository;
 
-use Application\Entity\Student;
 /**
  * StudentHasCourseRepo
  *
@@ -11,5 +10,5 @@ use Application\Entity\Student;
  */
 class StudentHasCourseRepo extends \Doctrine\ORM\EntityRepository
 {
-	
+ 	
 }

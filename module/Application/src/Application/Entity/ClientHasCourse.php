@@ -63,7 +63,7 @@ class ClientHasCourse
      */
     private $emailtemplateurl;
 
-    /**
+   /**
      * @var integer
      *
      * @ORM\Column(name="durationweek", type="integer", nullable=true)
@@ -117,8 +117,27 @@ class ClientHasCourse
      */
     private $weekday;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="allow_signup", type="integer", nullable=true)
+     */
+    private $allowSignup;
+    
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="enable_extrafields", type="integer", nullable=true)
+     */
+    private $enableExtrafields;
 
-
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="redirect_exam", type="integer", nullable=true)
+     */
+    private $redirectExam;
+    
     /**
      * Get id
      *
@@ -415,5 +434,77 @@ class ClientHasCourse
     public function getWeekday()
     {
         return $this->weekday;
+    }
+    
+    /**
+     * Set allowSignup
+     *
+     * @param integer $allowSignup
+     *
+     * @return ClientHasCourse
+     */
+    public function setAllowSignup($allowSignup)
+    {
+        $this->allowSignup = $allowSignup;
+
+        return $this;
+    }
+
+    /**
+     * Get allowSignup
+     *
+     * @return integer
+     */
+    public function getAllowSignup()
+    {
+        return $this->allowSignup;
+    }
+    
+    /**
+     * Set enableExtrafields
+     *
+     * @param integer $enableExtrafields
+     *
+     * @return ClientHasCourse
+     */
+    public function setEnableExtrafields($enableExtrafields)
+    {
+        $this->enableExtrafields = $enableExtrafields;
+
+        return $this;
+    }
+
+    /**
+     * Get enableExtrafields
+     *
+     * @return integer
+     */
+    public function getEnableExtrafields()
+    {
+        return $this->enableExtrafields;
+    }
+    
+    /**
+     * Set redirectExam
+     *
+     * @param integer $redirectExam
+     *
+     * @return ClientHasCourse
+     */
+    public function setRedirectExam($redirectExam)
+    {
+        $this->redirectExam = $redirectExam;
+
+        return $this;
+    }
+
+    /**
+     * Get redirectExam
+     *
+     * @return integer
+     */
+    public function getRedirectExam()
+    {
+        return $this->redirectExam;
     }
 }

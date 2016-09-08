@@ -25,6 +25,18 @@ return array(
 	),
     'router' => array(
         'routes' => array(
+                'tools_migrate' => array(
+                    'type' => 'Segment',
+                    'options' => array(
+                        'route' => '/tools/migrate',
+                        'defaults' => array(
+                            '__NAMESPACE__' => 'Application\Controller',
+                            'controller' => 'Tools',
+                            'action' => 'migrate',
+                        ),
+                    ),
+                    'may_terminate' => true,
+                ),
         	'tools_students' => array(
         			'type' => 'Segment',
         			'options' => array(
@@ -269,6 +281,33 @@ return array(
         		),
         		'may_terminate' => true,
         	),
+                'signup_prepare' => array(
+        		'type' => 'Segment',
+        		'options' => array(
+        			'route' => '/signup/prepare/:clientcourse',
+        			'constraints' => array(),
+        			'defaults' => array(
+        				'__NAMESPACE__' => 'Application\Controller',
+        				'controller' => 'Signup',
+        				'action' => 'prepare',
+        			),
+        		),
+        		'may_terminate' => true,
+        	),
+                'signup_form' => array(
+                        'type' => 'Segment',
+        		'options' => array(
+        			'route' => '/signup/form/:time/:clientcourse/:crc',
+        			'constraints' => array(),
+        			'defaults' => array(
+        				'__NAMESPACE__' => 'Application\Controller',
+        				'controller' => 'Signup',
+        				'action' => 'form',
+        			),
+        		),
+        		'may_terminate' => true,
+                ),
+        	
         	'index' => array(
         		'type'    => 'segment',
         		'options' => array(
@@ -314,7 +353,8 @@ return array(
         'invokables' => array(
             'Application\Controller\Index' => 'Application\Controller\IndexController',
         	'Application\Controller\Exam' => 'Application\Controller\ExamController',
-        	'Application\Controller\Tools' => 'Application\Controller\ToolsController'
+        	'Application\Controller\Tools' => 'Application\Controller\ToolsController',
+                'Application\Controller\Signup' => 'Application\Controller\SignupController'
         ),
     ),
 	'view_manager' => array(

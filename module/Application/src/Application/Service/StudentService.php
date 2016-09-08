@@ -43,30 +43,88 @@ final class StudentService extends BaseService
 		return $this->getStudentRepo()->find($id);
 	}
 	
-	/**
-     * Creating new student
-     * @param array $payload Student properties
+    /**
+     * Esegue:
+     * 
+     * - registrazione nuovo studente
+     * - associazione con cliente/corso
+     * - roll delle sessioni
+     * 
+     * @param array $payload Dati studente/cliente/corso
      */
-    public function insertStudent(array $payload)
+    public function registerUser(array $payload)
     {
-    	$inStudent = $this->getStudentRepo()->findBy(array("email" => $payload['email']));
-    	if ($inStudent) {
-    		// Student is already in db
-    		return false;
-    	}
+        $retval = array();
+        
+        $payload['sex'] = 'N';
+        $payload['passwordsha1'] = sha1('password_'.$payload['email']);
+        
+        $clientCourseId = $payload['client_course'];
+        
+        /* @var $clientCourse \Application\Entity\ClientHasCourse */
+        $clientCourse = $this->getClientHasCourseRepo()->find($clientCourseId);
+        
+        $client = $clientCourse->getClient();
+        $course = $clientCourse->getCourse();
+        
+        // Prima cosa, verifica se lo studente esiste 
+    	$student = $this->getStudentRepo()->findBy(array("email" => $payload['email']));
+    	if (!$student) {
+            // Creare utente in db
+            $student = new \Application\Entity\Student();
+        
+            $student->setFirstname($payload['firstname']);
+            $student->setLastname($payload['lastname']);
+            $student->setEmail($payload['email']);
+            $student->setPasswordsha1($payload['passwordsha1']);
+            $student->setIdentifier($this->generateIdentifier());
+            $student->setSex($payload['sex']);
+            $student->setActivationstatus($this->getActivationStatusRecord(ActivationStatus::STATUS_ENABLED));
+            
+            $extrafields = array();
+            if ($payload['internal'] != null) {
+                $extrafields['internal'] = $payload['internal'];
+            }
+            if ($payload['role'] != null) {
+                $extrafields['role'] = $payload['role'];
+            }
+            $student->setExtrafields(json_encode($extrafields));
+            
+            $this->getEntityManager()->persist($student);
+        }
+        
+        // Studente in db, è associato al cliente?
+        $studentClient = $this->getClientHasStudentRepo()->findByStudentAndClient($student, $client);
+        if (is_null($studentClient)) {
+            // Crea l'associazione studente-client
+            $studentClient = new \Application\Entity\ClientHasStudent();
+            $studentClient->setActivationstatus($this->getActivationStatusRecord(ActivationStatus::STATUS_ENABLED));
+            $studentClient->setClient($client);
+            $studentClient->setStudent($student);
+            $studentClient->setInsertDate(new \DateTime());
+                
+            $this->getEntityManager()->persist($studentClient);
+        }
+        
+        // Studente e cliente sono associati. E' associato al corso?
+        $studentClientCourse = $this->getStudentHasClientHasCourseRepo()->findByStudentAndClientCourse($student,$clientCourse);
+        if (is_null($studentClientCourse)) {
+            
+            // Crea l'associazione studente-cliente-corso
+            $studentClientCourse = new StudentHasClientHasCourse();
+            $studentClientCourse->setActivationstatus($this->getActivationStatusRecord(ActivationStatus::STATUS_ENABLED));
+            $studentClientCourse->setClientHasCourse($clientCourse);
+            $studentClientCourse->setInsertDate(new \DateTime());
+            $studentClientCourse->setStudent($student);
+            
+            $this->getEntityManager()->persist($studentClientCourse);
+        }
+            
+            
+            return false;
     	
-    	$student = new Student();
-		
-    	$student->setFirstname($payload['firstname']);
-    	$student->setLastname($payload['lastname']);
-    	$student->setEmail($payload['email']);
-    	$student->setPasswordsha1($payload['passwordsha1']);
-    	$student->setIdentifier($this->generateIdentifier());
-    	$student->setSex($payload['sex']);
-    	$student->setActivationstatus($this->getActivationStatusRecord(ActivationStatus::STATUS_ENABLED));
     	
-    	$this->getEntityManager()->persist($student);
-    	$this->getEntityManager()->flush();
+    	
     }
 	
 	public function associateAllStudentsToClientCourse(ClientHasCourse $clientCourse)
@@ -305,10 +363,9 @@ final class StudentService extends BaseService
 				}
 		
 				$this->getEntityManager()->persist($session);
-				$this->getEntityManager()->flush();
 			}
 		}
-		
+		$this->getEntityManager()->flush();
 		return "Completato: studente ".$student->getFirstname()." ".$student->getLastname()." assegnato a corso ".$clientCourse->getCourse()->getName();
 	}
 	
@@ -390,7 +447,145 @@ final class StudentService extends BaseService
 		//$this->getEntityManager()->persist($session);
 		//$this->getEntityManager()->flush();
 	}
-	
+        
+        public function migrateAnswers()
+        {
+            set_time_limit(0);
+            $repo = $this->getStudentHasAnsweredToItemRepo();
+            $answers = $repo->findAll();
+            
+            foreach ($answers as $answer) {
+                /* @var $answer \Application\Entity\StudentHasAnsweredToItem */
+                $newSession = $this->getStudentHasClientHasCourseHasExamRepo()->findByStudentCourse($answer->getStudentHasCourseHasExam());
+                $answer->setStudentHasClientHasCourseHasExam($newSession);   
+                $this->getEntityManager()->merge($answer);
+            }
+            $this->getEntityManager()->flush();
+        }
+
+        public function migrateSessions()
+        {
+            set_time_limit(0);
+            
+            $sessionRepo = $this->getStudentHasCourseHasExamRepo();
+            
+            $sessions = $sessionRepo->findAll();
+            
+            foreach ($sessions as $session) {
+
+                /* @var $session StudentHasCourseHasExam */
+                $studentHasCourse = $session->getStudentHasCourse();
+            
+                $studentClientCourse = $this->getStudentHasClientHasCourseRepo()->findByStudentCourse($studentHasCourse);
+                
+                
+                $newSession = new StudentHasClientHasCourseHasExam();
+                $newSession->setAnswer($session->getAnswer());
+                $newSession->setCompleted($session->getCompleted());
+                $newSession->setEndDate($session->getEndDate());
+                $newSession->setExam($session->getExam());
+                $newSession->setExpectedEndDate($session->getExpectedEndDate());
+                $newSession->setInsertDate($session->getInsertDate());
+                $newSession->setMandatory($session->getMandatory());
+                $newSession->setNotifiedDate($session->getNotifiedDate());
+                $newSession->setPoints($session->getPoints());
+                $newSession->setProgressive($session->getProgressive());
+                $newSession->setRealStartDate($session->getRealStartDate());
+                $newSession->setSessionOnCourse($session->getSessionOnCourse());
+                $newSession->setSessionOnExam($session->getSessionOnExam());
+                $newSession->setStartDate($session->getStartDate());
+                $newSession->setStudentHasCourseHasExam($session);
+                $newSession->setStudentHasClientHasCourse($studentClientCourse);
+                $newSession->setToken($session->getToken());
+        
+                $items = $session->getItem();
+                foreach ($items as $item) {$newSession->addItem ($item);}
+                
+                
+                $this->getEntityManager()->persist($newSession);
+            }
+            
+            $this->getEntityManager()->flush();
+            
+            
+        }
+        
+    public function migrateStudentCourse()
+    {
+        $this->getEntityManager()->beginTransaction();
+        
+        $studentCourses = $this->getStudentHasCourseRepo()->findAll();
+        foreach ($studentCourses as $shc) {
+            
+            echo "<hr>processo studente-corso ".$shc->getId();
+            
+            /* @var $shc StudentHasCourse */
+            $student = $shc->getStudent();
+            $course = $shc->getCourse();
+            
+            echo "<br>trovato studente ".$student->getId();
+            echo "<br>trovato corso ".$course->getId();
+            
+            $clientStudent = $this->getClientHasStudentRepo()->findByStudent($student); 
+            /* @var $clientStudent \Application\Entity\ClientHasStudent */
+            if ($clientStudent == null) {
+                echo "CLIENT NOT FOUND FOR STUDENT-COURSE WITH ID ".$clientStudent->getId();
+                $this->getEntityManager()->rollback();
+                echo "<br>ABORT";
+                die();
+            }
+            
+            echo "<br>trovato cliente-studente ".$clientStudent->getId();
+            if (is_array($clientStudent)) {
+                $clientStudent = $clientStudent[0];
+            }
+            $client = $clientStudent->getClient();
+            
+
+            /* @var $client Client */
+            $clientCourse = $this->getClientHasCourseRepo()->findByCourseAndClient($course, $client);
+            if ($client == null) {
+                echo " : trovato studente senza cliente ".$student->getId();
+            } else {
+                if ($clientCourse == null) {
+                    
+                    $weekday = $this->getWeekdayRepo()->find(1);
+                    
+                    // Trovato link orfano cliente-corso. Occorre creare l'associazione
+                    $nchc = new ClientHasCourse();
+                    $nchc->setActivationstatus($client->getActivationstatus());
+                    $nchc->setClient($client);
+                    $nchc->setCourse($course);
+                    $nchc->setDescription("**** migration ****");
+                    $nchc->setDurationweek(1);
+                    $nchc->setInsertDate(new \DateTime('2015-12-21 00:00:00'));
+                    $nchc->setLogoFilename('logo_smile.jpg');
+                    $nchc->setName($course->getName());
+                    $nchc->setPeriodicityweek(1);
+                    $nchc->setStartDate(new \DateTime('2015-12-22 00:00:00'));
+                    $nchc->setWeekday($weekday);
+                    
+                    $this->getEntityManager()->persist($nchc);
+                    $this->getEntityManager()->flush();
+                    
+                    $clientCourse = $nchc;
+                } 
+            }
+            
+            // Nuovo record
+            $shchc = new StudentHasClientHasCourse();
+            $shchc->setStudent($student);
+            $shchc->setActivationstatus($shc->getActivationstatus());
+            $shchc->setClientHasCourse($clientCourse);
+            $shchc->setInsertDate($shc->getInsertDate());
+            $shchc->setStudentHasCourse($shc);
+            
+            $this->getEntityManager()->persist($shchc);
+            $this->getEntityManager()->flush();
+        }
+        $this->getEntityManager()->commit();
+    }
+
 	/**
 	 * The purpose of this function is to cycle for incoming sessions
 	 * and send an email to each student involved, with the link to start the session 
