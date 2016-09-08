@@ -65,7 +65,6 @@ final class StudentService extends BaseService
         $clientCourse = $this->getClientHasCourseRepo()->find($clientCourseId);
         
         $client = $clientCourse->getClient();
-        $course = $clientCourse->getCourse();
         
         // Prima cosa, verifica se lo studente esiste 
     	$student = $this->getStudentRepo()->findBy(array("email" => $payload['email']));
