@@ -57,8 +57,17 @@ class ToolsController extends AbstractActionController
             $this->getStudentService()->migrateSessions();
             $this->getStudentService()->migrateAnswers();
             echo "Done";die();
-            
-            
+        }
+        
+        public function setupsignupAction()
+        {
+            $clientCourseId = $this->params()->fromRoute('clientcourse');
+            $t = time();
+            $crc = crc32($t."|".$clientCourseId);
+            $url = "http://".$_SERVER['HTTP_HOST']."/signup/form/".$t."/".$clientCourseId."/".$crc;
+        
+            echo $url;
+            die();
         }
 	
 	public function structureallAction()

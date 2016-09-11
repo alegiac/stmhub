@@ -54,21 +54,25 @@ final class StudentService extends BaseService
      */
     public function registerUser(array $payload)
     {
+        // Preimpostazioni
+        $fakeSignup = true;
         $retval = array();
+        
+        // Transazione
+        $this->getEntityManager()->beginTransaction();
         
         $payload['sex'] = 'N';
         $payload['passwordsha1'] = sha1('password_'.$payload['email']);
         
-        $clientCourseId = $payload['client_course'];
-        
         /* @var $clientCourse \Application\Entity\ClientHasCourse */
-        $clientCourse = $this->getClientHasCourseRepo()->find($clientCourseId);
-        
-        $client = $clientCourse->getClient();
+        $clientCourse = $this->getClientHasCourseRepo()->find($payload['client_course']);
         
         // Prima cosa, verifica se lo studente esiste 
-    	$student = $this->getStudentRepo()->findBy(array("email" => $payload['email']));
+    	$student = $this->getStudentRepo()->findOneBy(array("email" => $payload['email']));
     	if (!$student) {
+            
+            $fakeSignup = false;
+            
             // Creare utente in db
             $student = new \Application\Entity\Student();
         
@@ -90,46 +94,75 @@ final class StudentService extends BaseService
             $student->setExtrafields(json_encode($extrafields));
             
             $this->getEntityManager()->persist($student);
+            $this->getEntityManager()->flush();
         }
         
         // Studente in db, è associato al cliente?
-        $studentClient = $this->getClientHasStudentRepo()->findByStudentAndClient($student, $client);
+        $studentClient = $this->getClientHasStudentRepo()->findByStudentAndClient($student, $clientCourse->getClient());
         if (is_null($studentClient)) {
+            
+            $fakeSignup = false;
+            
             // Crea l'associazione studente-client
             $studentClient = new \Application\Entity\ClientHasStudent();
             $studentClient->setActivationstatus($this->getActivationStatusRecord(ActivationStatus::STATUS_ENABLED));
-            $studentClient->setClient($client);
+            $studentClient->setClient($clientCourse->getClient());
             $studentClient->setStudent($student);
             $studentClient->setInsertDate(new \DateTime());
                 
             $this->getEntityManager()->persist($studentClient);
+            $this->getEntityManager()->flush();
         }
         
         // Studente e cliente sono associati. E' associato al corso?
         $studentClientCourse = $this->getStudentHasClientHasCourseRepo()->findByStudentAndClientCourse($student,$clientCourse);
-        if (is_null($studentClientCourse)) {
-            
-            // Crea l'associazione studente-cliente-corso
-            $studentClientCourse = new StudentHasClientHasCourse();
-            $studentClientCourse->setActivationstatus($this->getActivationStatusRecord(ActivationStatus::STATUS_ENABLED));
-            $studentClientCourse->setClientHasCourse($clientCourse);
-            $studentClientCourse->setInsertDate(new \DateTime());
-            $studentClientCourse->setStudent($student);
-            
-            $this->getEntityManager()->persist($studentClientCourse);
+        if (!is_null($studentClientCourse)) {
+            // Studente già assegnato al corso
+            $fakeSignup = true;
+        } 
+        
+        if ($fakeSignup === true) {
+            $this->getEntityManager()->rollback();
+            $retval['result'] = false;
+            $retval['already_in'] = true;
+            // Se tuttavia l'utente deve essere rediretto all'esame, rispondo true
+            if ($clientCourse->getRedirectExam() === 1) {
+                $retval['result'] = true;
+                $retval['to_landing'] = false;
+                $studentClientCourse = $this->getStudentHasClientHasCourseRepo()->findByStudentAndClientCourse($student,$clientCourse);
+                $session = $this->getStudentHasClientHasCourseHasExamRepo()->findByStudentOnCourse($studentClientCourse, true, true);
+                $retval['redirect'] = $_SERVER['HTTP_HOST']."/exam/token/".$student->getIdentifier().".".$session->getToken();
+            }
+            $retval['course_name'] = $clientCourse->getName();
+
+            return $retval;
         }
-            
-            
-            return false;
-    	
-    	
+        
+        // Alla fine assegno lo studente e creo le sessioni
+        $this->associateStudentToClientCourse($student, $clientCourse,true);
+        
+        $this->getEntityManager()->commit();
+        
+        $retval['result'] = true;
+        $retval['course_name'] = $clientCourse->getName();
+        if ($clientCourse->getRedirectExam() === 1) {
+            $retval['to_landing'] = false;
+            $studentClientCourse = $this->getStudentHasClientHasCourseRepo()->findByStudentAndClientCourse($student,$clientCourse);
+            $session = $this->getStudentHasClientHasCourseHasExamRepo()->findByStudentOnCourse($studentClientCourse, true, true);
+            $retval['redirect'] = $_SERVER['HTTP_HOST']."/exam/token/".$student->getIdentifier().".".$session->getToken();
+
+        } else {
+            $retval['to_landing'] = true;
+        }
+        
+    	return $retval;
     	
     }
-	
-	public function associateAllStudentsToClientCourse(ClientHasCourse $clientCourse)
-	{
-		$em = $this->getEntityManager();
-		$connection = $em->getConnection();
+
+    public function associateAllStudentsToClientCourse(ClientHasCourse $clientCourse)
+    {
+    	$em = $this->getEntityManager();
+	$connection = $em->getConnection();
 		
 		try {
 			$connection->query('SET FOREIGN_KEY_CHECKS=0');
@@ -156,216 +189,216 @@ final class StudentService extends BaseService
 	 * @param Client $client
 	 * @return type
 	 */
-	public function associateStudentToClientCourse(Student $student, ClientHasCourse $clientCourse)
+	public function associateStudentToClientCourse(Student $student, ClientHasCourse $clientCourse, $fromSignup = false)
 	{
-		// Pre-impostazioni
-		if (is_null($clientCourse->getStartDate())) {
-			$startDate = new \DateTimeImmutable();
-		} else {
-			$sdformatted = $clientCourse->getStartDate()->format('Y-m-d H:i:s');
-			$startDate = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $sdformatted);
-		}
-		
-		// Creazione associazione studente - cliente/corso
-		$studentHasClientCourse = new StudentHasClientHasCourse();
-		$studentHasClientCourse->setStudent($student);
-		$studentHasClientCourse->setClientHasCourse($clientCourse);
-		$studentHasClientCourse->setInsertDate(new \DateTime());
-		$studentHasClientCourse->setActivationstatus($this->getActivationStatusRecord(ActivationStatus::STATUS_ENABLED));
-		
-		$this->getEntityManager()->persist($studentHasClientCourse);
-		$this->getEntityManager()->flush();
-		
-		// Acquisizione proprietà e definizione esami dal corso
-		$durationWeek = $clientCourse->getCourse()->getDurationweek();
-		$periodicityWeek = $clientCourse->getCourse()->getPeriodicityweek();
-		
-		// Calcolo data finale per esami e sfide
-		$lastDateStart = $startDate;
-		$lastDateEnd = $lastDateStart->add(new \DateInterval('P'.$periodicityWeek.'W'));
-		$lastDatChallengeEnd = $lastDateStart->add(new \DateInterval('P'.$durationWeek.'W'));
-		
-		// *********************************************************************
-		// Pianificazione sfide
-		$challenges = $this->getExamRepo()->findNotMandatoriesByCourse($clientCourse->getCourse());
-		$sessionsForChallenge = 1;
-		
-		foreach ($challenges as $challenge) {
-			/* @var $challenge Exam */
-			$itemsForChallenge = $this->getExamHasItemRepo()->findByExam($challenge);
-			shuffle($itemsForChallenge);
-			$numItemsForChallenge = count($itemsForChallenge);
-			
-			// Creazione token univoco
-			$token = $this->generateSessionToken($student->getId(), $challenge->getId(),1);
-			
-			// Creazione sessione per la sfida (unica sessione per ogni sfida)
-			$session = new StudentHasClientHasCourseHasExam();
-			$session->setCompleted(0);
-			$session->setExam($challenge);
-			$session->setMandatory(0);
-			$session->setExpectedEndDate($lastDatChallengeEnd);
-			$session->setInsertDate(new \DateTime());
-			$session->setPoints(0);
-			$session->setProgressive(0);
-			$session->setStartDate($lastDateStart);
-			$session->setStudentHasClientHasCourse($studentHasClientCourse);
-			$session->setToken($token);
-			$session->setSessionOnCourse(1);
-			$session->setSessionOnExam("1/1");
-			
-			$this->getEntityManager()->persist($session);
-			
-			$arrayItemsForSession = array();
-			
-			for ($j=0;$j<$numItemsForChallenge;$j++) {
-				if (count($itemsForChallenge) == 0)break;
-				
-				$theItem = array_pop($itemsForChallenge);
-				/* @var $theItem ExamHasItem */
-				if ($theItem->getItem()->getItem() != null) {
-					$found = false;
-					foreach ($session->getItem() as $itemIn) {
-						/* @var $itemIn Item */
-						if ($itemIn == $theItem->getItem()->getItem()) {
-							$found = true;break;
-						}
-					}
-					if (!$found) {
-						// Has parent dependency but his parent is not in.
-						array_push($itemsForExam, $theItem);
-						shuffle($itemsForExam);
-					}
-				}
-				$session->addItem($theItem->getItem());
-			}
-			$this->getEntityManager()->flush();
-			$this->getEntityManager()->detach($session);
-		}
-		
-		// *********************************************************************
-		// Pianificazione esami obbligatori
-		$ss = 0;	
-		
-		$exams = $this->getExamRepo()->findMandatoriesByCourse($clientCourse->getCourse());
-		$numOfSessions = ceil($durationWeek/$periodicityWeek);
-		$totalItems = 0; $assignedReserved = 0; $totalAssignedSessions = 0; $arrSave= array();
-		
-		// Calculate the total item number and initialize the reserved sessions array
-		foreach ($exams as $exam) {
-			$totalItems += $exam->getTotalitems();
-			$arrSave[$exam->getId()] = 0;
-		}
+            // Pre-impostazioni
+            if (is_null($clientCourse->getStartDate()) || $fromSignup === true) {
+                    $startDate = new \DateTimeImmutable();
+            } else {
+                    $sdformatted = $clientCourse->getStartDate()->format('Y-m-d H:i:s');
+                    $startDate = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $sdformatted);
+            }
 
-		$avgItemNumberPerSession = ceil($totalItems/$numOfSessions);
+            // Creazione associazione studente - cliente/corso
+            $studentHasClientCourse = new StudentHasClientHasCourse();
+            $studentHasClientCourse->setStudent($student);
+            $studentHasClientCourse->setClientHasCourse($clientCourse);
+            $studentHasClientCourse->setInsertDate(new \DateTime());
+            $studentHasClientCourse->setActivationstatus($this->getActivationStatusRecord(ActivationStatus::STATUS_ENABLED));
 
-		// Reserve a session for each short exam
-		foreach ($exams as $exam) {
-			if ($exam->getTotalitems() <= $avgItemNumberPerSession + 5) {
-				$arrSave[$exam->getid()] = 1;
-				$assignedReserved = $assignedReserved + 1;
-				$totalAssignedSessions = $totalAssignedSessions + 1;
-			}
-		}
-		
-		$remainingSessions = $numOfSessions - $assignedReserved;
-		$baseForExam = floor($remainingSessions/(count($exams)-$assignedReserved));
-		
-		// Assign the minimum sessions for each non-reserved exam
-		foreach($exams as $exam) {
-			if ($arrSave[$exam->getId()] == 0) {
-				$arrSave[$exam->getId()] = $baseForExam;
-				$totalAssignedSessions += $baseForExam;
-			}
-		}
-		
-		// Now, remaining session should be 0 or a value <= to the non-reserved exam number
-		$remainingSessions = $numOfSessions - $totalAssignedSessions;
-		
-		while ($remainingSessions > 0) {
-			foreach ($arrSave as $k=>$value) {
-				if ($value != 1 && $remainingSessions > 0) {
-					$arrSave[$k] = $value + 1;
-					$remainingSessions--;
-				}
-			}
-		}
-		
-		// Determined the final number of sessions for each exam, cycle for creating the records
-		$lastDateStart = clone($startDate);
-		$lastDateEnd = $lastDateStart->add(new \DateInterval('P'.$periodicityWeek.'W'));
-		
-		$currentSession = 0;
-		
-		foreach ($exams as $exam) {
-			
-			$sessionsForExam = $arrSave[$exam->getId()];
-			
-			// All the items connected to an exam. Pick up and randomize
-			$itemsForExam = $this->getExamHasItemRepo()->findByExam($exam);
-			shuffle($itemsForExam);
-		
-			$numItemsForSession = ceil(count($itemsForExam)/$sessionsForExam);
-			$upto = count($itemsForExam);
-			
-			for($i=0;$i<$sessionsForExam;$i++) {
-				$currentSession += 1;
-				// Create an universal token
-				$token = $this->generateSessionToken($student->getId(), $exam->getId(), $i);
-				 
-				// Create an entry in the session-for-the-student table
-				$session = new StudentHasClientHasCourseHasExam();
-				$session->setCompleted(0);
-				$session->setExam($exam);
-				$session->setMandatory(1);
-				$session->setExpectedEndDate($lastDateEnd);
-				$session->setInsertDate(new \DateTime());
-				$session->setPoints(0);
-				$session->setProgressive(0);
-				$session->setStartDate($lastDateStart);
-				$session->setStudentHasClientHasCourse($studentHasClientCourse);
-				$session->setToken($token);
-				$session->setSessionOnCourse($currentSession);
-				$session->setSessionOnExam(($i+1)."/".$sessionsForExam);
-				
-				// Extend dates
-				$next = new \DateInterval('P'.$periodicityWeek.'W');
-				$lastDateStart = $lastDateStart->add($next);
-				$lastDateEnd = $lastDateEnd->add($next);
-				 
-				$arrayItemsForSession = array();
-				 
-				for($j=0;$j<$numItemsForSession;$j++) {
-					if (count($itemsForExam) == 0) break;
-					 
-					// Pop an item from the global-exam-items array
-					// Check if it has a parent dependency
-					$theItem = array_pop($itemsForExam);
-		
-					/* @var $theItem ExamHasItem */
-					if ($theItem->getItem()->getItem() != null) {
-						$found = false;
-						foreach ($session->getItem() as $itemIn) {
-							/* @var $itemIn Item */
-							if ($itemIn == $theItem->getItem()->getItem()) {
-								$found = true; break;
-							}
-						}
-						if (!$found) {
-							// Has parent dependency but his parent is not in.
-							array_push($itemsForExam, $theItem);
-							shuffle($itemsForExam);
-						}
-					}
-		
-					$session->addItem($theItem->getItem());
-				}
-		
-				$this->getEntityManager()->persist($session);
-			}
-		}
-		$this->getEntityManager()->flush();
-		return "Completato: studente ".$student->getFirstname()." ".$student->getLastname()." assegnato a corso ".$clientCourse->getCourse()->getName();
+            $this->getEntityManager()->persist($studentHasClientCourse);
+            $this->getEntityManager()->flush();
+
+            // Acquisizione proprietà e definizione esami dal corso
+            $durationWeek = $clientCourse->getCourse()->getDurationweek();
+            $periodicityWeek = $clientCourse->getCourse()->getPeriodicityweek();
+
+            // Calcolo data finale per esami e sfide
+            $lastDateStart = $startDate;
+            $lastDateEnd = $lastDateStart->add(new \DateInterval('P'.$periodicityWeek.'W'));
+            $lastDatChallengeEnd = $lastDateStart->add(new \DateInterval('P'.$durationWeek.'W'));
+
+            // *********************************************************************
+            // Pianificazione sfide
+            $challenges = $this->getExamRepo()->findNotMandatoriesByCourse($clientCourse->getCourse());
+            $sessionsForChallenge = 1;
+
+            foreach ($challenges as $challenge) {
+                    /* @var $challenge Exam */
+                    $itemsForChallenge = $this->getExamHasItemRepo()->findByExam($challenge);
+                    shuffle($itemsForChallenge);
+                    $numItemsForChallenge = count($itemsForChallenge);
+
+                    // Creazione token univoco
+                    $token = $this->generateSessionToken($student->getId(), $challenge->getId(),1);
+
+                    // Creazione sessione per la sfida (unica sessione per ogni sfida)
+                    $session = new StudentHasClientHasCourseHasExam();
+                    $session->setCompleted(0);
+                    $session->setExam($challenge);
+                    $session->setMandatory(0);
+                    $session->setExpectedEndDate($lastDatChallengeEnd);
+                    $session->setInsertDate(new \DateTime());
+                    $session->setPoints(0);
+                    $session->setProgressive(0);
+                    $session->setStartDate($lastDateStart);
+                    $session->setStudentHasClientHasCourse($studentHasClientCourse);
+                    $session->setToken($token);
+                    $session->setSessionOnCourse(1);
+                    $session->setSessionOnExam("1/1");
+
+                    $this->getEntityManager()->persist($session);
+
+                    $arrayItemsForSession = array();
+
+                    for ($j=0;$j<$numItemsForChallenge;$j++) {
+                            if (count($itemsForChallenge) == 0)break;
+
+                            $theItem = array_pop($itemsForChallenge);
+                            /* @var $theItem ExamHasItem */
+                            if ($theItem->getItem()->getItem() != null) {
+                                    $found = false;
+                                    foreach ($session->getItem() as $itemIn) {
+                                            /* @var $itemIn Item */
+                                            if ($itemIn == $theItem->getItem()->getItem()) {
+                                                    $found = true;break;
+                                            }
+                                    }
+                                    if (!$found) {
+                                            // Has parent dependency but his parent is not in.
+                                            array_push($itemsForExam, $theItem);
+                                            shuffle($itemsForExam);
+                                    }
+                            }
+                            $session->addItem($theItem->getItem());
+                    }
+                    $this->getEntityManager()->flush();
+                    $this->getEntityManager()->detach($session);
+            }
+
+            // *********************************************************************
+            // Pianificazione esami obbligatori
+            $ss = 0;	
+
+            $exams = $this->getExamRepo()->findMandatoriesByCourse($clientCourse->getCourse());
+            $numOfSessions = ceil($durationWeek/$periodicityWeek);
+            $totalItems = 0; $assignedReserved = 0; $totalAssignedSessions = 0; $arrSave= array();
+
+            // Calculate the total item number and initialize the reserved sessions array
+            foreach ($exams as $exam) {
+                    $totalItems += $exam->getTotalitems();
+                    $arrSave[$exam->getId()] = 0;
+            }
+
+            $avgItemNumberPerSession = ceil($totalItems/$numOfSessions);
+
+            // Reserve a session for each short exam
+            foreach ($exams as $exam) {
+                    if ($exam->getTotalitems() <= $avgItemNumberPerSession + 5) {
+                            $arrSave[$exam->getid()] = 1;
+                            $assignedReserved = $assignedReserved + 1;
+                            $totalAssignedSessions = $totalAssignedSessions + 1;
+                    }
+            }
+
+            $remainingSessions = $numOfSessions - $assignedReserved;
+            $baseForExam = floor($remainingSessions/(count($exams)-$assignedReserved));
+
+            // Assign the minimum sessions for each non-reserved exam
+            foreach($exams as $exam) {
+                    if ($arrSave[$exam->getId()] == 0) {
+                            $arrSave[$exam->getId()] = $baseForExam;
+                            $totalAssignedSessions += $baseForExam;
+                    }
+            }
+
+            // Now, remaining session should be 0 or a value <= to the non-reserved exam number
+            $remainingSessions = $numOfSessions - $totalAssignedSessions;
+
+            while ($remainingSessions > 0) {
+                    foreach ($arrSave as $k=>$value) {
+                            if ($value != 1 && $remainingSessions > 0) {
+                                    $arrSave[$k] = $value + 1;
+                                    $remainingSessions--;
+                            }
+                    }
+            }
+
+            // Determined the final number of sessions for each exam, cycle for creating the records
+            $lastDateStart = clone($startDate);
+            $lastDateEnd = $lastDateStart->add(new \DateInterval('P'.$periodicityWeek.'W'));
+
+            $currentSession = 0;
+
+            foreach ($exams as $exam) {
+
+                    $sessionsForExam = $arrSave[$exam->getId()];
+
+                    // All the items connected to an exam. Pick up and randomize
+                    $itemsForExam = $this->getExamHasItemRepo()->findByExam($exam);
+                    shuffle($itemsForExam);
+
+                    $numItemsForSession = ceil(count($itemsForExam)/$sessionsForExam);
+                    $upto = count($itemsForExam);
+
+                    for($i=0;$i<$sessionsForExam;$i++) {
+                            $currentSession += 1;
+                            // Create an universal token
+                            $token = $this->generateSessionToken($student->getId(), $exam->getId(), $i);
+
+                            // Create an entry in the session-for-the-student table
+                            $session = new StudentHasClientHasCourseHasExam();
+                            $session->setCompleted(0);
+                            $session->setExam($exam);
+                            $session->setMandatory(1);
+                            $session->setExpectedEndDate($lastDateEnd);
+                            $session->setInsertDate(new \DateTime());
+                            $session->setPoints(0);
+                            $session->setProgressive(0);
+                            $session->setStartDate($lastDateStart);
+                            $session->setStudentHasClientHasCourse($studentHasClientCourse);
+                            $session->setToken($token);
+                            $session->setSessionOnCourse($currentSession);
+                            $session->setSessionOnExam(($i+1)."/".$sessionsForExam);
+
+                            // Extend dates
+                            $next = new \DateInterval('P'.$periodicityWeek.'W');
+                            $lastDateStart = $lastDateStart->add($next);
+                            $lastDateEnd = $lastDateEnd->add($next);
+
+                            $arrayItemsForSession = array();
+
+                            for($j=0;$j<$numItemsForSession;$j++) {
+                                    if (count($itemsForExam) == 0) break;
+
+                                    // Pop an item from the global-exam-items array
+                                    // Check if it has a parent dependency
+                                    $theItem = array_pop($itemsForExam);
+
+                                    /* @var $theItem ExamHasItem */
+                                    if ($theItem->getItem()->getItem() != null) {
+                                            $found = false;
+                                            foreach ($session->getItem() as $itemIn) {
+                                                    /* @var $itemIn Item */
+                                                    if ($itemIn == $theItem->getItem()->getItem()) {
+                                                            $found = true; break;
+                                                    }
+                                            }
+                                            if (!$found) {
+                                                    // Has parent dependency but his parent is not in.
+                                                    array_push($itemsForExam, $theItem);
+                                                    shuffle($itemsForExam);
+                                            }
+                                    }
+
+                                    $session->addItem($theItem->getItem());
+                            }
+
+                            $this->getEntityManager()->persist($session);
+                }
+            }
+            $this->getEntityManager()->flush();
+            return "Completato: studente ".$student->getFirstname()." ".$student->getLastname()." assegnato a corso ".$clientCourse->getCourse()->getName();
 	}
 	
 	/**

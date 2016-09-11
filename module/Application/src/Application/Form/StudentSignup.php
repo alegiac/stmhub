@@ -6,26 +6,19 @@ use Zend\Form\Form;
 
 class StudentSignup extends Form
 {	
+    private $extraFields;
+    
     public function __construct($extraFields = false)
     {
         parent::__construct('signup_student');
 
+        $this->extraFields = $extraFields;
+        
         $this->add(array(
             'type' => 'Zend\Form\Element\Text',
             'name' => 'firstname',
-            'required' => true,
             'options' => array (
                 'label' => 'Nome',
-            ),
-            'validators' => array(
-		array(
-                    'name'=>'NotEmpty',
-                    'options' => array(
-                        'messages' => array(
-                            \Zend\Validator\NotEmpty::IS_EMPTY => 'Questo campo &egrave; obbligatorio',
-                        ),
-                    ),
-		),
             ),
             'attributes' => array(
                 'class' => 'form-control',
@@ -45,36 +38,26 @@ class StudentSignup extends Form
 	));
         
         $this->add(array(
-            'type' => 'Zend\Form\Element\Email',
+            'type' => 'Zend\Form\Element\Text',
             'name' => 'email',
             'required' => true,
             'options' => array (
                 'label' => 'E-Mail',
-            ),
-            'validators' => array(
-		array(
-                    'name'=>'Mail',
-                    'options' => array(
-                        'messages' => array(
-                            \Zend\Validator\EmailAddress::INVALID => 'Questo campo deve contenere un indirizzo email valido',
-                        ),
-                    ),
-		),
             ),
             'attributes' => array(
                 'class' => 'form-control',
             ),
 	));
         
-        if ($extraFields === true) {
+        if ($this->extraFields === true) {
 
             $this->add(array(
                 'type' => 'Zend\Form\Element\Select',
                 'name' => 'internal',
                 'options' => array(
                     'label' => 'Sono interno a Ca\'Foscari',
+                    'empty_option' => 'Seleziona',
                     'value_options' => array(
-                        '0' => 'Seleziona',
                         '1' => 'Si',
                         '2' => 'No'
                     ),
@@ -82,7 +65,7 @@ class StudentSignup extends Form
                 'attributes' => array(
                     'value' => '0',
                     'class' => 'form-control'
-                )
+                ),
             ));
 
             $this->add(array(
@@ -90,8 +73,8 @@ class StudentSignup extends Form
                 'name' => 'role',
                 'options' => array(
                     'label' => 'Il mio ruolo',
+                    'empty_option' => 'Seleziona',
                     'value_options' => array(
-                        '0' => 'Seleziona',
                         '1' => 'Studente',
                         '2' => 'Dottorando',
                         '3' => 'Ricercatore',
@@ -111,9 +94,12 @@ class StudentSignup extends Form
 
         $this->add(array(
             'type' => 'Zend\Form\Element\Checkbox',
-            'name' => 'privacy',
-            'required' => true,
-            'options' => array (),
+            'name' => 'privacy_check',
+            'options' => array (
+                'use_hidden_element' => true,
+                'checked_value' => 1,
+                'unchecked_value' => 'no'
+            ),
         ));
 
         $this->add(array(
@@ -124,5 +110,55 @@ class StudentSignup extends Form
                 'class' => "btn btn-primary btn-lg col-xs-8 col-xs-offset-2",
             )
         ));
+        
+        $this->setInputFilter($this->createInputFilters());
     }
+    
+    public function createInputFilters()
+    {
+        $inputFilter = new \Zend\InputFilter\InputFilter();
+
+        $nameFilter = new \Zend\InputFilter\Input('firstname');
+        $nameFilter->setRequired(true);
+        $nameFilter->setErrorMessage("Questo campo è obbligatorio");
+        $inputFilter->add($nameFilter);
+
+        $lastnameFilter = new \Zend\InputFilter\Input('lastname');
+        $lastnameFilter->setRequired(true);
+        $lastnameFilter->setErrorMessage("Questo campo è obbligatorio");
+        $inputFilter->add($lastnameFilter);
+        
+        $emailFilter = new \Zend\InputFilter\Input('email');
+        $emailFilter->setRequired(true);
+        $emailFilter->setErrorMessage("Questo campo deve contenere un indirizzo email valido");
+        $emailFilter->getValidatorChain()->attach(new \Zend\Validator\EmailAddress());
+        $inputFilter->add($emailFilter);
+        
+        $checkboxFilter = new \Zend\InputFilter\Input('privacy_check');
+        $checkboxFilter->setRequired(true);
+        $checkboxFilter->setErrorMessage("Devi accettare le condizioni riportate nell'informativa Privacy");
+        $checkVal = new \Zend\Validator\Digits();
+        $checkVal->setMessages(array(
+            \Zend\Validator\Digits::NOT_DIGITS => "Devi accettare le condizioni riportate nell'informativa Privacy"
+        ));
+        $checkboxFilter->getValidatorChain()->attach($checkVal);
+        $inputFilter->add($checkboxFilter);
+ 
+        
+        if ($this->extraFields === true) {
+            
+            $select1Filter = new \Zend\InputFilter\Input('internal');
+            $select1Filter->setRequired(true);
+            $select1Filter->setErrorMessage("Devi selezionare un valore");
+            $inputFilter->add($select1Filter);
+            
+            $select2Filter = new \Zend\InputFilter\Input('role');
+            $select2Filter->setRequired(true);
+            $select2Filter->setErrorMessage("Devi selezionare un valore");
+            $inputFilter->add($select2Filter);
+        }
+        
+        return $inputFilter;
+    }
+    
 }

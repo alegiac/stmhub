@@ -25,303 +25,328 @@ return array(
 	),
     'router' => array(
         'routes' => array(
-                'tools_migrate' => array(
-                    'type' => 'Segment',
-                    'options' => array(
-                        'route' => '/tools/migrate',
-                        'defaults' => array(
-                            '__NAMESPACE__' => 'Application\Controller',
-                            'controller' => 'Tools',
-                            'action' => 'migrate',
-                        ),
+            'tools_setupsignup' => array(
+        	'type' => 'Segment',
+        	'options' => array(
+                    'route' => '/tools/setupsignup/:clientcourse',
+                    'constraints' => array(),
+                    'defaults' => array(
+        		'__NAMESPACE__' => 'Application\Controller',
+        		'controller' => 'Tools',
+                        'action' => 'setupsignup',
                     ),
-                    'may_terminate' => true,
+        	),
+                'may_terminate' => true,
+            ),
+            
+            'tools_migrate' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/tools/migrate',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Application\Controller',
+                        'controller' => 'Tools',
+                        'action' => 'migrate',
+                    ),
                 ),
-        	'tools_students' => array(
-        			'type' => 'Segment',
-        			'options' => array(
-        					'route' => '/tools/students',
-        					'defaults' => array(
-        							'__NAMESPACE__' => 'Application\Controller',
-        							'controller' => 'Tools',
-        							'action' => 'students',
-        					),
-        			),
-        			'may_terminate' => true,
-        	),
-        	'tools_dem' => array(
-        		'type' => 'Segment',
-        		'options' => array(
-        			'route' => '/tools/dem',
-        			'defaults' => array(
-        				'__NAMESPACE__' => 'Application\Controller',
-        				'controller' => 'Tools',
-        				'action' => 'dem',
-        			),
-        		),
-       			'may_terminate' => true,
-       		),        	
-        	'tools_testemail' => array(
-        		'type'	=> 'Segment',
-        		'options' => array(
-        			'route' => '/tools/testdem/:email/:idsession',
-        			'defaults' => array(
-        				'__NAMESPACE__' => 'Application\Controller',
-        				'controller' => 'Tools',
-        				'action' => 'testdem',
-        			),
-        		),
-        		'may_terminate' => true,
-        	),
-        	'tools_structure' => array(
-        		'type' => 'Segment',
-        		'options' => array(
-        			'route' => '/tools/structure/:user/:course/:client',
-        			'defaults' => array(
-        					'__NAMESPACE__' => 'Application\Controller',
-        					'controller' => 'Tools',
-        					'action' => 'structure',
-        			),
-        		),
-        		'may_terminate' => true,
-        	),
-        		'tools_structureall' => array(
-        				'type' => 'Segment',
-        				'options' => array(
-        						'route' => '/tools/structureall/:course[/:delete]',
-        						'defaults' => array(
-        								'__NAMESPACE__' => 'Application\Controller',
-        								'controller' => 'Tools',
-        								'action' => 'structureall',
-        						),
-        				),
-        				'may_terminate' => true,
-        		),
-        	'exam_js' => array(
-        		'type' => 'Segment',
-        		'options' => array(
-        			'route' => '/exam/ajcheckanswer/:optionid',
-        			'defaults' => array(
-        				'__NAMESPACE__' => 'Application\Controller',
-        				'controller' => 'Exam',
-        					'action' => 'ajcheckanswer',
-        			),
-        		),
-        		'may_terminate' => true,
-        	),
-			// Route for validating an url. parameter tkn is left intentionally optional for control purposes.
-        	'exam_tokenchallenge' => array(
-        		'type' => 'Segment',
-        		'options' => array(
-        			'route' => '/exam/tokenchallenge[/][:tkn][/]',
-        			'constraints' => array(
-        				'tkn' => '[a-zA-Z0-9\.]+',
-        			),
-        			'defaults' => array(
-        					'__NAMESPACE__' => 'Application\Controller',
-        					'controller' => 'Exam',
-        					'action' => 'tokenchallenge',
-        			),
-        		),
-        		'may_terminate' => true,
-        	),        		
-        	// Route for validating an url. parameter tkn is left intentionally optional for control purposes.
+                'may_terminate' => true,
+            ),
+            'tools_students' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/tools/students',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Application\Controller',
+                        'controller' => 'Tools',
+                        'action' => 'students',
+                    ),
+                ),
+                'may_terminate' => true,
+            ),
+            'tools_dem' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/tools/dem',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Application\Controller',
+                        'controller' => 'Tools',
+                        'action' => 'dem',
+                    ),
+                ),
+                'may_terminate' => true,
+            ),        	
+            'tools_testemail' => array(
+                'type'	=> 'Segment',
+                'options' => array(
+                    'route' => '/tools/testdem/:email/:idsession',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Application\Controller',
+                        'controller' => 'Tools',
+                        'action' => 'testdem',
+                    ),
+                ),
+                'may_terminate' => true,
+            ),
+            'tools_structure' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/tools/structure/:user/:course/:client',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Application\Controller',
+                        'controller' => 'Tools',
+                        'action' => 'structure',
+                    ),
+                ),
+                'may_terminate' => true,
+            ),
+            'tools_structureall' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/tools/structureall/:course[/:delete]',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Application\Controller',
+                        'controller' => 'Tools',
+        		'action' => 'structureall',
+                    ),
+                ),
+        	'may_terminate' => true,
+            ),
+            'exam_js' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/exam/ajcheckanswer/:optionid',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Application\Controller',
+                        'controller' => 'Exam',
+                        'action' => 'ajcheckanswer',
+                    ),
+                ),
+                'may_terminate' => true,
+            ),
+            // Route for validating an url. parameter tkn is left intentionally optional for control purposes.
+            'exam_tokenchallenge' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/exam/tokenchallenge[/][:tkn][/]',
+                    'constraints' => array(
+                        'tkn' => '[a-zA-Z0-9\.]+',
+                    ),
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Application\Controller',
+                        'controller' => 'Exam',
+                        'action' => 'tokenchallenge',
+                    ),
+                ),
+                'may_terminate' => true,
+            ),        		
+            // Route for validating an url. parameter tkn is left intentionally optional for control purposes.
             'exam_token' => array(
-        		'type' => 'Segment',
-        		'options' => array(
-        			'route' => '/exam/token[/][:tkn][/]',
-        			'constraints' => array(
-        				'tkn' => '[a-zA-Z0-9\.]+',
-        			),
-        			'defaults' => array(
-        				'__NAMESPACE__' => 'Application\Controller',
-        				'controller' => 'Exam',
-        				'action' => 'token',
-        			),
-        		),
-        		'may_terminate' => true,
-        	),
-        	'exam_reset_demo' => array(
-        		'type' => 'Segment',
-        		'options' => array(
-        			'route' => '/exam/reset/:id',
-        			'defaults' => array(
-        				'__NAMESPACE__' => 'Application\Controller',
-        				'controller' => 'Exam',
-        				'action' => 'reset'	
-        			), 
-        		),
-        		'may_terminate' => true,
-        	),
-        	// Route per la gestione di un errore
-        	'exam_error' => array(
-        		'type' => 'Segment',
-        		'options' => array(
-        			'route' => '/exam/error',
-        			'defaults' => array(
-        				'__NAMESPACE__' => 'Application\Controller',
-        				'controller' => 'Exam',
-        				'action' => 'error'
-        			),
-        		),
-        		'may_terminate' => true,
-        	),
-        	'exam_nothing' => array(
-        		'type' => 'Segment',
-        		'options' => array(
-        			'route' => '/exam/nothing',
-        			'constraints' => array(),
-        			'defaults' => array(
-        				'__NAMESPACE__' => 'Application\Controller',
-        				'controller' => 'Exam',
-        				'action' => 'nothing',
-        			),
-        		),
-        		'may_terminate' => true,
-        	),
-        	'exam_challenges' => array(
-        		'type' => 'Segment',
-        		'options' => array(
-        			'route' => '/exam/challenges',
-        			'constraints' => array(),
-        			'defaults' => array(
-        				'__NAMESPACE__' => 'Application\Controller',
-        				'controller' => 'Exam',
-        				'action' => 'challenges',
-        			),
-        		),
-        		'may_terminate' => true,
-			),
-        	'exam_start' => array(
-        		'type' => 'Segment',
-        		'options' => array(
-        			'route' => '/exam/start',
-        			'constraints' => array(),
-        			'defaults' => array(
-        				'__NAMESPACE__' => 'Application\Controller',
-        				'controller' => 'Exam',
-        				'action' => 'start',
-        			),
-        		),
-        		'may_terminate' => true,
-			),
-        	'exam_restart' => array(
-        		'type' => 'Segment',
-        		'options' => array(
-        			'route' => '/exam/restart',
-        			'constraints' => array(),
-        			'defaults' => array(
-        				'__NAMESPACE__' => 'Application\Controller',
-        				'controller' => 'Exam',
-        				'action' => 'restart',
-        			),
-        		),
-        		'may_terminate' => true,
-        	),
-        	'exam_saveanswer' => array(
-        		'type' => 'Segment',
-        		'options' => array(
-        			'route' => '/exam/saveanswer/:optionValue',
-        			'constraints' => array(),
-        			'defaults' => array(
-        				'__NAMESPACE__' => 'Application\Controller',
-        				'controller' => 'Exam',
-        				'action' => 'saveanswer',
-        			),
-        		),
-        	),
-        	'exam_end' => array(
-        		'type' => 'Segment',
-        		'options' => array(
-        			'route' => '/exam/end[/:congrats]',
-        			'constraints' => array(),
-        			'defaults' => array(
-        				'__NAMESPACE__' => 'Application\Controller',
-        				'controller' => 'Exam',
-        				'action' => 'end',
-        			),
-        		),
-        	),
-        	'exam_participate' => array(
-        		'type' => 'Segment',
-        		'options' => array(
-        			'route' => '/exam/participate',
-        			'constraints' => array(),
-        			'defaults' => array(
-        				'__NAMESPACE__' => 'Application\Controller',
-        				'controller' => 'Exam',
-        				'action' => 'participate',
-        			),
-        		),
-        		'may_terminate' => true,
-			),
-        	'exam_timeout' => array(
-        		'type' => 'Segment',
-        		'options' => array(
-        			'route' => '/exam/timeout',
-        			'constraints' => array(),
-        			'defaults' => array(
-        				'__NAMESPACE__' => 'Application\Controller',
-        				'controller' => 'Exam',
-        				'action' => 'timeout',
-        			),
-        		),
-        		'may_terminate' => true,
-        	),
-        	'exam_root' => array(
-        		'type' => 'Segment',
-        		'options' => array(
-        			'route' => '/exam[/]',
-        			'constraints' => array(),
-        			'defaults' => array(
-        				'__NAMESPACE__' => 'Application\Controller',
-        				'controller' => 'Exam',
-        				'action' => 'index',
-        			),
-        		),
-        		'may_terminate' => true,
-        	),
-                'signup_prepare' => array(
-        		'type' => 'Segment',
-        		'options' => array(
-        			'route' => '/signup/prepare/:clientcourse',
-        			'constraints' => array(),
-        			'defaults' => array(
-        				'__NAMESPACE__' => 'Application\Controller',
-        				'controller' => 'Signup',
-        				'action' => 'prepare',
-        			),
-        		),
-        		'may_terminate' => true,
-        	),
-                'signup_form' => array(
-                        'type' => 'Segment',
-        		'options' => array(
-        			'route' => '/signup/form/:time/:clientcourse/:crc',
-        			'constraints' => array(),
-        			'defaults' => array(
-        				'__NAMESPACE__' => 'Application\Controller',
-        				'controller' => 'Signup',
-        				'action' => 'form',
-        			),
-        		),
-        		'may_terminate' => true,
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/exam/token[/][:tkn][/]',
+                    'constraints' => array(
+                        'tkn' => '[a-zA-Z0-9\.]+',
+                    ),
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Application\Controller',
+                        'controller' => 'Exam',
+                        'action' => 'token',
+                    ),
                 ),
-        	
-        	'index' => array(
-        		'type'    => 'segment',
-        		'options' => array(
-        			'route'    => '/',
-        			'defaults' => array(
-        				'__NAMESPACE__' => 'Application\Controller',
-        				'controller' => 'Index',
-        				'action'     => 'index',
-        			),
-        		),
-        		'may_terminate' => true,
-        		'child_routes' => array(
-        		),
+                'may_terminate' => true,
+            ),
+            'exam_reset_demo' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/exam/reset/:id',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Application\Controller',
+                        'controller' => 'Exam',
+                        'action' => 'reset'	
+                    ), 
+                ),
+                'may_terminate' => true,
+            ),
+            // Route per la gestione di un errore
+            'exam_error' => array(
+        	'type' => 'Segment',
+        	'options' => array(
+                    'route' => '/exam/error',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Application\Controller',
+        		'controller' => 'Exam',
+        		'action' => 'error'
+                    ),
         	),
+        	'may_terminate' => true,
+            ),
+            'exam_nothing' => array(
+        	'type' => 'Segment',
+            	'options' => array(
+                    'route' => '/exam/nothing',
+                    'constraints' => array(),
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Application\Controller',
+        		'controller' => 'Exam',
+        		'action' => 'nothing',
+                    ),
+        	),
+        	'may_terminate' => true,
+            ),
+            'exam_challenges' => array(
+                'type' => 'Segment',
+        	'options' => array(
+                    'route' => '/exam/challenges',
+                    'constraints' => array(),
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Application\Controller',
+                        'controller' => 'Exam',
+                        'action' => 'challenges',
+                    ),
+                ),
+                'may_terminate' => true,
+            ),
+            'exam_start' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/exam/start',
+                    'constraints' => array(),
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Application\Controller',
+                        'controller' => 'Exam',
+                        'action' => 'start',
+                    ),
+                ),
+                'may_terminate' => true,
+            ),
+            'exam_restart' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/exam/restart',
+                    'constraints' => array(),
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Application\Controller',
+                        'controller' => 'Exam',
+                        'action' => 'restart',
+                    ),
+                ),
+                'may_terminate' => true,
+            ),
+            'exam_saveanswer' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/exam/saveanswer/:optionValue',
+                    'constraints' => array(),
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Application\Controller',
+                        'controller' => 'Exam',
+                        'action' => 'saveanswer',
+                    ),
+                ),
+            ),
+            'exam_end' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/exam/end[/:congrats]',
+                    'constraints' => array(),
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Application\Controller',
+                        'controller' => 'Exam',
+                        'action' => 'end',
+                    ),
+                ),
+            ),
+            'exam_participate' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/exam/participate',
+                    'constraints' => array(),
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Application\Controller',
+                        'controller' => 'Exam',
+                        'action' => 'participate',
+                    ),
+                ),
+        	'may_terminate' => true,
+            ),
+            'exam_timeout' => array(
+        	'type' => 'Segment',
+                'options' => array(
+                    'route' => '/exam/timeout',
+                    'constraints' => array(),
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Application\Controller',
+                        'controller' => 'Exam',
+                        'action' => 'timeout',
+                    ),
+                ),
+                'may_terminate' => true,
+            ),
+            'exam_root' => array(
+                'type' => 'Segment',
+            	'options' => array(
+                    'route' => '/exam[/]',
+                    'constraints' => array(),
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Application\Controller',
+        		'controller' => 'Exam',
+        		'action' => 'index',
+                    ),
+        	),
+                'may_terminate' => true,
+            ),
+            'signup_form' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/signup/form/:time/:clientcourse/:crc',
+                    'constraints' => array(),
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Application\Controller',
+                        'controller' => 'Signup',
+                        'action' => 'form',
+                    ),
+                ),
+                'may_terminate' => true,
+            ),
+            'signup_landing' => array (
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/signup/landing/:coursename',
+                    'constraints' => array(),
+                    'defaults' => array(
+                       '__NAMESPACE__' => 'Application\Controller',
+                        'controller' => 'Signup',
+                        'action' => 'landing'
+                    ),
+                ),
+                'may_terminate' => true,
+            ),
+            'signup_registered' => array (
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/signup/registered/:coursename',
+                    'constraints' => array(),
+                    'defaults' => array(
+                       '__NAMESPACE__' => 'Application\Controller',
+                        'controller' => 'Signup',
+                        'action' => 'registered'
+                    ),
+                ),
+            ),
+            'index' => array(
+                'type'    => 'segment',
+                'options' => array(
+                    'route'    => '/',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Application\Controller',
+                        'controller' => 'Index',
+                        'action'     => 'index',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                ),
+            ),
         ),
     ),
     'service_manager' => array(
@@ -357,7 +382,8 @@ return array(
                 'Application\Controller\Signup' => 'Application\Controller\SignupController'
         ),
     ),
-	'view_manager' => array(
+    
+    	'view_manager' => array(
 		'default_suffix' => 'tpl', // <-- new option for path stack resolver
 		'display_not_found_reason' => true,
 		'display_exceptions'       => true,

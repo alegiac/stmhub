@@ -21,6 +21,7 @@ class ClientHasStudentRepo extends \Doctrine\ORM\EntityRepository
         $query->setParameter('student', $student);
         $query->setParameter('client', $client);
         $result = $query->getResult();
+        
         if (count($result) > 0) {
             return $result[0];
         }

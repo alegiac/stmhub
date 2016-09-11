@@ -58,37 +58,45 @@ class SignupController extends AbstractActionController
         $this->logger = $this->getServiceLocator()->get('Logger');
     }
 
-    public function prepareAction()
+    public function landingAction()
     {
-        $clientCourseId = $this->params()->fromRoute('clientcourse');
-        $t = time();
-        $crc = crc32($t."|".$clientCourseId);
-        
-        $url = "http://".$_SERVER['HTTP_HOST']."/signup/form/".$t."/".$clientCourseId."/".$crc;
-        
-        echo $url;
-        die();
+        $courseName = $this->params()->fromRoute('coursename');
+        return array(
+            'coursename' => $courseName,
+        ); 
     }
-
+    
+    public function registeredAction()
+    {
+        $courseName = $this->params()->fromRoute('coursename');
+        return array(
+            'coursename' => $courseName
+        );
+    }
+    
     public function formAction()
     {
         
         $this->init();
         
         // Acquisizione parametri
-        $time = $this->params()->fromRoute('time');
-        $cc = $this->params()->fromRoute('clientcourse');
-        $crc = $this->params()->fromRoute('crc');
+        if (null === $_SESSION['signup_client_course']) {
+            $time = $this->params()->fromRoute('time');
+            $cc = $this->params()->fromRoute('clientcourse');
+            $crc = $this->params()->fromRoute('crc');
         
-        // Verifica accessibilità
-        if (crc32($time."|".$cc) != $crc) {
-            $this->error("I parametri passati con ".$cc.",".$time.",".$crc." non sono coerenti");
-            $this->getResponse()->setStatusCode(400);
-            return $this->getResponse();
-        } 
+            // Verifica accessibilità
+            if (crc32($time."|".$cc) != $crc) {
+                $this->error("I parametri passati con ".$cc.",".$time.",".$crc." non sono coerenti");
+                $this->getResponse()->setStatusCode(400);
+                return $this->getResponse();
+            } 
+            
+            $_SESSION['signup_client_course'] = $cc;
+        }
         
         // Verifica logica
-        $clientCourse = $this->getCourseService()->findAssociation($cc);
+        $clientCourse = $this->getCourseService()->findAssociation($_SESSION['signup_client_course']);
         if ($clientCourse->getAllowSignup() !== 1) {
             $this->logger->error("Il record con id ".$cc." non permette la registrazione da configurazione db");
             $this->getResponse()->setStatusCode(400);
@@ -174,13 +182,15 @@ class SignupController extends AbstractActionController
             $form->setData($postData);
             
             if ($form->isValid()) {
-                $showError = "";
                 $registerRequest = array();
                 $registerRequest['firstname'] = $this->getRequest()->getPost()['firstname'];
                 $registerRequest['lastname'] = $this->getRequest()->getPost()['lastname'];
                 $registerRequest['email'] = $this->getRequest()->getPost()['email'];
+                $registerRequest['client_course'] = $_SESSION['signup_client_course'];
                 
-                $registerRequest['token'] = $_SESSION['fb_access_token'];
+                if (isset($_SESSION['fb_access_token'])) {
+                    $registerRequest['token'] = $_SESSION['fb_access_token'];
+                }
  
                 if (null !== $this->getRequest()->getPost()['internal']) {
                     $registerRequest['internal'] = $this->getRequest()->getPost()['internal'];
@@ -190,17 +200,25 @@ class SignupController extends AbstractActionController
                     $registerRequest['role'] = $this->getRequest()->getPost()['role'];
                 }
                 
-                $result = $this->getStudentService()->insertStudent($registerRequest);
-                
-                if ($result['success'] === 1) {
-                    if ($result['to_landing'] === 1) {
+                $result = $this->getStudentService()->registerUser($registerRequest);
+                unset($_SESSION['signup_client_course']);
+                if ($result['result'] === true) {
+                    if ($result['to_landing'] === true) {
                         // A landing page
-                        $this->redirect()->toRoute('signup_landing');
+                        $url = "http://".$_SERVER['HTTP_HOST']."/signup/landing/".$result['course_name'];
+                        $this->redirect()->toUrl($url);
                     } else {
                         // A sessione di esame: acquisire il token di esame e passare a redirect
+                        $url = "http://".$result['redirect'];
+                        $this->redirect()->toUrl($url);
                     }
                 } else {
-                    $showError = $result['errormessage'];
+                    if ($result['already_in'] === true) {
+                        // A pagina di errore - già registrato
+                        $url = "http://".$_SERVER['HTTP_HOST']."/signup/registered/".$result['course_name'];
+                        $this->redirect()->toUrl($url);
+                        return;
+                    }
                 }
             }
         }
@@ -209,7 +227,6 @@ class SignupController extends AbstractActionController
             'form' => $form,
             'showExtraFields' => $showExtraFields,
             'showFacebookLogin' => $showFacebookLogin,
-            'showError' => $showError
         );
     }
 

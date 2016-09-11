@@ -11,7 +11,12 @@
                 font-size: 20px;
             }
         }
-
+        ul
+        {
+            list-style-type: none;
+            padding: 0;
+            color: red;
+        }
         @media screen and (min-width: 1025px) {
             img {
                 max-width: 100%;
@@ -43,6 +48,23 @@
 {/block}
 
 {block name="main"}
+    
+    <div id="myModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <iframe src="http://www.traintoaction.com/privacy" style="zoom:1.00" width="99.6%" height="100%" frameborder="0"></iframe>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <section id="content">
         <div class="container">
             <div class="col-sm-12">
@@ -54,37 +76,26 @@
                     {$this->form()->openTag($this->form)}
 
                     <div class="card-header card-padding">
-                        <button type="button" class="btn btn--facebook anim" onclick="location.href='https://www.facebook.com/v2.6/dialog/oauth?client_id=234480890274751&amp;state=cea4d8879578e2c227f2a0be1a76cdd3&amp;response_type=code&amp;sdk=php-sdk-5.1.2&amp;redirect_uri=http%3A%2F%2Fwww.petadviser.it%2Flanding%2Findex&amp;scope=email'">Log in with Facebook</button>
+                        <button type="button" class="btn btn--facebook anim" onclick="location.href='https://www.facebook.com/v2.6/dialog/oauth?client_id=234480890274751&amp;state=cea4d8879578e2c227f2a0be1a76cdd3&amp;response_type=code&amp;sdk=php-sdk-5.1.2&amp;redirect_uri=http%3A%2F%2Fwww.petadviser.it%2Flanding%2Findex&amp;scope=email'">Accedi con Facebook</button>
                     </div>
                     <div class="card-body card-padding">
                         <div class="row">
-                            <div class="col-sm-2"></div>
+                            <center>oppure procedi con la registrazione manuale<br><br><br></center>
                             <div class="col-sm-4">
-                                    <span class="input-group-addon"></span>
-                                    <div class="fg-line">
-                                        {$this->formLabel($this->form->get('firstname'))}
-                                        {$this->formElement($this->form->get('firstname'))}
-                                        {$this->formElementErrors($this->form->get('firstname'))}
-                                    </div>
-                                <br>
-                                    <span class="input-group-addon"></span>
-                                    <div class="fg-line">
-                                        {$this->formLabel($this->form->get('email'))}
-                                        {$this->formElement($this->form->get('email'))}
-                                        {$this->formElementErrors($this->form->get('email'))}
-                                    </div>
+                                {$this->formLabel($this->form->get('firstname'))}
+                                {$this->formElement($this->form->get('firstname'))}
+                                {$this->formElementErrors($this->form->get('firstname'))}
                             </div>
                             <div class="col-sm-4">
-                                    <span class="input-group-addon"></span>
-                                    <div class="fg-line">
-                                        {$this->formLabel($this->form->get('lastname'))}
-                                        {$this->formInput($this->form->get('lastname'))}
-                                    </div>
-                                <br>    
-                                    <span class="input-group-addon"></span>
-                                    <div class="fg-line">&nbsp;</div>
+                                {$this->formLabel($this->form->get('lastname'))}
+                                {$this->formInput($this->form->get('lastname'))}
+                                {$this->formElementErrors($this->form->get('lastname'))}
                             </div>
-                            <div class="col-sm-2"></div>
+                            <div class="col-sm-4">
+                                {$this->formLabel($this->form->get('email'))}
+                                {$this->formElement($this->form->get('email'))}
+                                {$this->formElementErrors($this->form->get('email'))}
+                            </div>
                         </div>
                         {if $showExtraFields eq 1}
                             <div class="row">
@@ -110,8 +121,10 @@
                             </div>
                         {/if}
                         <div class="row">
-                            <span>Ho letto e accetto le condizioni riportate <a href="#" id="to_privacy">QUI</a></span>
-                            {$this->formCheckbox($this->form->get('privacy'))}                            
+                            <span>Ho letto e accetto le condizioni riportate <a href="#" id="privacy">QUI</a></span>
+                            {$this->formCheckbox($this->form->get('privacy_check'))}                            
+                            <br>
+                            {$this->formElementErrors($this->form->get('privacy_check'))}
                         </div>
                         <div class="row">
                             {$this->formSubmit($this->form->get('subm'))}                            
@@ -125,14 +138,29 @@
 {/block}
 
 {block name="custom_js"}
-	<script src="/static/assets/js/jquery.sortable.min.js"></script>
-        <script type="text/javascript">
-		
-		var selectedOption = "";
-		
-		{literal}
-			$(document).ready(function() {
-			});
-		{/literal}
-	</script>
+    <script src="/static/assets/js/jquery.sortable.min.js"></script>
+    <script type="text/javascript">
+
+        {literal}
+            $(document).ready(function() {
+                var src="http://www.traintoaction.com/privacy";
+                
+                $('#myModal').on('show.bs.modal', function () {
+                    $('.modal-content').css('height',$( window ).height()*0.95);
+                    $('.modal-body').css('height',$( window ).height()*0.81);
+                });
+                //JS script
+                $('#myModal').on('show', function () {
+
+                    $('iframe').attr("src",frameSrc);
+      
+                });
+                $("#privacy").on("click", function() {
+                    $('#myModal').modal({show:true});
+                    //$('#myModal').modal('show').find('.modal-body').load("http://www.traintoaction.com/privacy");
+                });
+                
+            });
+        {/literal}
+    </script>
 {/block}

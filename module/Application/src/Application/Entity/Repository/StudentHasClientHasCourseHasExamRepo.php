@@ -129,7 +129,7 @@ class StudentHasClientHasCourseHasExamRepo extends \Doctrine\ORM\EntityRepositor
 	 * @param StudentHasClientHasCourse $studentCourse
 	 * @return array
 	 */
-	public function findByStudentOnCourse(StudentHasClientHasCourse $studentCourse,$onlyMandatory=true)
+	public function findByStudentOnCourse(StudentHasClientHasCourse $studentCourse,$onlyMandatory=true,$onlyFirst=false)
 	{
 		$criteria = Criteria::create()->where(Criteria::expr()->eq('studentHasClientHasCourse',$studentCourse));
 		
@@ -138,7 +138,13 @@ class StudentHasClientHasCourseHasExamRepo extends \Doctrine\ORM\EntityRepositor
 		}
 		
 		$result = $this->matching($criteria);
-		if ($result->count()) return $result->getValues();
+		if ($result->count()) {
+                    if ($onlyFirst === true) {
+                        return $result->getValues()[0];
+                    } else {
+                        return $result->getValues();
+                    }
+                }
 		return array();
 	}
 }

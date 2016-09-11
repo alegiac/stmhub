@@ -208,26 +208,26 @@ final class ExamService extends BaseService
     	return $totPoints;
     }
     
-    private function getTotalPointsForStudentInCourse(StudentHasClientHasCourse $studentCourse)
+    private function getTotalPointsForStudentInCourse(\Application\Entity\StudentHasClientHasCourse $studentCourse)
     {
     	return $this->getStudentHasClientHasCourseHasExamRepo()->sumStudentPoints($studentCourse);
     }
     
-    private function getTotalTimeForStudentInCourse(StudentHasClientCourse $studentCourse)
+    private function getTotalTimeForStudentInCourse(\Application\Entity\StudentHasClientHasCourse $studentCourse)
     {
     	return $this->getStudentHasClientHasCourseHasExamRepo()->getTimingForStudent($studentCourse);
     }
     
-    private function getTotalSessionsForStudentInCourse(StudentHasCourse $studentCourse)
+    private function getTotalSessionsForStudentInCourse(\Application\Entity\StudentHasClientHasCourse $studentCourse)
     {
-    	return $this->getStudentHasCourseHasExamRepo()->countSessions($studentCourse);
+    	return $this->getStudentHasClientHasCourseHasExamRepo()->countSessions($studentCourse);
     }
     
-    private function getClassificationAndPrizes(StudentHasCourse $studentCourse)
+    private function getClassificationAndPrizes(\Application\Entity\StudentHasClientHasCourse $studentCourse)
     {
     	$retval = array();
     	$index = 1;
-    	$clientCourse = $this->getClientHasCourseRepo()->findOneBy(array('course' => $studentCourse->getCourse()));
+    	$clientCourse = $this->getClientHasCourseRepo()->findOneBy(array('course' => $studentCourse->getClientHasCourse()->getCourse()));
     	
     	$list = $this->getStudentHasCourseHasExamRepo()->getAllByPoints();
     	$prizes = $this->getPrizeRepo()->findBy(array('clientHasCourse' => $clientCourse),array('position' => 'ASC'));
@@ -265,7 +265,7 @@ final class ExamService extends BaseService
     	return $retval;	
     }
     
-    private function getCurrentPositionAndPrizeForStudentInCourse(StudentHasCourse $studentCourse)
+    private function getCurrentPositionAndPrizeForStudentInCourse(StudentHasClientHasCourse $studentCourse)
     {
     	$list = $this->getStudentHasCourseHasExamRepo()->getAllByPoints();
     	$index = 1;
@@ -281,7 +281,7 @@ final class ExamService extends BaseService
     	}
     	
     	// Get prize
-    	$clientCourse = $this->getClientHasCourseRepo()->findOneBy(array('course' => $studentCourse->getCourse()));
+    	$clientCourse = $this->getClientHasCourseRepo()->findOneBy(array('course' => $studentCourse->getClientHasCourse()->getCourse()));
     	
     	$prize = $this->getPrizeRepo()->findOneBy(array('clientHasCourse' => $clientCourse,'position' => $index));
     	
@@ -300,7 +300,7 @@ final class ExamService extends BaseService
     	);
     }
     
-    private function composeAnswer(StudentHasCourseHasExam $session,$isError = false,$message = "")
+    private function composeAnswer(StudentHasClientHasCourseHasExam $session,$isError = false,$message = "")
     {
     	$retval = array();
     	$retval['result'] = (int)!$isError;
@@ -308,13 +308,16 @@ final class ExamService extends BaseService
     	 
     	if (!is_null($session)) {
     		$retval['course'] = array(
-    				'name' => $session->getStudentHasCourse()->getCourse()->getName(),
+    				'name' => $session->getStudentHasClientHasCourse()->getClientHasCourse()->getCourse()->getName(),
     		);
-    		$clientCourse = $this->getClientHasCourseRepo()->findByCourse($session->getStudentHasCourse()->getCourse());
-    		$retval['course']['logo'] = $clientCourse[0]->getLogoFilename();
+                
+                $clientCourse = $session->getStudentHasClientHasCourse()->getClientHasCourse();
+                //$clientCourse = $this->getClientHasCourseRepo()->findByCourse($session->getStudentHasClientHasCourse()->getClientHasCourse()->getCourse());
+                //$clientCourse = $session->getStudentHasClientHasCourse()->getClientHasCourse();
+    		$retval['course']['logo'] = $clientCourse->getLogoFilename();
     
-    		$retval['classification'] = $this->getCurrentPositionAndPrizeForStudentInCourse($session->getStudentHasCourse());
-    		$retval['prizes'] = $this->getClassificationAndPrizes($session->getStudentHasCourse());
+    		$retval['classification'] = $this->getCurrentPositionAndPrizeForStudentInCourse($session->getStudentHasClientHasCourse());
+    		$retval['prizes'] = $this->getClassificationAndPrizes($session->getStudentHasClientHasCourse());
     		
     		$retval['exam'] = array(
     				'id' => $session->getExam()->getId(),
@@ -325,10 +328,10 @@ final class ExamService extends BaseService
     		//$retval['allexams'] = $this->getExamsForCourse($session->getStudentHasCourse()->getCourse());
     		$retval['allexams'] = $this->getExamsForCourse($session);
     		$retval['student'] = array(
-    				'id' => $session->getStudentHasCourse()->getStudent()->getId(),
-    				'firstname' => $session->getStudentHasCourse()->getStudent()->getFirstname(),
-    				'lastname' => $session->getStudentHasCourse()->getStudent()->getLastname(),
-    				'sex' => $session->getStudentHasCourse()->getStudent()->getSex()
+    				'id' => $session->getStudentHasClientHasCourse()->getStudent()->getId(),
+    				'firstname' => $session->getStudentHasClientHasCourse()->getStudent()->getFirstname(),
+    				'lastname' => $session->getStudentHasClientHasCourse()->getStudent()->getLastname(),
+    				'sex' => $session->getStudentHasClientHasCourse()->getStudent()->getSex()
     		);
     
     		$retval['session'] = array(
@@ -336,12 +339,12 @@ final class ExamService extends BaseService
     				'answer' => $session->getAnswer(),
     				'completed' => $session->getCompleted(),
     				'expectedenddate' => $session->getExpectedEndDate(),
-    				'points' => $this->getTotalPointsForStudentInCourse($session->getStudentHasCourse()),
+    				'points' => $this->getTotalPointsForStudentInCourse($session->getStudentHasClientHasCourse()),
     				'progressive' => $session->getProgressive(),
     				'startdate' => $session->getStartDate(),
     				'realstartdate' => $session->getRealStartDate(),
     				'challenge' => !$session->getMandatory(),
-    				'index' => $session->getSessionOnCourse()."/".$this->getTotalSessionsForStudentInCourse($session->getStudentHasCourse()),
+    				'index' => $session->getSessionOnCourse()."/".$this->getTotalSessionsForStudentInCourse($session->getStudentHasClientHasCourse()),
     		);
     
     		//$retval['stats'] = $this->getStatsForStudent($session);
@@ -379,8 +382,8 @@ final class ExamService extends BaseService
      */
     public function setExamSessionProgress($sessionId,$number)
     {
-    	$session = $this->getStudentHasCourseHasExamRepo()->find($sessionId);
-    	/* @var $session StudentHasCourseHasExam */
+    	$session = $this->getStudentHasClientHasCourseHasExamRepo()->find($sessionId);
+    	/* @var $session StudentHasClientHasCourseHasExam */
     	$session->setProgressive($number);
     	$this->getEntityManager()->persist($session);
     	$this->getEntityManager()->flush();
@@ -407,7 +410,7 @@ final class ExamService extends BaseService
     public function responseReorder($sessionId,$examId,$itemId,$optionId,$value)
     {
     	$this->getEntityManager()->beginTransaction();
-    	$session = $this->getStudentHasCourseHasExamRepo()->find($sessionId);
+    	$session = $this->getStudentHasClientHasCourseHasExamRepo()->find($sessionId);
     	$exam = $this->getExamRepo()->find($examId);
     	$item = $this->getItemRepo()->find($itemId);
     	$option = $this->getItemoptionRepo()->find($optionId);
@@ -424,7 +427,8 @@ final class ExamService extends BaseService
     	// Creazione risposta
     	$answer = new StudentHasAnsweredToItem();
     	$answer->setInsertDate(new \DateTime());
-    	$answer->setStudentHasCourseHasExam($session);
+        $answer->setStudentHasClientHasCourseHasExam($session);
+    	//$answer->setStudentHasCourseHasExam($session);
     	$answer->setItem($item);
     	$answer->setTimeout(0);
     	$answer->setPoints($points);
@@ -496,7 +500,7 @@ final class ExamService extends BaseService
     	$this->getEntityManager()->beginTransaction();
     	
     	// Get session, exam, item and option
-    	$session = $this->getStudentHasCourseHasExamRepo()->find($sessionId);
+    	$session = $this->getStudentHasClientHasCourseHasExamRepo()->find($sessionId);
     	$exam = $session->getExam();
     	//$exam = $this->getExamRepo()->find($examId);
     	$item = $this->getItemRepo()->find($itemId);
@@ -505,7 +509,8 @@ final class ExamService extends BaseService
     	// Generate answer
     	$answer = new StudentHasAnsweredToItem();
     	$answer->setInsertDate(new \DateTime());
-    	$answer->setStudentHasCourseHasExam($session);
+    	//$answer->setStudentHasCourseHasExam($session);
+        $answer->setStudentHasClientHasCourseHasExam($session);
     	$answer->setItem($item);
     	$answer->setTimeout(0);
     	$answer->setPoints($option->getPoints());
@@ -568,13 +573,14 @@ final class ExamService extends BaseService
     {
     	$this->getEntityManager()->beginTransaction();
     	
-    	$session = $this->getStudentHasCourseHasExamRepo()->find($sessionId);
+    	$session = $this->getStudentHasClientHasCourseHasExamRepo()->find($sessionId);
     	$exam = $this->getExamRepo()->find($examId);
     	$item = $this->getItemRepo()->find($itemId);
     	
     	$answer = new StudentHasAnsweredToItem();
     	$answer->setInsertDate(new \DateTime());
-    	$answer->setStudentHasCourseHasExam($session);
+    	//$answer->setStudentHasCourseHasExam($session);
+        $answer->setStudentHasClientHasCourseHasExam($session);
     	$answer->setItem($item);
     	$answer->setTimeout(1);
     	$answer->setPoints(0);
@@ -646,20 +652,20 @@ final class ExamService extends BaseService
     		throw new ObjectNotEnabled("Not enabled student found [".$student->getId()."] for the token student part [".$studentToken."]",Errorcode::ERRCODE_STUDENT_NOT_ENABLED);
     	
 		// Get the session info
-    	$session = $this->getStudentHasCourseHasExamRepo()->findByIdentifier($sessionToken);
+    	$session = $this->getStudentHasClientHasCourseHasExamRepo()->findByIdentifier($sessionToken);
     	
     	if (!$session)
     		throw new ObjectNotFound("No exam session found for the token session part [".$sessionToken."]",Errorcode::ERRCODE_SESSION_NOT_FOUND);
     	
     	// Does the session belong to the student?
-    	if ($session->getStudentHasCourse()->getStudent() != $student)
+    	if ($session->getStudentHasClientHasCourse()->getStudent() != $student)
     		throw new InconsistentContent("Both student and session token part are correct [".$studentToken."], [".$sessionToken."], but not related. Possible hacking trial");
     	
     	// End validation process
     		
     		
     	// Get course information
-    	$course = $session->getStudentHasCourse()->getCourse();
+    	$course = $session->getStudentHasClientHasCourse()->getClientHasCourse()->getCourse();
     	if ($course->getActivationstatus()->getId() != ActivationStatus::STATUS_ENABLED) {
     		return $this->composeAnswer($session,true,"Course has been disabled");
     	}
@@ -679,7 +685,8 @@ final class ExamService extends BaseService
     	// on the link. For that reason, we need to check if the session has already completed.
     	// Furthermore, if the student clicks the link having previous left open sessions, we need to redirect
     	// him to the right open session.
-    	$allSessions = $this->getStudentHasCourseHasExamRepo()->findByStudentOnCourse($session->getStudentHasCourse());
+        $allSessions = $this->getStudentHasClientHasCourseHasExamRepo()->findByStudentOnCourse($session->getStudentHasClientHasCourse());
+    	//$allSessions = $this->getStudentHasCourseHasExamRepo()->findByStudentOnCourse($session->getStudentHasCourse());
    		
     	// Current session is completed?
     	if ($session->getCompleted()) {
@@ -688,7 +695,7 @@ final class ExamService extends BaseService
     		$remainingSessions = 0;
     			
     		foreach ($allSessions as $sess) {
-    			/* @var $sess StudentHasCourseHasExam */
+    			/* @var $sess StudentHasClientHasCourseHasExam */
     			if ($sess->getCompleted() === 0) {
     				$remainingSessions++;
     			}
@@ -715,7 +722,7 @@ final class ExamService extends BaseService
    		} else {
    			// Other sessions to complete "before" the current one?
    			foreach ($allSessions as $sess) {
-   				/* @var $sess StudentHasCourseHasExam */
+   				/* @var $sess StudentHasClientHasCourseHasExam */
    				if ($sess->getCompleted() === 0 && $sess->getStartDate() < new \DateTime()) {
    					// Found previous session
    					if ($sess != $session) {
@@ -743,21 +750,22 @@ final class ExamService extends BaseService
    	public function getAvailableChallenges($sessionId)
    	{
 		$retval = array();
-		
-		$session = $this->getStudentHasCourseHasExamRepo()->find($sessionId);
-		$listOfChallenges = $this->getStudentHasCourseHasExamRepo()->findChallengesByStudentOnCourse($session->getStudentHasCourse());
+		/* @var $session Application\Entity\StudentHasClientHasCourseHasExam */
+		$session = $this->getStudentHasClientHasCourseHasExamRepo()->find($sessionId);
+                $listOfChallenges = $this->getStudentHasClientHasCourseHasExamRepo()->findChallengesByStudentOnCourse($session->getStudentHasClientHasCourse());
+                //$listOfChallenges = $this->getStudentHasCourseHasExamRepo()->findChallengesByStudentOnCourse($session->getStudentHasCourse());
 		if (count($listOfChallenges) > 0) {
 			
 			foreach ($listOfChallenges as $challenge)
 			{
-				/* @var $challenge StudentHasCourseHasExam */
+				/* @var $challenge StudentHasClientHasCourseHasExam */
 				if ($challenge->getCompleted() === 0 && $challenge->getStartDate() < new \DateTime()) {
 					
 					// Load max possible points
 					
 					$arr = array(
 							'id' => $challenge->getId(),
-							'token' => $challenge->getStudentHasCourse()->getStudent()->getIdentifier().".".$challenge->getToken(),
+							'token' => $challenge->getStudentHasClientHasCourse()->getStudent()->getIdentifier().".".$challenge->getToken(),
 							'name' => $challenge->getExam()->getName(),
 							'questions' => count($challenge->getItem()),
 							'maxpoints' => $this->getSessionMaxPoints($challenge)

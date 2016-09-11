@@ -201,7 +201,7 @@ class ExamController extends AbstractActionController
 			
 			// Load session info
 			$res = $this->getExamService()->getCurrentExamSessionItemByToken($stmt,$isChallenge);
-			
+		
 			if ($res['result'] === 1) {
 				// Session found: set token in session for future interactions in the exam session
 				$this->session->token = $stmt;
