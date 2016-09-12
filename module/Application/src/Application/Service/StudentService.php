@@ -624,7 +624,7 @@ final class StudentService extends BaseService
 	 */
 	public function rollEmailForSessions()
 	{
-                $sessions = $this->getStudentHasClientHasCourseHasExamRepo()->findStartedNotNotified();
+            $sessions = $this->getStudentHasClientHasCourseHasExamRepo()->findStartedNotNotified();
 //		$sessions = $this->getStudentHasCourseHasExamRepo()->findStartedNotNotified();
 
 		if ($sessions) {
