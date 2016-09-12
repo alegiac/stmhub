@@ -76,7 +76,7 @@
                     {$this->form()->openTag($this->form)}
 
                     <div class="card-header card-padding">
-                        <button type="button" class="btn btn--facebook anim" onclick="location.href='https://www.facebook.com/v2.6/dialog/oauth?client_id=234480890274751&amp;state=cea4d8879578e2c227f2a0be1a76cdd3&amp;response_type=code&amp;sdk=php-sdk-5.1.2&amp;redirect_uri=http%3A%2F%2Fwww.petadviser.it%2Flanding%2Findex&amp;scope=email'">Accedi con Facebook</button>
+                        <button type="button" class="btn btn--facebook anim" onclick="location.href='https://www.facebook.com/v2.6/dialog/oauth?client_id=170229993385237&amp;state=cea4d8879578e2c227f2a0be1a76cdd3&amp;response_type=code&amp;sdk=php-sdk-5.1.2&amp;redirect_uri=http://smiletomove.local/signin/form/1473345665/2/1618741335'">Accedi con Facebook</button>
                     </div>
                     <div class="card-body card-padding">
                         <div class="row">

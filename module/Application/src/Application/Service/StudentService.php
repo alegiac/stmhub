@@ -488,7 +488,7 @@ final class StudentService extends BaseService
             
             foreach ($answers as $answer) {
                 /* @var $answer \Application\Entity\StudentHasAnsweredToItem */
-                $newSession = $this->getStudentHasClientHasCourseHasExamRepo()->findByStudentCourse($answer->getStudentHasCourseHasExam());
+                $newSession = $this->getStudentHasClientHasCourseHasExamRepo()->findByStudentCourse($answer->getStudentHasClientHasCourseHasExam());
                 $answer->setStudentHasClientHasCourseHasExam($newSession);   
                 $this->getEntityManager()->merge($answer);
             }
@@ -624,7 +624,7 @@ final class StudentService extends BaseService
 	 */
 	public function rollEmailForSessions()
 	{
-		$sessions = $this->getStudentHasClientHasCourseHasExamRepo()->findStartedNotNotified();
+                $sessions = $this->getStudentHasClientHasCourseHasExamRepo()->findStartedNotNotified();
 //		$sessions = $this->getStudentHasCourseHasExamRepo()->findStartedNotNotified();
 
 		if ($sessions) {

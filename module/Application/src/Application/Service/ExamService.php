@@ -296,7 +296,7 @@ final class ExamService extends BaseService
     		'position' => $index,
     		'has_prize' => $hasPrize,
     		'prizename' => $prizename,
-    		'totaltime' => $timing,
+    		'totaltime' => 0,
     	);
     }
     
