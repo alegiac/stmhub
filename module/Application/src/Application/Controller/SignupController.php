@@ -99,8 +99,10 @@ class SignupController extends AbstractActionController
         $clientCourse = $this->getCourseService()->findAssociation($_SESSION['signup_client_course']);
         if ($clientCourse->getAllowSignup() !== 1) {
             //$this->logger->error("Il record con id ".$cc." non permette la registrazione da configurazione db");
-            $this->getResponse()->setStatusCode(400);
-            return $this->getResponse();
+            $this->redirect()->toUrl("http://www.traintoaction.com");
+            return;
+            //$this->getResponse()->setStatusCode(400);
+            //return $this->getResponse();
         }        
         
         
