@@ -491,7 +491,7 @@ final class StudentService extends BaseService
             
             foreach ($answers as $answer) {
                 /* @var $answer \Application\Entity\StudentHasAnsweredToItem */
-                $newSession = $this->getStudentHasClientHasCourseHasExamRepo()->findByStudentCourse($answer->getStudentHasClientHasCourseHasExam());
+                $newSession = $this->getStudentHasClientHasCourseHasExamRepo()->findByStudentCourse($answer->getStudentHasCourseHasExam());
                 $answer->setStudentHasClientHasCourseHasExam($newSession);   
                 $this->getEntityManager()->merge($answer);
             }
