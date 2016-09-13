@@ -53,6 +53,7 @@ class ToolsController extends AbstractActionController
         
         public function migrateAction()
         {
+
             $this->getStudentService()->migrateStudentCourse();
             $this->getStudentService()->migrateSessions();
             $this->getStudentService()->migrateAnswers();

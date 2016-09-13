@@ -14,9 +14,7 @@ return array (
 				'params' => array (
 					'host'     => '127.0.0.1',
 					'port'     => '3306',
-					'dbname'   => 'smiletomove_learning_TEST',
-					'user' => 'root',
-					'password' => 'BC9kEenf',
+					'dbname'   => 'smiletomove_learning',
 				)
 			)
 		),
@@ -34,7 +32,15 @@ return array (
 				'options' => array (
 					'output' => 'data/logs/staging___'.date('Ymd')."___app.log",
 				),
-				'filter' => \Zend\Log\Logger::INFO,
+				'filter' => \Zend\Log\Logger::DEBUG,
+				'enabled' => true,
+			),
+			'standard-error-file' => array (
+				'adapter' => '\Zend\Log\Writer\Stream',
+				'options' => array (
+					'output' => 'data/logs/staging___'.date('Ymd')."___err.log",
+				),
+				'filter' => \Zend\Log\Logger::WARN,
 				'enabled' => true,
 			),
 		)

@@ -3,6 +3,7 @@
 // TODO: Impostazioni PHPINI
 ini_set('display_errors', true);
 ini_set('date.timezone','Europe/Rome');
+ini_set('memory_limit', '2048M');
 
 set_time_limit(0);
 
