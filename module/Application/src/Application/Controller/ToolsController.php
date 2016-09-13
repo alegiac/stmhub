@@ -51,13 +51,23 @@ class ToolsController extends AbstractActionController
 		echo "Done";die();
 	}
         
-        public function migrateAction()
+        public function migratestudentsAction()
         {
 
             $this->getStudentService()->migrateStudentCourse();
+            echo "Done migrate students";die();
+        }
+        
+        public function migratesessionsAction()
+        {
             $this->getStudentService()->migrateSessions();
+            echo "Done migrate sessions";die();
+        }
+        
+        public function migrateanswersAction()
+        {
             $this->getStudentService()->migrateAnswers();
-            echo "Done";die();
+            echo "Done migrate answers";die();
         }
         
         public function setupsignupAction()

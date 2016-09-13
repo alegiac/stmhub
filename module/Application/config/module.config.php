@@ -38,15 +38,38 @@ return array(
         	),
                 'may_terminate' => true,
             ),
-            
-            'tools_migrate' => array(
+            'tools_migratestudents' => array(
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/tools/migrate',
+                    'route' => '/tools/migratestudents',
                     'defaults' => array(
                         '__NAMESPACE__' => 'Application\Controller',
                         'controller' => 'Tools',
-                        'action' => 'migrate',
+                        'action' => 'migratestudents',
+                    ),
+                ),
+                'may_terminate' => true,
+            ),
+            'tools_migratesessions' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/tools/migratesessions',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Application\Controller',
+                        'controller' => 'Tools',
+                        'action' => 'migratesessions',
+                    ),
+                ),
+                'may_terminate' => true,
+            ),
+            'tools_migrateanswers' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/tools/migrateanswers',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Application\Controller',
+                        'controller' => 'Tools',
+                        'action' => 'migrateanswers',
                     ),
                 ),
                 'may_terminate' => true,

@@ -483,6 +483,9 @@ final class StudentService extends BaseService
         public function migrateAnswers()
         {
             set_time_limit(0);
+            
+            $this->getEntityManager()->beginTransaction();
+            
             $repo = $this->getStudentHasAnsweredToItemRepo();
             $answers = $repo->findAll();
             
@@ -493,11 +496,15 @@ final class StudentService extends BaseService
                 $this->getEntityManager()->merge($answer);
             }
             $this->getEntityManager()->flush();
+            
+            $this->getEntityManager()->commit();
         }
 
         public function migrateSessions()
         {
             set_time_limit(0);
+            
+            $this->getEntityManager()->beginTransaction();
             
             $sessionRepo = $this->getStudentHasCourseHasExamRepo();
             
@@ -539,7 +546,7 @@ final class StudentService extends BaseService
             
             $this->getEntityManager()->flush();
             
-            
+            $this->getEntityManager()->commit();
         }
         
     public function migrateStudentCourse()
