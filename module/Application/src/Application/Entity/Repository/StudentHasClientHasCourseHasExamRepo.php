@@ -25,6 +25,7 @@ class StudentHasClientHasCourseHasExamRepo extends \Doctrine\ORM\EntityRepositor
 	
         public function findByStudentCourse(\Application\Entity\StudentHasCourseHasExam $studentCourseExam)
         {
+            \Doctrine\Common\Util\Debug::dump($studentCourseExam);die();
             $qb = $this->createQueryBuilder("c");
             $qb->where('c.studentHasCourseHasExam = :shche');
             $query = $qb->getQuery()->setParameter('shche', $studentCourseExam);
