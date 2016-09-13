@@ -5,7 +5,6 @@ namespace Application\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Session\Container;
 use Application\Service\ExamService;
-use EddieJaoude\Zf2Logger\Log\Logger;
 
 class SignupController extends AbstractActionController
 {
@@ -87,7 +86,7 @@ class SignupController extends AbstractActionController
         
             // Verifica accessibilità
             if (crc32($time."|".$cc) != $crc) {
-                $this->error("I parametri passati con ".$cc.",".$time.",".$crc." non sono coerenti");
+               // $this->error("I parametri passati con ".$cc.",".$time.",".$crc." non sono coerenti");
                 $this->getResponse()->setStatusCode(400);
                 return $this->getResponse();
             } 
@@ -98,7 +97,7 @@ class SignupController extends AbstractActionController
         // Verifica logica
         $clientCourse = $this->getCourseService()->findAssociation($_SESSION['signup_client_course']);
         if ($clientCourse->getAllowSignup() !== 1) {
-            $this->logger->error("Il record con id ".$cc." non permette la registrazione da configurazione db");
+            //$this->logger->error("Il record con id ".$cc." non permette la registrazione da configurazione db");
             $this->getResponse()->setStatusCode(400);
             return $this->getResponse();
         }        
