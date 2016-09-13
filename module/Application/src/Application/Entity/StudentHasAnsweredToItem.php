@@ -280,7 +280,7 @@ class StudentHasAnsweredToItem
      *
      * @return StudentHasAnsweredToItem
      */
-    public function setStudentHasClientHasCourseHasExam(\Application\Entity\StudentHasClientHasCourseHasExam $studentHasClientHasCourseHasExam = null)
+    public function setStudentHasClientHasCourseHasExam(StudentHasClientHasCourseHasExam $studentHasClientHasCourseHasExam = null)
     {
         $this->studentHasClientHasCourseHasExam = $studentHasClientHasCourseHasExam;
 
@@ -304,7 +304,7 @@ class StudentHasAnsweredToItem
      *
      * @return StudentHasAnsweredToItem
      */
-    public function setStudentHasCourseHasExam(\Application\Entity\StudentHasCourseHasExam $studentHasCourseHasExam = null)
+    public function setStudentHasCourseHasExam(StudentHasCourseHasExam $studentHasCourseHasExam = null)
     {
         $this->studentHasCourseHasExam = $studentHasCourseHasExam;
 

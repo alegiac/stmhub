@@ -4,6 +4,7 @@ namespace Application\Entity\Repository;
 
 use Application\Entity\StudentHasClientHasCourse;
 use Application\Entity\StudentHasClientHasCourseHasExam;
+use Application\Entity\StudentHasCourseHasExam;
 use Doctrine\Common\Collections\Criteria;
 use Application\Entity\Exam;
 
@@ -23,7 +24,7 @@ class StudentHasClientHasCourseHasExamRepo extends \Doctrine\ORM\EntityRepositor
 		return $query->fetch();
 	}
 	
-        public function findByStudentCourse(\Application\Entity\StudentHasCourseHasExam $studentCourseExam)
+        public function findByStudentCourse(StudentHasCourseHasExam $studentCourseExam)
         {
             \Doctrine\Common\Util\Debug::dump($studentCourseExam);die();
             $qb = $this->createQueryBuilder("c");
