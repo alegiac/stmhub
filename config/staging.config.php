@@ -21,14 +21,15 @@ return array(
 		'ZF\\Versioning',
 		'ZF\\DevelopmentMode',
 		'ZendDeveloperTools',
-		'AssetManager',
+//		'AssetManager',
 		'EddieJaoude\\Zf2Logger',
 		'BsbPhingService',
 		'SmartyModule',
 		'Application',
 		'Core',
 		'ZF\Apigility\Admin',
-		'ZF\Configuration'
+		'ZF\Configuration',
+		'MailMan',
 	),
 	'module_listener_options' => array(
 		'module_paths' => array(

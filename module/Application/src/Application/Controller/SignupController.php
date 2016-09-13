@@ -5,6 +5,7 @@ namespace Application\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Session\Container;
 use Application\Service\ExamService;
+use Facebook\Facebook;
 
 class SignupController extends AbstractActionController
 {
