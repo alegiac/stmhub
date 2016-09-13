@@ -490,6 +490,7 @@ final class StudentService extends BaseService
             $answers = $repo->findAll();
             
             foreach ($answers as $answer) {
+                echo "sssss";
                 /* @var $answer StudentHasAnsweredToItem */
                 \Doctrine\Common\Util\Debug::dump($answer);die();
                 $newSession = $this->getStudentHasClientHasCourseHasExamRepo()->findByStudentCourse($answer->getStudentHasCourseHasExam());

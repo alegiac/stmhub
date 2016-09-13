@@ -84,9 +84,9 @@ class StudentHasAnsweredToItem
     private $studentHasClientHasCourseHasExam;
 
     /**
-     * @var \Application\Entity\StudentHasCourseHasExam
+     * @var StudentHasCourseHasExam
      *
-     * @ORM\ManyToOne(targetEntity="Application\Entity\StudentHasCourseHasExam")
+     * @ORM\ManyToOne(targetEntity="StudentHasCourseHasExam")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="student_has_course_has_exam_id", referencedColumnName="id")
      * })
