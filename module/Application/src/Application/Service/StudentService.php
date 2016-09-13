@@ -332,10 +332,10 @@ final class StudentService extends BaseService
 
             foreach ($exams as $exam) {
 
-                    $sessionsForExam = $arrSave[$exam->getId()];
+                $sessionsForExam = $arrSave[$exam->getId()];
 
-                    // All the items connected to an exam. Pick up and randomize
-                    $itemsForExam = $this->getExamHasItemRepo()->findByExam($exam);
+                // All the items connected to an exam. Pick up and randomize
+                $itemsForExam = $this->getExamHasItemRepo()->findByExam($exam);
                     shuffle($itemsForExam);
 
                     $numItemsForSession = ceil(count($itemsForExam)/$sessionsForExam);
