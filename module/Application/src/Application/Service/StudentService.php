@@ -490,9 +490,8 @@ final class StudentService extends BaseService
             $answers = $repo->findAll();
             
             foreach ($answers as $answer) {
-                echo "sssss";
-                /* @var $answer StudentHasAnsweredToItem */
-                \Doctrine\Common\Util\Debug::dump($answer);die();
+                /* @var $answer \Application\Entity\StudentHasAnsweredToItem */
+                echo $answer->getStudentHasCourseHasExam()->getId()."<br>";
                 $newSession = $this->getStudentHasClientHasCourseHasExamRepo()->findByStudentCourse($answer->getStudentHasCourseHasExam());
                 $answer->setStudentHasClientHasCourseHasExam($newSession);   
                 $this->getEntityManager()->merge($answer);
