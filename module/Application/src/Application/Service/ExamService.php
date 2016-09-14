@@ -273,7 +273,7 @@ final class ExamService extends BaseService
     	$prizename = null;
     	
     	foreach ($list as $element) {
-    		if ($studentCourse->getId() == $element['student_has_client_course_id']) {
+    		if ($studentCourse->getId() == $element['student_has_client_has_course_id']) {
     			break;
     		} else {
     			$index++;
