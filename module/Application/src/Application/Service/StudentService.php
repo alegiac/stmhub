@@ -480,6 +480,8 @@ final class StudentService extends BaseService
 		//$this->getEntityManager()->flush();
 	}
         
+        
+        
         public function migrateAnswers()
         {
             set_time_limit(0);
@@ -487,13 +489,15 @@ final class StudentService extends BaseService
             $this->getEntityManager()->beginTransaction();
             
             $repo = $this->getStudentHasAnsweredToItemRepo();
+            
             $answers = $repo->findAll();
             
             foreach ($answers as $answer) {
-                /* @var $answer \Application\Entity\StudentHasAnsweredToItem */
-                echo $answer->getStudentHasCourseHasExam()->getId()."<br>";
-                $newSession = $this->getStudentHasClientHasCourseHasExamRepo()->findByStudentCourse($answer->getStudentHasCourseHasExam());
-                $answer->setStudentHasClientHasCourseHasExam($newSession);   
+                /* @var $answer StudentHasAnsweredTo */
+                $oldRefId = $answer->getStudentHasCourseHasExam()->getId();
+                $oldRef = $this->getStudentHasCourseHasExamRepo()->find($oldRefId);
+                $newRef = $this->getStudentHasClientHasCourseHasExamRepo()->findByStudentCourse($oldRef);
+                $answer->setStudentHasClientHasCourseHasExam($newRef);
                 $this->getEntityManager()->merge($answer);
             }
             $this->getEntityManager()->flush();
@@ -518,7 +522,6 @@ final class StudentService extends BaseService
             
                 $studentClientCourse = $this->getStudentHasClientHasCourseRepo()->findByStudentCourse($studentHasCourse);
                 
-                
                 $newSession = new StudentHasClientHasCourseHasExam();
                 $newSession->setAnswer($session->getAnswer());
                 $newSession->setCompleted($session->getCompleted());
@@ -539,8 +542,9 @@ final class StudentService extends BaseService
                 $newSession->setToken($session->getToken());
         
                 $items = $session->getItem();
-                foreach ($items as $item) {$newSession->addItem ($item);}
-                
+                foreach ($items as $item) {
+                    $newSession->addItem ($item);
+                }
                 
                 $this->getEntityManager()->persist($newSession);
             }
