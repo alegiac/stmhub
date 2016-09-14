@@ -34,7 +34,7 @@ final class ExamService extends BaseService
 	 * @param Course $course
 	 * @return array
 	 */
-	private function getExamsForCourse(StudentHasClientHasCourseHasExam $session)
+	private function getExamsForCourse(\Application\Entity\StudentHasClientHasCourseHasExam $session)
 	{
 		// Initialize the retval: exams and challenges are under an associative array
 		// that use the keys as labels in the view.
@@ -122,7 +122,7 @@ final class ExamService extends BaseService
      * @param Item $item
      * @return array
      */
-    private function getExamItemMedia(Item $item)
+    private function getExamItemMedia(\Application\Entity\Item $item)
     {
     	$retval = array();
     	
@@ -145,7 +145,7 @@ final class ExamService extends BaseService
      * @param Item $item
      * @return array
      */
-    private function getExamItemOptions(Item $item)
+    private function getExamItemOptions(\Application\Entity\Item $item)
     {
     	$retval = array();
     	
@@ -174,7 +174,7 @@ final class ExamService extends BaseService
      * @param Item $item
      * @return number
      */
-    private function getItemMaxPoints(Item $item)
+    private function getItemMaxPoints(\Application\Entity\Item $item)
     {
     	$totPoints = 0;
     	$options = $this->getItemoptionRepo()->findByItem($item);
@@ -195,7 +195,7 @@ final class ExamService extends BaseService
      * @param StudentHasClientHasCourseHasExam $session
      * @return number
      */
-    private function getSessionMaxPoints(StudentHasClientHasCourseHasExam $session)
+    private function getSessionMaxPoints(\Application\Entity\StudentHasClientHasCourseHasExam $session)
     {
     	$totPoints = 0;
     	
@@ -265,7 +265,7 @@ final class ExamService extends BaseService
     	return $retval;	
     }
     
-    private function getCurrentPositionAndPrizeForStudentInCourse(StudentHasClientHasCourse $studentCourse)
+    private function getCurrentPositionAndPrizeForStudentInCourse(\Application\Entity\StudentHasClientHasCourse $studentCourse)
     {
     	$list = $this->getStudentHasClientHasCourseHasExamRepo()->getAllByPoints();
     	$index = 1;
@@ -300,7 +300,7 @@ final class ExamService extends BaseService
     	);
     }
     
-    private function composeAnswer(StudentHasClientHasCourseHasExam $session,$isError = false,$message = "")
+    private function composeAnswer(\Application\Entity\StudentHasClientHasCourseHasExam $session,$isError = false,$message = "")
     {
     	$retval = array();
     	$retval['result'] = (int)!$isError;
