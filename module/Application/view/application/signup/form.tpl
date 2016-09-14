@@ -75,12 +75,23 @@
                     <h2>Registrazione studente</h2>
                     {$this->form()->openTag($this->form)}
 
+                    {if $showFacebookLogin eq 1}
                     <div class="card-header card-padding">
-                        <button type="button" class="btn btn--facebook anim" onclick="location.href='https://www.facebook.com/v2.6/dialog/oauth?client_id=170229993385237&amp;state=cea4d8879578e2c227f2a0be1a76cdd3&amp;response_type=code&amp;sdk=php-sdk-5.1.2&amp;redirect_uri=http://smiletomove.local/signin/form/1473345665/2/1618741335'">Accedi con Facebook</button>
+                        <button type="button" class="btn btn--facebook anim" onclick="location.href='{$fbAccess}'">Accedi con Facebook</button>
                     </div>
                     <div class="card-body card-padding">
                         <div class="row">
                             <center>oppure procedi con la registrazione manuale<br><br><br></center>
+                    {else}
+                    
+                    <div class="card-header card-padding">
+                        <h2>Utente collegato con Facebook!</h2>
+                    </div>
+                    <div class="card-body card-padding">
+                        <div class="row">
+                            <center>ora completa la registrazione<br><br><br></center>
+                    
+                    {/if}
                             <div class="col-sm-4">
                                 {$this->formLabel($this->form->get('firstname'))}
                                 {$this->formElement($this->form->get('firstname'))}

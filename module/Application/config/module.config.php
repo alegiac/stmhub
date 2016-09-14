@@ -318,15 +318,42 @@ return array(
         	),
                 'may_terminate' => true,
             ),
+            'signup_preform' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/signup/preform/:time/:clientcourse/:crc',
+                    'constraints' => array(),
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Application\Controller',
+                        'controller' => 'Signup',
+                        'action' => 'preform',
+                    ),
+                ),
+                'may_terminate' => true,
+            ),
             'signup_form' => array(
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/signup/form/:time/:clientcourse/:crc',
+                    //'route' => '/signup/form/[:params]:time/:clientcourse/:crc',
+                    'route' => '/signup/form[:param]',
                     'constraints' => array(),
                     'defaults' => array(
                         '__NAMESPACE__' => 'Application\Controller',
                         'controller' => 'Signup',
                         'action' => 'form',
+                    ),
+                ),
+                'may_terminate' => true,
+            ),
+            'signup_fbform' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/signup/fbform[/:state]',
+                    'constraints' => array(),
+                    'defaults' => array (
+                        '__NAMESPACE__' => 'Application\Controller',
+                        'controller' => 'Signup',
+                        'action' => 'fbform',    
                     ),
                 ),
                 'may_terminate' => true,

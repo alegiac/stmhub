@@ -58,6 +58,13 @@ class SignupController extends AbstractActionController
         $this->logger = $this->getServiceLocator()->get('Logger');
     }
 
+    protected function resetSessionVars()
+    {
+        unset($_SESSION['signup_client_course']);
+        unset($_SESSION['fb_access_token']);
+    }
+
+
     public function landingAction()
     {
         $courseName = $this->params()->fromRoute('coursename');
@@ -74,37 +81,46 @@ class SignupController extends AbstractActionController
         );
     }
     
+    public function preformAction()
+    {
+        $this->init();
+        $this->resetSessionVars();
+        
+        $time = $this->params()->fromRoute('time');
+        $cc = $this->params()->fromRoute('clientcourse');
+        $crc = $this->params()->fromRoute('crc');
+        
+        // Verifica accessibilità
+        if (crc32($time."|".$cc) != $crc) {
+            // $this->error("I parametri passati con ".$cc.",".$time.",".$crc." non sono coerenti");
+            $this->getResponse()->setStatusCode(400);
+            return $this->getResponse();
+        } 
+        
+        // Verifica logica
+        $clientCourse = $this->getCourseService()->findAssociation($cc);
+        if ($clientCourse->getAllowSignup() !== 1) {
+            return $this->redirect()->toUrl("http://www.traintoaction.com");
+        }
+        
+        $_SESSION['signup_client_course'] = $cc;
+        $this->redirect()->toRoute('signup_form');
+    }
+    
     public function formAction()
     {
-        
         $this->init();
         
         // Acquisizione parametri
         if (null === $_SESSION['signup_client_course']) {
-            $time = $this->params()->fromRoute('time');
-            $cc = $this->params()->fromRoute('clientcourse');
-            $crc = $this->params()->fromRoute('crc');
-        
-            // Verifica accessibilità
-            if (crc32($time."|".$cc) != $crc) {
-               // $this->error("I parametri passati con ".$cc.",".$time.",".$crc." non sono coerenti");
-                $this->getResponse()->setStatusCode(400);
-                return $this->getResponse();
-            } 
-            
-            $_SESSION['signup_client_course'] = $cc;
+            return $this->redirect()->toUrl("http://www.traintoaction.com");
         }
         
         // Verifica logica
         $clientCourse = $this->getCourseService()->findAssociation($_SESSION['signup_client_course']);
         if ($clientCourse->getAllowSignup() !== 1) {
-            //$this->logger->error("Il record con id ".$cc." non permette la registrazione da configurazione db");
             return $this->redirect()->toUrl("http://www.traintoaction.com");
-            
-            //$this->getResponse()->setStatusCode(400);
-            //return $this->getResponse();
         }        
-        
         
         $showExtraFields = $clientCourse->getEnableExtrafields();
         
@@ -122,10 +138,10 @@ class SignupController extends AbstractActionController
         ]);
 		
         $helper = $fb->getRedirectLoginHelper();
-		
+        
         if (isset($_SESSION['fb_access_token'])) {
             $accessToken = $_SESSION['fb_access_token'];
-	} else {
+        } else {
             try {
                 $accessToken = $helper->getAccessToken();
             } catch (Facebook\Exceptions\FacebookResponseException $e) {
@@ -140,28 +156,29 @@ class SignupController extends AbstractActionController
         if (!isset($accessToken)) {
 
             // No access token
-            $permissions = ['email'];
+            $permissions = ['email','public_profile'];
             $facebookLoginUrl = $helper->getLoginUrl('http://'.$_SERVER['SERVER_NAME'].'/signup/form',$permissions);
             $showFacebookLogin = 1;
         } else {
+            
             $oAuth2Client = $fb->getOAuth2Client();
             $tokenMetadata = $oAuth2Client->debugToken($accessToken);
             $tokenMetadata->validateAppId($this->fbAppId);
             $tokenMetadata->validateExpiration();
 
-            if (! $accessToken->isLongLived() ) {
-                try {
-                    $accessToken = $oAuth2Client->getLongLivedAccessToken($accessToken);
-                } catch (Facebook\Exceptions\FacebookSDKException $e) {
-                    echo "Error getting long-lived access token: ".$e->getMessage();
-                    exit;
-                }
-            }
+//            if (! $accessToken->isLongLived() ) {
+//                try {
+//                    $accessToken = $oAuth2Client->getLongLivedAccessToken($accessToken);
+//                } catch (Facebook\Exceptions\FacebookSDKException $e) {
+//                    echo "Error getting long-lived access token: ".$e->getMessage();
+//                    exit;
+//                }
+//            }
 
             $_SESSION['fb_access_token'] = $accessToken;
-
-            $me = $fb->get('/me?field=id,first_name,last_name,picture,email',$accessToken);
+            $me = $fb->get('/me?fields=id,email,first_name,last_name',$accessToken);
             $plainOldArray = $me->getDecodedBody();
+            
             $givenFirstName = $plainOldArray['first_name'];
             $givenLastName = $plainOldArray['last_name'];
             $givenEmailAddress = $plainOldArray['email'];
@@ -203,7 +220,7 @@ class SignupController extends AbstractActionController
                 }
                 
                 $result = $this->getStudentService()->registerUser($registerRequest);
-                unset($_SESSION['signup_client_course']);
+                $this->resetSessionVars();
                 if ($result['result'] === true) {
                     if ($result['to_landing'] === true) {
                         // A landing page
@@ -227,6 +244,7 @@ class SignupController extends AbstractActionController
 	
         return array(
             'form' => $form,
+            'fbAccess' => $facebookLoginUrl,
             'showExtraFields' => $showExtraFields,
             'showFacebookLogin' => $showFacebookLogin,
         );
