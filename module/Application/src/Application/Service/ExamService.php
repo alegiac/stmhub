@@ -267,13 +267,13 @@ final class ExamService extends BaseService
     
     private function getCurrentPositionAndPrizeForStudentInCourse(StudentHasClientHasCourse $studentCourse)
     {
-    	$list = $this->getStudentHasCourseHasExamRepo()->getAllByPoints();
+    	$list = $this->getStudentHasClientHasCourseHasExamRepo()->getAllByPoints();
     	$index = 1;
     	$hasPrize = 0;
     	$prizename = null;
     	
     	foreach ($list as $element) {
-    		if ($studentCourse->getId() == $element['student_has_course_id']) {
+    		if ($studentCourse->getId() == $element['student_has_client_course_id']) {
     			break;
     		} else {
     			$index++;
@@ -308,7 +308,7 @@ final class ExamService extends BaseService
     	 
     	if (!is_null($session)) {
     		$retval['course'] = array(
-    				'name' => $session->getStudentHasClientHasCourse()->getClientHasCourse()->getCourse()->getName(),
+                    'name' => $session->getStudentHasClientHasCourse()->getClientHasCourse()->getCourse()->getName(),
     		);
                 
                 $clientCourse = $session->getStudentHasClientHasCourse()->getClientHasCourse();

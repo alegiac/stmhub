@@ -42,7 +42,7 @@ class StudentHasClientHasCourseHasExamRepo extends \Doctrine\ORM\EntityRepositor
         
 	public function getAllByPoints()
 	{
-		$query = $this->getEntityManager()->getConnection()->prepare('SELECT SUM(points) AS tot,student_has_course_id, SUM(TIMESTAMPDIFF(SECOND,real_start_date,end_date)) AS timing FROM student_has_client_has_course_has_exam GROUP BY student_has_client_has_course_id ORDER BY tot DESC,timing ASC');
+		$query = $this->getEntityManager()->getConnection()->prepare('SELECT SUM(points) AS tot,student_has_client_has_course_id, SUM(TIMESTAMPDIFF(SECOND,real_start_date,end_date)) AS timing FROM student_has_client_has_course_has_exam GROUP BY student_has_client_has_course_id ORDER BY tot DESC,timing ASC');
 		$query->execute();
 		return $query->fetchAll();
 	}
