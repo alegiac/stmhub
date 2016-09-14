@@ -110,6 +110,7 @@ class SignupController extends AbstractActionController
     public function formAction()
     {
         $this->init();
+        $facebookLoginUrl = "";
         
         // Acquisizione parametri
         if (null === $_SESSION['signup_client_course']) {

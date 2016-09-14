@@ -134,7 +134,7 @@ class StudentHasClientHasCourseHasExam
      *
      * @ORM\ManyToOne(targetEntity="Application\Entity\StudentHasClientHasCourse")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="student_has_client_has_course_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="student_has_client_has_course_id", referencedColumnName="id", fetch="EAGER")
      * })
      */
     private $studentHasClientHasCourse;
