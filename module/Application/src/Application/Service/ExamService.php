@@ -749,7 +749,7 @@ final class ExamService extends BaseService
     
    	public function getAvailableChallenges($sessionId)
    	{
-		$retval = array();
+         	$retval = array();
 		/* @var $session Application\Entity\StudentHasClientHasCourseHasExam */
 		$session = $this->getStudentHasClientHasCourseHasExamRepo()->find($sessionId);
                 $listOfChallenges = $this->getStudentHasClientHasCourseHasExamRepo()->findChallengesByStudentOnCourse($session->getStudentHasClientHasCourse());

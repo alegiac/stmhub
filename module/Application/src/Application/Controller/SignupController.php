@@ -226,11 +226,11 @@ class SignupController extends AbstractActionController
                     if ($result['to_landing'] === true) {
                         // A landing page
                         $url = "http://".$_SERVER['HTTP_HOST']."/signup/landing/".$result['course_name'];
-                        $this->redirect()->toUrl($url);
+                        return $this->redirect()->toUrl($url);
                     } else {
                         // A sessione di esame: acquisire il token di esame e passare a redirect
                         $url = "http://".$result['redirect'];
-                        $this->redirect()->toUrl($url);
+                        return $this->redirect()->toUrl($url);
                     }
                 } else {
                     if ($result['already_in'] === true) {

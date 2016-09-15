@@ -194,30 +194,29 @@ class ExamController extends AbstractActionController
 	 */
 	private function tokenize($isChallenge)
 	{
-		$this->init();
-		$stmt = $this->params('tkn',"");
-		
-		try {
-			
-			// Load session info
-			$res = $this->getExamService()->getCurrentExamSessionItemByToken($stmt,$isChallenge);
-		
-			if ($res['result'] === 1) {
-				// Session found: set token in session for future interactions in the exam session
-				$this->session->token = $stmt;
-				$this->session->exam = $res;
-				
-				$this->redirect()->toRoute('exam_participate');
-				return;
-			}
-			
-			// No session available: different behavior for exam and challenge
+            $this->init();
+            $stmt = $this->params('tkn',"");
+                
+            try {
+
+                // Load session info
+                $res = $this->getExamService()->getCurrentExamSessionItemByToken($stmt,$isChallenge);
+                
+                if ($res['result'] === 1) {
+                    // Session found: set token in session for future interactions in the exam session
+                    $this->session->token = $stmt;
+                    $this->session->exam = $res;
+
+                    return $this->redirect()->toRoute('exam_participate');
+                } 
+                
+                // No session available: different behavior for exam and challenge
 			if ($isChallenge === false) {
 				// Redirect the user to the challenges, if any
-				$this->redirect()->toRoute('exam_challenges');
+				return $this->redirect()->toRoute('exam_challenges');
 			} else {
 				// Nothing left to do
-				$this->redirect()->toRoute('exam_nothing');
+				return $this->redirect()->toRoute('exam_nothing');
 			}
 			
 		} catch (\Exception $e) {
@@ -228,11 +227,11 @@ class ExamController extends AbstractActionController
 			
 			if ($e instanceof MalformedRequest || $e instanceof InconsistentContent || $e instanceof ObjectNotFound || $e instanceof ObjectNotEnabled) {
 				// Richiesta errata 
-				$this->redirect()->toUrl($this->config['corporateurl']);
+				return $this->redirect()->toUrl($this->config['corporateurl']);
 			} else {
 				// Errore 500
-				$this->session->error_message = "Errore interno del Server";
-				$this->redirect()->toRoute('exam_error');
+                                $this->session->error_message = "Errore interno del Server";
+				return $this->redirect()->toRoute('exam_error');
 			}
 		}
 	}
@@ -339,15 +338,13 @@ class ExamController extends AbstractActionController
 		// The session is now terminated: redirect to exam_end
 		if ($retval !== 0) {
 			$this->session->offsetSet('session_termination', $retval);
-			$this->redirect()->toRoute('exam_end');
-			return;
+			return $this->redirect()->toRoute('exam_end');
 		}
 		
 		// The session goes on
 		$res = $this->getExamService()->getCurrentExamSessionItemByToken($this->session->token,$this->session->exam['session']['challenge']);
 		$this->session->exam = $res;
-		$this->redirect()->toRoute('exam_participate');
-		return;
+		return $this->redirect()->toRoute('exam_participate');	
 	}
 	
     /**
@@ -381,8 +378,8 @@ class ExamController extends AbstractActionController
         // The session is now terminated: redirect to exam_end
         if ($retval !== 0) {
             $this->session->offsetSet('session_termination', $retval);
-            $this->redirect()->toRoute('exam_end');
-            return;
+            return $this->redirect()->toRoute('exam_end');
+            
         }
 
         // The session goes on
@@ -402,7 +399,6 @@ class ExamController extends AbstractActionController
 	public function participateAction()
 	{
 		$this->initExam();
-		
 		$vm = $this->composeParticipationVM();
 		
 		$form = $this->composeForm();

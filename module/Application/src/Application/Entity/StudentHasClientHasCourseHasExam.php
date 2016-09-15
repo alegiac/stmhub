@@ -601,7 +601,6 @@ class StudentHasClientHasCourseHasExam
     public function addItem(\Application\Entity\Item $item)
     {
         $this->item[] = $item;
-
         return $this;
     }
 
