@@ -76,17 +76,16 @@ class ToolsController extends AbstractActionController
             $clientCourse = $this->getCourseService()->findAssociation($clientCourseId);
             /* @var $clientCourse Application\Entity\ClientHasCourse */
             if ($clientCourse->getAllowSignup() === 0) {
-                echo "ATTENZIONE: generazione form di iscrizione per un cliente/corso {$clientCourseId} con flag di abilitazione a 0.<br>".
-                        "Per generare il link alla registrazione studente, impostare il parametro <b>allow_signup</b> a <b>1</b> nella tabella <b><i>client_has_course</i></b>";
-                        die();
+              echo "ATTENZIONE: generazione form di iscrizione per un cliente/corso {$clientCourseId} con flag di abilitazione a 0.<br>".
+              "Per generare il link alla registrazione studente, impostare il parametro <b>allow_signup</b> a <b>1</b> nella tabella <b><i>client_has_course</i></b>";
+              die();
             }
                        
             $t = time();
             $crc = crc32($t."|".$clientCourseId);
             $url = "http://".$_SERVER['HTTP_HOST']."/signup/preform/".$t."/".$clientCourseId."/".$crc;
-        
-            echo $url;
-            die();
+            $this->session->offsetSet('coming_from_signup',true);
+            return $this->redirect()->toUrl($url);
         }
 	
 	public function structureallAction()

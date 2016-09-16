@@ -281,7 +281,7 @@ class ExamController extends AbstractActionController
 	public function endAction()
 	{
 		$this->initExam();
-		$terminationValue = $this->session->offsetGet('session_termination');
+    $terminationValue = $this->session->offsetGet('session_termination');
 		
 		// TEST: not remove the offsetUnset of termination value here!
 		$this->session->offsetUnset('session_termination');
@@ -306,7 +306,6 @@ class ExamController extends AbstractActionController
 		} else {
 			$vm->challengeBtn;
 		}
-		
 		
 		// Inizializza variabili d'ambiente
 		$this->session->offsetUnset('startedTime');
