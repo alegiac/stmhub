@@ -84,7 +84,7 @@ class ToolsController extends AbstractActionController
             $t = time();
             $crc = crc32($t."|".$clientCourseId);
             $url = "http://".$_SERVER['HTTP_HOST']."/signup/preform/".$t."/".$clientCourseId."/".$crc;
-            $this->session->offsetSet('coming_from_signup',true);
+            //$this->session->offsetSet('coming_from_signup',true);
             return $this->redirect()->toUrl($url);
         }
 	
