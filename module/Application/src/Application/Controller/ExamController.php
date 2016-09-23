@@ -281,13 +281,14 @@ class ExamController extends AbstractActionController
 	public function endAction()
 	{
 		$this->initExam();
-    $terminationValue = $this->session->offsetGet('session_termination');
+        $terminationValue = $this->session->offsetGet('session_termination');
 		
 		// TEST: not remove the offsetUnset of termination value here!
 		$this->session->offsetUnset('session_termination');
 
 		$vm = $this->composeParticipationVM();
-		switch ($terminationValue) {
+        
+        switch ($terminationValue) {
 			case ExamService::SESSION_TERMINATED:
 				$vm->message = $this->session->exam['student']['firstname'].", hai completato questa sessione.";
 				break;
@@ -374,18 +375,19 @@ class ExamController extends AbstractActionController
         $this->session->offsetUnset('startedTime');
         $this->session->offsetUnset('usedTries');
 
+        $res = $this->getExamService()->getCurrentExamSessionItemByToken($this->session->token,$this->session->exam['session']['challenge']);
+        $this->session->exam = $res;
+        
         // The session is now terminated: redirect to exam_end
         if ($retval !== 0) {
             $this->session->offsetSet('session_termination', $retval);
-            return $this->redirect()->toRoute('exam_end');
-            
+            $this->redirect()->toRoute('exam_end');    
+            return;
+        } else {
+            // The session goes on
+            $this->redirect()->toRoute('exam_participate');
+            return;   
         }
-
-        // The session goes on
-        $res = $this->getExamService()->getCurrentExamSessionItemByToken($this->session->token,$this->session->exam['session']['challenge']);
-        $this->session->exam = $res;
-        $this->redirect()->toRoute('exam_participate');
-        return;
     }
 	
 	/**

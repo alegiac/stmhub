@@ -527,7 +527,7 @@ final class ExamService extends BaseService
     	$session->setProgressive($currentProgressive+1);
         
         if (count($session->getItem()) == $currentProgressive+1) {
-            	$endDate = new \DateTime();
+            $endDate = new \DateTime();
     		$session->setCompleted(1);
     		$session->setEndDate($endDate);
     		if ($endDate > $session->getExpectedEndDate()) {
@@ -536,8 +536,7 @@ final class ExamService extends BaseService
     			$newPoints = ceil($session->getPoints() - (($session->getPoints()*$perc)/100));
     		}
                 
-                $this->getEntityManager()->persist($session);
-    		
+            $this->getEntityManager()->persist($session);
     		$index = split("/",$session->getSessionOnExam());
     		if ($index[0] == $index[1]) {
     			// Session has terminated, and exam has terminated too:
