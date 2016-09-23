@@ -661,7 +661,8 @@ final class StudentService extends BaseService
                             $lastname = $student->getLastname();
                             $email = $student->getEmail();
                             $reference = $student->getIdentifier();
-                            $studentSessions = $this->getStudentHasClientHasCourseHasExamRepo()->findByStudentOnCourse($session->getStudentHasCourse(),false);
+                            // Studenti per la sessione 
+                            $studentSessions = $this->getStudentHasClientHasCourseHasExamRepo()->findByStudentOnCourse($session->getStudentHasClientHasCourse(),false);
                             $points = 0;
                             foreach ($studentSessions as $ssession) {
                                     $points += $ssession->getPoints();
