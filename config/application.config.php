@@ -22,7 +22,7 @@ return array(
         'ZF\\DevelopmentMode',
         'ZendDeveloperTools',
 //        'AssetManager',
-        'EddieJaoude\\Zf2Logger',
+	'EddieJaoude\\Zf2Logger',
         'BsbPhingService',
     	'SmartyModule',
     	'Application',
