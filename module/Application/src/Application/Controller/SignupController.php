@@ -60,7 +60,7 @@ class SignupController extends AbstractActionController
 
     protected function resetSessionVars()
     {
-        unset($_SESSION['signup_client_course']);
+        unset($_SESSION['from_registration']);
         unset($_SESSION['fb_access_token']);
     }
 
@@ -223,6 +223,7 @@ class SignupController extends AbstractActionController
                 $result = $this->getStudentService()->registerUser($registerRequest);
                 $this->resetSessionVars();
                 if ($result['result'] === true) {
+                    
                     if ($result['to_landing'] === true) {
                         // A landing page
                         $url = "http://".$_SERVER['HTTP_HOST']."/signup/landing/".$result['course_name'];

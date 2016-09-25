@@ -280,6 +280,7 @@ class ExamController extends AbstractActionController
 	 */
 	public function endAction()
 	{
+        
 		$this->initExam();
         $terminationValue = $this->session->offsetGet('session_termination');
 		
@@ -287,7 +288,6 @@ class ExamController extends AbstractActionController
 		$this->session->offsetUnset('session_termination');
 
 		$vm = $this->composeParticipationVM();
-        
         switch ($terminationValue) {
 			case ExamService::SESSION_TERMINATED:
 				$vm->message = $this->session->exam['student']['firstname'].", hai completato questa sessione.";
@@ -296,10 +296,18 @@ class ExamController extends AbstractActionController
 				$vm->message = "Complimenti ".$this->session->exam['student']['firstname'].", hai completato il livello ".$this->session->exam['exam']['name'];
 				break;
 			case ExamService::COURSE_TERMINATED:
-				$vm->message = "Complimenti ".$this->session->exam['student']['firstname'].", hai completato il corso ".$this->session->exam['course']['name'];
+                $vm->message = "Complimenti ".$this->session->exam['student']['firstname'].", hai completato il corso ".$this->session->exam['course']['name'];
 				break;
 		}
 		
+        if (isset($_SESSION['signup_client_course'])) {
+            $url = "http://".$_SERVER['HTTP_HOST']."/tools/setupsignup/".$_SESSION['signup_client_course'];
+            unset($_SESSION['signup_client_course']);
+            return $this->redirect()->toUrl($url);
+            return;
+        }
+               
+        
 		// Evaluates if the go-to-challenges button must be shown
 		$res = $this->getExamService()->getAvailableChallenges($this->session->exam['session']['id']);
 		if (is_array($res) && count($res) > 0) {
